@@ -14,5 +14,8 @@ For details on setup and information about the inbuilt server used and what you 
 
 More instructions to follow
 
+### Attributions
+Toolbox icon by Daniel Garrett Hickey
+
 ### License
 This work is licensed under the GNU General Public License v3.0. To view a copy of this license, visit http://www.gnu.org/licenses/gpl-3.0.txt.

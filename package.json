@@ -1,0 +1,29 @@
+{
+    "name": "Allmighty-Twitch-Toolbox",
+    "version": "1.0.0",
+    "description": "0.0.1",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/RyanTheAllmighty/Allmighty-Twitch-Toolbox.git"
+    },
+    "author": "RyanTheAllmighty",
+    "license": "GPUv3",
+    "bugs": {
+        "url": "https://github.com/RyanTheAllmighty/Allmighty-Twitch-Toolbox/issues"
+    },
+    "homepage": "https://github.com/RyanTheAllmighty/Allmighty-Twitch-Toolbox",
+    "dependencies": {
+        "archiver": "^0.14.3"
+    },
+    "main": "app.html",
+    "node-main": "app.js",
+    "window": {
+        "show": true,
+        "icon": "./assets/image/icon.png",
+        "toolbar": true,
+        "width": 800,
+        "height": 500,
+        "min_width": 800,
+        "min_height": 500
+    }
+}
