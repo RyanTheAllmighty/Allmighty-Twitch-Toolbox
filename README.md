@@ -7,6 +7,50 @@ This is a collection of tools and utilities I use for Twitch to tell me such as 
 ### Coding standards & styling guidelines
 Please see the STYLE.md file for coding standards and style guidelines.
 
+### Setting up a development environment
+To get started you need a couple pieces of software installed on your computer. The versions next to the package is the version we build against so you would be best to get that version or newer:
+
+- [NodeJS](https://nodejs.org/) (0.12.0)
+- [NW.js](http://nwjs.io/) (0.12.0)
+
+To make sure you have those all installed correctly, open up a command line/terminal and run the following commands and make sure they all work with no errors:
+
+```javascript
+node -v
+npm -v
+nw
+```
+
+Once you have those installed on your system you can clone the repository and get started.
+
+#### Building the application
+To get started you firstly need to install all the NPM modules needed. Run the below command in the root directory:
+
+```sh
+npm install
+```
+
+Then, assuming there were no errors, all you need to do is run our util.js file with the package option:
+
+```sh
+node util.js package
+```
+
+This will create an app.nw file in the current directory.
+
+#### Running the application
+To run the application you can simply go into the root directory of the project and run the below command, making sure that NW.js is in your PATH:
+
+```sh
+nw .
+```
+
+Alternatively if you've built the application as said above you can run that with the following command:
+
+```sh
+nw app.nw
+```
+
 ### Getting Started
 To get a Twitch API token for use in the application you can either visit http://www.ryandowling.me/twitch-api-token-generator to generate a token using my site or you can follow the directions on Twitch's API docs (https://github.com/justintv/Twitch-API/blob/master/authentication.md) making sure to grant rights for all scopes when doing so.
 
