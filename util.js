@@ -3,10 +3,13 @@
  *
  * Below is a list of actions which can be provided and what they do:
  *
- * package - This builds an app.nw in the current directory for distribution with various extra junk removed from the distributed application.
+ * package - This builds an app.asar in the current directory for distribution with various extra junk removed from the distributed application.
  */
 
-var archiver = require('archiver');
+var tmp = require('tmp');
+var asar = require('asar');
+var del = require('del');
+var ncp = require('ncp').ncp;
 var fs = require('fs');
 
 if (process.argv.length == 2) {
@@ -25,22 +28,33 @@ switch (process.argv[2]) {
 }
 
 function packageApp() {
-    fs.unlink('./app.nw', function (err) {
-        var output = fs.createWriteStream('./app.nw');
-        var archive = archiver('zip');
+    fs.unlink('./app.asar', function (err) {
+        tmp.dir(function (err, path) {
+            if (err) {
+                return del(path + '/', {force: true}, function () {
+                    console.error(err);
+                });
+            }
 
-        output.on('close', function () {
-            console.log('app.nw created!');
+            ncp('./', path, function (err) {
+                if (err) {
+                    return del(path + '/', {force: true}, function () {
+                        console.error(err);
+                    });
+                }
+
+                del([path + '/.git/', path + '/.idea/', path + '/.gitignore', path + '/README.md', path + '/STYLE.md', path + '/util.js'], {force: true, dot: true}, function (err) {
+                    if (err) {
+                        return del(path + '/', {force: true}, function () {
+                            console.error(err);
+                        });
+                    }
+
+                    asar.createPackage(path, './app.asar', function () {
+                        del(path + '/', {force: true});
+                    });
+                });
+            });
         });
-
-        archive.on('error', function (err) {
-            throw err;
-        });
-
-        archive.pipe(output);
-
-        archive.bulk([
-            {src: ['./**', '!./README.md', '!./STYLE.md', '!./app.nw', '!./util.js'], data: {date: new Date()}}
-        ]).finalize();
     });
 }
