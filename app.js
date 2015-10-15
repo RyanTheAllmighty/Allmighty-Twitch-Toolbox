@@ -23,14 +23,14 @@ process.on('uncaughtException', function (e) {
 });
 
 var app = require('app');
-var BrowserWindow = require('browser-window');
 var path = require('path');
-var mkdirp = require('mkdirp');
-var async = require('async');
+var shell = require('shell');
 var Datastore = require('nedb');
+var mkdirp = require('mkdirp').mkdirp;
+var BrowserWindow = require('browser-window');
 
-var splashScreen = null;
 var mainWindow = null;
+var splashScreen = null;
 
 app.on('ready', function () {
     splashScreen = new BrowserWindow({width: 576, height: 192, show: false, frame: false, center: true, 'skip-taskbar': true});
@@ -49,18 +49,15 @@ app.on('ready', function () {
     splashScreen.loadUrl('file://' + __dirname + '/splash-screen.html');
     splashScreen.show();
 
-    // Make the directories
-    async.series([
-        function (callback) {
-            mkdirp.mkdirp(global.App.basePath, callback);
-        }
-    ], function () {
+    // Make the main directory
+    mkdirp(global.App.basePath, function () {
         // Close the splash screen
         splashScreen.close();
 
         mainWindow.loadUrl('file://' + __dirname + '/app.html');
         mainWindow.setMenu(null);
         mainWindow.show();
+        mainWindow.openDevTools();
 
         mainWindow.webContents.on('new-window', function (event, url) {
             event.preventDefault();
