@@ -24,18 +24,16 @@
     "maxstatements": false,
     "maxcomplexity": false,
     "maxlen": 200,
-    "varstmt": false,
     "asi": false,
     "boss": false,
     "debug": false,
     "eqnull": false,
-    "es5": true,
     "esnext": true,
     "moz": false,
     "evil": false,
     "expr": false,
     "funcscope": false,
-    "globalstrict": false,
+    "globalstrict": true,
     "iterator": false,
     "lastsemic": false,
     "laxbreak": false,
@@ -70,5 +68,7 @@
     "worker": false,
     "wsh": false,
     "yui": false,
-    "globals": {}
+    "globals": {
+        "angular": true
+    }
 }

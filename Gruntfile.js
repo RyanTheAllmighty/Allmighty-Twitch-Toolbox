@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 'use strict';
 
 module.exports = function (grunt) {
@@ -24,6 +25,9 @@ module.exports = function (grunt) {
     grunt.initConfig({
         jshintrc: true,
         jshint: {
+            options: {
+                jshintrc: '.jshintrc'
+            },
             src: ['assets/js/**/*.js']
         },
         mochaTest: {
