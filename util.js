@@ -6,13 +6,16 @@
  * package - This builds an app.asar in the current directory for distribution with various extra junk removed from the distributed application.
  */
 
+'use strict';
+
+var fs = require('fs');
+var del = require('del');
 var tmp = require('tmp');
 var asar = require('asar');
-var del = require('del');
+var path = require('path');
 var ncp = require('ncp').ncp;
-var fs = require('fs');
 
-if (process.argv.length == 2) {
+if (process.argv.length === 2) {
     console.error('No argument provided!');
     process.exit(1);
 }
@@ -29,32 +32,57 @@ switch (process.argv[2]) {
 
 function packageApp() {
     fs.unlink('./app.asar', function (err) {
-        tmp.dir(function (err, path) {
+        if (err && fs.existsSync('./app.asar')) {
+            return console.error(err);
+        }
+
+        tmp.dir(function (err, tempPath) {
+            console.log(tempPath);
             if (err) {
-                return del(path + '/', {force: true}, function () {
+                del(tempPath + '/', {force: true}).then(function () {
                     console.error(err);
                 });
-            }
-
-            ncp('./', path, function (err) {
-                if (err) {
-                    return del(path + '/', {force: true}, function () {
-                        console.error(err);
-                    });
-                }
-
-                del([path + '/.git/', path + '/.idea/', path + '/.gitignore', path + '/README.md', path + '/STYLE.md', path + '/util.js'], {force: true, dot: true}, function (err) {
+            } else {
+                ncp('./', tempPath, function (err) {
                     if (err) {
-                        return del(path + '/', {force: true}, function () {
+                        del(tempPath + '/', {force: true}).then(function () {
                             console.error(err);
                         });
-                    }
+                    } else {
+                        let thingsToDelete = [
+                            tempPath + '/node_modules/.bin/',
+                            tempPath + '/node_modules/chai/',
+                            tempPath + '/node_modules/grunt/',
+                            tempPath + '/node_modules/grunt-cli/',
+                            tempPath + '/node_modules/grunt-contrib-jshint/',
+                            tempPath + '/node_modules/grunt-mocha-test/',
+                            tempPath + '/node_modules/jshint/',
+                            tempPath + '/node_modules/mocha/',
+                            tempPath + '/node_modules/sinon/',
+                            tempPath + '/.git/',
+                            tempPath + '/.idea/',
+                            tempPath + '/test/',
+                            tempPath + '/.gitignore',
+                            tempPath + '/.jshintrc',
+                            tempPath + '/.jshintignore',
+                            tempPath + '/README.md',
+                            tempPath + '/STYLE.md',
+                            tempPath + '/util.js',
+                            tempPath + '/Gruntfile.js'
+                        ];
 
-                    asar.createPackage(path, './app.asar', function () {
-                        del(path + '/', {force: true});
-                    });
+                        del(thingsToDelete, {force: true, dot: true}).then(function () {
+                            console.log('Packaging up application!');
+                            console.log(path.resolve('./app.asar'));
+                            asar.createPackage(tempPath, './app.asar', function () {
+                                del(tempPath + '/', {force: true}).then(function () {
+                                    console.log('Application packaged successfully!');
+                                });
+                            });
+                        });
+                    }
                 });
-            });
+            }
         });
     });
 }
