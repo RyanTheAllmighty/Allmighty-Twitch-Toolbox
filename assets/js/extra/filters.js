@@ -16,9 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* globals app, AutoLinker */
+/* globals app */
 
 'use strict';
+
+var AutoLinker = require('autolinker');
 
 app.filter('capitalize', function () {
     return function (input) {

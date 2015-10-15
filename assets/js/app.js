@@ -18,6 +18,11 @@
 
 'use strict';
 
+var path = require('path');
+var gui = require('nw.gui');
+var Datastore = require('nedb');
+var mkdirp = require('mkdirp').mkdirp;
+
 var app = angular.module('AllmightyTwitchToolbox', ['ngRoute', 'ngSanitize']);
 
 app.config(function ($routeProvider) {
@@ -25,4 +30,44 @@ app.config(function ($routeProvider) {
         templateUrl: './assets/html/home.html',
         controller: 'HomeController'
     }).otherwise({redirectTo: '/'});
+});
+
+var win = gui.Window.open('./splash-screen.html', {
+    position: 'center',
+    width: 576,
+    height: 192,
+    frame: false,
+    toolbar: false,
+    show_in_taskbar: false,
+    show: true
+});
+
+global.App = {
+    // Setup the base path
+    basePath: path.join(gui.App.dataPath, 'ApplicationStorage'),
+    db: {
+        test: new Datastore({filename: path.join(gui.App.dataPath, 'ApplicationStorage', 'db', 'test.db'), autoload: true})
+    }
+};
+
+gui.Window.get().on('closed', function () {
+    gui.App.clearCache();
+});
+
+gui.Window.get().on('new-win-policy', function (frame, url, policy) {
+    gui.Shell.openExternal(url);
+    policy.ignore();
+});
+
+app.run(function ($rootScope) {
+    // Load the app into the root scope
+    $rootScope.App = global.App;
+
+    mkdirp(global.App.basePath, function () {
+        // Close the splash screen
+        win.close();
+
+        // Show the window
+        gui.Window.get().show();
+    });
 });
