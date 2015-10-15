@@ -18,7 +18,7 @@
 
 'use strict';
 
-process.on("uncaughtException", function (e) {
+process.on('uncaughtException', function (e) {
     console.error(e);
 });
 
@@ -53,49 +53,25 @@ app.on('ready', function () {
     async.series([
         function (callback) {
             mkdirp.mkdirp(global.App.basePath, callback);
-        },
-        function (callback) {
-            mkdirp.mkdirp(global.App.filesPath, callback);
-        },
-        function (callback) {
-            mkdirp.mkdirp(global.App.instancesPath, callback);
-        },
-        function (callback) {
-            mkdirp.mkdirp(global.App.skinsPath, callback);
-        },
-        function (callback) {
-            mkdirp.mkdirp(global.App.downloadsPath, callback);
-        },
-        function (callback) {
-            mkdirp.mkdirp(global.App.librariesPath, callback);
         }
     ], function () {
-        // Load everything
-        loadingService.load(function (err) {
-            if (err) {
-                console.error(err);
-                splashScreen.close();
-                return app.quit();
-            }
+        // Close the splash screen
+        splashScreen.close();
 
-            // Close the splash screen
-            splashScreen.close();
+        mainWindow.loadUrl('file://' + __dirname + '/app.html');
+        mainWindow.setMenu(null);
+        mainWindow.show();
 
-            mainWindow.loadUrl('file://' + __dirname + '/app.html');
-            mainWindow.setMenu(null);
-            mainWindow.show();
+        mainWindow.webContents.on('new-window', function (event, url) {
+            event.preventDefault();
 
-            mainWindow.webContents.on('new-window', function (event, url) {
-                event.preventDefault();
+            shell.openExternal(url);
+        });
 
-                shell.openExternal(url);
-            });
+        mainWindow.on('closed', function () {
+            mainWindow = null;
 
-            mainWindow.on('closed', function () {
-                mainWindow = null;
-
-                app.quit();
-            });
+            app.quit();
         });
     });
 });
