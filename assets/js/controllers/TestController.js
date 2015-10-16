@@ -30,8 +30,8 @@ app.controller('TestController', ['$scope', 'Followers', 'Notification', functio
 
         $scope.follower.username = '';
 
-        Followers.newFollower({username, date: new Date()});
-        Notification.success({message: 'New follower triggered!', delay: 3000, test: true});
+        Followers.newFollower({username, date: new Date(), test: true});
+        Notification.success({message: 'New follower triggered!', delay: 3000});
     };
 
     $scope.clearFollower = function () {

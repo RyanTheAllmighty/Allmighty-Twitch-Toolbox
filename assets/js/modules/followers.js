@@ -39,12 +39,16 @@ angular.module('followers').provider('Followers', function () {
                     follower.date = new Date();
                 }
 
-                function notify() {
+                function notify(err) {
+                    if (err) {
+                        return callback(err);
+                    }
+
                     SocketIOServer.emit('follower', follower, callback);
                 }
 
                 if (!follower.test) {
-                    global.App.db.followers.update({username: follower.username}, {username: follower.username, date: follower.date}, {upsert: true}).exec(notify);
+                    global.App.db.followers.update({username: follower.username}, {username: follower.username, date: follower.date}, {upsert: true}, notify);
                 } else {
                     notify();
                 }
