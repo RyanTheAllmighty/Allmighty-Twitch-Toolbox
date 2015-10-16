@@ -50,9 +50,8 @@ angular.module('follower-checker').provider('FollowerChecker', function () {
 
                 // Save this timeout promise so we can cancel it if we get another one later
                 promise = $interval(function () {
-                    Followers.newFollower({
-                        username: 'Test',
-                        date: new Date()
+                    Followers.getFollowerCount(function (err, followers) {
+                        console.log('There are a total of ' + followers + ' followers!');
                     });
                 }, self.options.interval * 1000);
             }

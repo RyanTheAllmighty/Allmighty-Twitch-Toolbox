@@ -33,6 +33,7 @@ global.App = {
     // Setup the base path
     basePath: path.join(gui.App.dataPath, 'ApplicationStorage'),
     db: {
+        followers: new Datastore({filename: path.join(gui.App.dataPath, 'ApplicationStorage', 'db', 'followers.db'), autoload: true}),
         settings: new Datastore({filename: path.join(gui.App.dataPath, 'ApplicationStorage', 'db', 'settings.db'), autoload: true})
     },
     settings: {}

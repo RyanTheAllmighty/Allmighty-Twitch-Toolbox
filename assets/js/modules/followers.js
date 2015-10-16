@@ -23,8 +23,31 @@ angular.module('followers', []);
 angular.module('followers').provider('Followers', function () {
     this.$get = ['SocketIOServer', function (SocketIOServer) {
         return {
-            newFollower: function (follower) {
-                SocketIOServer.emit('follower', follower);
+            getFollowers: function (limit, callback) {
+                if (limit && !callback) {
+                    callback = limit;
+                    limit = 100;
+                }
+
+                global.App.db.followers.find({}).sort({date: 1}).limit(limit).exec(callback);
+            },
+            getFollowerCount: function (callback) {
+                global.App.db.followers.count({}).exec(callback);
+            },
+            newFollower: function (follower, callback) {
+                if (!follower.date) {
+                    follower.date = new Date();
+                }
+
+                function notify() {
+                    SocketIOServer.emit('follower', follower, callback);
+                }
+
+                if (!follower.test) {
+                    global.App.db.followers.update({username: follower.username}, {username: follower.username, date: follower.date}, {upsert: true}).exec(notify);
+                } else {
+                    notify();
+                }
             }
         };
     }];
