@@ -30,6 +30,11 @@ let defaultSettings = {
         accessToken: '',
         clientID: ''
     },
+    checks: {
+        donations: 10,
+        followers: 10,
+        viewers: 10
+    },
     network: {
         socketIOPort: 4000,
         webPort: 5000
