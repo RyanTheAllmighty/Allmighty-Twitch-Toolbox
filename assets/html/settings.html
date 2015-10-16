@@ -1,5 +1,65 @@
 <div class="row">
-    <div class="col-xs-12">
+    <div class="col-xs-6">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Twitch Settings</h3>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label for="twitchUsername" class="col-lg-2 control-label">Username</label>
+
+                    <div class="col-lg-10">
+                        <input ng-model="settings.twitch.username" type="text" class="form-control" id="twitchUsername"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="twitchApiToken" class="col-lg-2 control-label">API Token</label>
+
+                    <div class="col-lg-10">
+                        <input ng-model="settings.twitch.apiToken" type="password" class="form-control" id="twitchApiToken"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="twitchApiClientID" class="col-lg-2 control-label">API Client ID</label>
+
+                    <div class="col-lg-10">
+                        <input ng-model="settings.twitch.apiClientID" type="password" class="form-control" id="twitchApiClientID"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-6">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Stream Tip Settings</h3>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label for="streamTipAccessToken" class="col-lg-2 control-label">Access Token</label>
+
+                    <div class="col-lg-10">
+                        <input ng-model="settings.streamtip.accessToken" type="password" class="form-control" id="streamTipAccessToken"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="streamTipClientID" class="col-lg-2 control-label">Client ID</label>
+
+                    <div class="col-lg-10">
+                        <input ng-model="settings.streamtip.clientID" type="password" class="form-control" id="streamTipClientID"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-6">
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h3 class="panel-title">Network Settings</h3>
@@ -20,11 +80,21 @@
                         <input ng-model="settings.network.webPort" type="number" class="form-control" id="webPort" min="1" max="65535"/>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
 
+<div class="row">
+    <div class="col-xs-12">
+        <div class="panel panel-primary">
+            <div class="panel-body">
                 <div class="form-group">
-                    <div class="col-lg-10 col-lg-offset-2">
-                        <button type="reset" class="btn btn-primary" ng-click="reset()">Reset</button>
+                    <div class="col-sm-6 text-center">
                         <button type="submit" class="btn btn-primary" ng-click="save()">Save</button>
+                    </div>
+                    <div class="col-sm-6 text-center">
+                        <button type="reset" class="btn btn-primary" ng-click="reset()">Reset</button>
                     </div>
                 </div>
             </div>

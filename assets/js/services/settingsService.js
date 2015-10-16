@@ -31,6 +31,15 @@ module.exports.loadSettings = function (callback) {
         // If there are no settings in the database then set some defaults and then save them
         if (docs.length === 0) {
             global.App.settings = {
+                twitch: {
+                    username: '',
+                    apiToken: '',
+                    apiClientID: ''
+                },
+                streamtip: {
+                    accessToken: '',
+                    clientID: ''
+                },
                 network: {
                     socketIOPort: 4000,
                     webPort: 5000
@@ -58,7 +67,9 @@ module.exports.loadSettings = function (callback) {
 };
 
 module.exports.saveSettings = function (callback) {
-    async.forEachOf(global.App.settings.network, function (value, key, next) {
-        global.App.db.settings.update({group: 'network', name: key}, {group: 'network', name: key, value}, {upsert: true}, next);
+    async.eachSeries(['twitch', 'streamtip', 'network'], function (group, nextMain) {
+        async.forEachOf(global.App.settings[group], function (value, key, next) {
+            global.App.db.settings.update({group, name: key}, {group, name: key, value}, {upsert: true}, next);
+        }, nextMain);
     }, callback);
 };
