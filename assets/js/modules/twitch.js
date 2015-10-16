@@ -37,9 +37,21 @@ angular.module('twitch').provider('Twitch', function () {
     };
 
     this.$get = function () {
-        return new TwitchAPI({
+        return new OurTwitchAPI({
             clientId: this.options.clientID,
             accessToken: this.options.accessToken
         });
     };
 });
+
+class OurTwitchAPI extends TwitchAPI {
+    constructor(options) {
+        super(options);
+
+        this._options = options;
+    }
+
+    get accessToken() {
+        return this._options.accessToken;
+    }
+}

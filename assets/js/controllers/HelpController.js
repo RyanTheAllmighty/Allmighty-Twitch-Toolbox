@@ -21,15 +21,11 @@
 'use strict';
 
 app.controller('HelpController', ['$scope', '$timeout', 'Twitch', function ($scope, $timeout, Twitch) {
-    $scope.test = 'Help';
+    $scope.test = Twitch.accessToken;
 
-    Twitch.getChannel('RyanTheAllmighty', function (err, data) {
-        if (err) {
-            return console.error(err);
-        }
-
+    Twitch.getBlocks('RyanTheAllmighty', Twitch.accessToken, function (err, data) {
         $timeout(function () {
-            $scope.test = data;
+            $scope.test = err || data;
             $scope.$apply();
         });
     });

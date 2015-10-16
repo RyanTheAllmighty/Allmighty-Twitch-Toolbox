@@ -83,8 +83,8 @@ app.config(function ($routeProvider, NotificationProvider, TwitchProvider) {
 
         // Setup the TwitchProvider
         TwitchProvider.setOptions({
-            accessToken: '',
-            clientID: ''
+            accessToken: global.App.settings.twitch.apiToken,
+            clientID: global.App.settings.twitch.apiClientID
         });
     });
 });
