@@ -23,9 +23,10 @@ var gui = require('nw.gui');
 var Datastore = require('nedb');
 var loadingService = require('./assets/js/services/loadingService');
 
-var app = angular.module('AllmightyTwitchToolbox', ['ngRoute', 'ngSanitize']);
+var app = angular.module('AllmightyTwitchToolbox', ['ngRoute', 'ngSanitize', 'ui-notification']);
 
-app.config(function ($routeProvider) {
+app.config(function ($routeProvider, NotificationProvider) {
+    // Setup the routes
     $routeProvider.when('/', {
         templateUrl: './assets/html/home.html',
         controller: 'HomeController'
@@ -39,6 +40,17 @@ app.config(function ($routeProvider) {
         templateUrl: './assets/html/help.html',
         controller: 'HelpController'
     }).otherwise({redirectTo: '/'});
+
+    // Setup the NotificationProvider
+    NotificationProvider.setOptions({
+        delay: 10000,
+        startTop: 20,
+        startRight: 10,
+        verticalSpacing: 20,
+        horizontalSpacing: 20,
+        positionX: 'right',
+        positionY: 'top'
+    });
 });
 
 var win = gui.Window.open('./splash-screen.html', {

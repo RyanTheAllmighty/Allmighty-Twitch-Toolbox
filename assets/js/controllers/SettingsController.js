@@ -24,7 +24,7 @@ let _ = require('lodash');
 
 let settingsService = require('./assets/js/services/settingsService');
 
-app.controller('SettingsController', ['$scope', function ($scope) {
+app.controller('SettingsController', ['$scope', 'Notification', function ($scope, Notification) {
     $scope.settings = angular.copy(global.App.settings);
 
     $scope.reset = function () {
@@ -37,10 +37,10 @@ app.controller('SettingsController', ['$scope', function ($scope) {
         settingsService.saveSettings(function (err) {
             if (err) {
                 console.error(err);
-                return alert('Couldn\'t save settings!');
+                return Notification.error({message: 'Couldn\'t save settings!', delay: 3000});
             }
 
-            alert('Settings saved!');
+            Notification.success({message: 'Settings saved!', delay: 3000});
         });
     };
 }]);
