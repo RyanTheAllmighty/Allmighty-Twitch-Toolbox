@@ -69,7 +69,6 @@ module.exports.loadSettings = function (callback) {
 
 module.exports.saveSettings = function (callback) {
     async.each(Object.keys(global.App.settings), function (group, nextMain) {
-        console.log(group);
         async.forEachOf(global.App.settings[group], function (value, key, next) {
             global.App.db.settings.update({group, name: key}, {group, name: key, value}, {upsert: true}, next);
         }, nextMain);

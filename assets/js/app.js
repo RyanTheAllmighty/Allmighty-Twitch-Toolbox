@@ -23,7 +23,7 @@ var gui = require('nw.gui');
 var Datastore = require('nedb');
 var loadingService = require('./assets/js/services/loadingService');
 
-var app = angular.module('AllmightyTwitchToolbox', ['ngRoute', 'ngSanitize', 'ui-notification', 'twitch', 'socket-io', 'socket-io-server', 'datatables']);
+var app = angular.module('AllmightyTwitchToolbox', ['ngRoute', 'ngSanitize', 'ui-notification', 'twitch', 'socket-io', 'socket-io-server', 'follower-checker', 'datatables', 'followers']);
 
 /**
  *
@@ -47,7 +47,7 @@ gui.Window.get().on('new-win-policy', function (frame, url, policy) {
     policy.ignore();
 });
 
-app.config(function ($routeProvider, NotificationProvider, TwitchProvider, SocketIOProvider, SocketIOServerProvider) {
+app.config(function ($routeProvider, NotificationProvider, TwitchProvider, SocketIOProvider, SocketIOServerProvider, FollowerCheckerProvider) {
     // Load everything before we proceed
     loadingService.load(function (err) {
         if (err) {
@@ -104,10 +104,18 @@ app.config(function ($routeProvider, NotificationProvider, TwitchProvider, Socke
         SocketIOProvider.setOptions({
             socketPort: global.App.settings.network.socketIOPort
         });
+
+        // Setup the follower checker
+        FollowerCheckerProvider.setOptions({
+            interval: global.App.settings.checks.followers
+        });
     });
 });
 
-app.run(function () {
+app.run(['FollowerChecker', function (FollowerChecker) {
+    // Start checking for new followers
+    FollowerChecker.startChecking();
+
     // Show the window
     gui.Window.get().show();
-});
+}]);

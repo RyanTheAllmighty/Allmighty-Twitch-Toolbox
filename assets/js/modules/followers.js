@@ -16,25 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* globals app */
-
 'use strict';
 
-app.controller('TestController', ['$scope', 'Followers', 'Notification', function ($scope, Followers, Notification) {
-    $scope.follower = {
-        username: ''
-    };
+angular.module('followers', []);
 
-    $scope.testFollower = function () {
-        let username = $scope.follower.username;
-
-        $scope.follower.username = '';
-
-        Followers.newFollower({username, date: new Date()});
-        Notification.success({message: 'New follower triggered!', delay: 3000});
-    };
-
-    $scope.clearFollower = function () {
-        $scope.follower.username = '';
-    };
-}]);
+angular.module('followers').provider('Followers', function () {
+    this.$get = ['SocketIOServer', function (SocketIOServer) {
+        return {
+            newFollower: function (follower) {
+                SocketIOServer.emit('follower', follower);
+            }
+        };
+    }];
+});
