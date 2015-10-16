@@ -1,6 +1,8 @@
 Allmighty Twitch Toolbox
 ====================================
 
+[![Build Status](https://build.atlcdn.net/buildStatus/icon?job=Allmighty Twitch Toolbox)](https://build.atlcdn.net/job/Allmighty%20Twitch%20Toolbox/)
+
 ### What is it?
 This is a collection of tools and utilities I use for Twitch to tell me such as notifications for new followers and donations as well as providing a simple UI for the broadcaster to use.
 
@@ -37,6 +39,9 @@ node util.js package
 ```
 
 This will create an app.nw file in the current directory.
+
+Alternatively if you just want the latest build binary you can download it from 
+[here](https://build.atlcdn.net/job/Allmighty%20Twitch%20Toolbox/)
 
 #### Running the application
 To run the application you can simply go into the root directory of the project and run the below command, making sure that NW.js is in your PATH:
