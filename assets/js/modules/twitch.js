@@ -20,19 +20,26 @@
 
 let TwitchAPI = require('twitch-api');
 
-let objectSymbol = Symbol();
+angular.module('twitch', []);
 
-module.exports = class TwitchService {
-    constructor() {
-        this[objectSymbol] = {};
+angular.module('twitch').provider('Twitch', function () {
+    this.options = {
+        accessToken: '',
+        clientID: ''
+    };
 
-        this[objectSymbol]._twitch = new TwitchAPI({
-            clientId: global.App.settings.twitch.apiClientID,
-            accessToken: global.App.settings.twitch.apiToken
+    this.setOptions = function (options) {
+        if (!angular.isObject(options)) {
+            throw new Error('Options should be an object!');
+        }
+
+        this.options = angular.extend({}, this.options, options);
+    };
+
+    this.$get = function () {
+        return new TwitchAPI({
+            clientId: this.options.clientID,
+            accessToken: this.options.accessToken
         });
-    }
-
-    getChannel(username, callback) {
-        this[objectSymbol]._twitch.getChannel(username, callback);
-    }
-};
+    };
+});

@@ -21,48 +21,9 @@
 var path = require('path');
 var gui = require('nw.gui');
 var Datastore = require('nedb');
-var TwitchService = require('./assets/js/services/twitchService');
 var loadingService = require('./assets/js/services/loadingService');
 
-var app = angular.module('AllmightyTwitchToolbox', ['ngRoute', 'ngSanitize', 'ui-notification']);
-
-app.config(function ($routeProvider, NotificationProvider) {
-    // Setup the routes
-    $routeProvider.when('/', {
-        templateUrl: './assets/html/home.html',
-        controller: 'HomeController'
-    }).when('/settings', {
-        templateUrl: './assets/html/settings.html',
-        controller: 'SettingsController'
-    }).when('/tools', {
-        templateUrl: './assets/html/tools.html',
-        controller: 'ToolsController'
-    }).when('/help', {
-        templateUrl: './assets/html/help.html',
-        controller: 'HelpController'
-    }).otherwise({redirectTo: '/'});
-
-    // Setup the NotificationProvider
-    NotificationProvider.setOptions({
-        delay: 10000,
-        startTop: 20,
-        startRight: 10,
-        verticalSpacing: 20,
-        horizontalSpacing: 20,
-        positionX: 'right',
-        positionY: 'top'
-    });
-});
-
-var win = gui.Window.open('./splash-screen.html', {
-    position: 'center',
-    width: 576,
-    height: 192,
-    frame: false,
-    toolbar: false,
-    show_in_taskbar: false,
-    show: true
-});
+var app = angular.module('AllmightyTwitchToolbox', ['ngRoute', 'ngSanitize', 'ui-notification', 'twitch']);
 
 /**
  *
@@ -87,24 +48,48 @@ gui.Window.get().on('new-win-policy', function (frame, url, policy) {
     policy.ignore();
 });
 
-app.run(function ($rootScope) {
-    // Load the app into the root scope
-    $rootScope.App = global.App;
-
+app.config(function ($routeProvider, NotificationProvider, TwitchProvider) {
+    // Load everything before we proceed
     loadingService.load(function (err) {
         if (err) {
             console.error(err);
-            gui.App.closeAllWindows();
-            return gui.App.quit();
         }
 
-        // Load the Twitch service
-        global.App.twitch = new TwitchService();
+        // Setup the routes
+        $routeProvider.when('/', {
+            templateUrl: './assets/html/home.html',
+            controller: 'HomeController'
+        }).when('/settings', {
+            templateUrl: './assets/html/settings.html',
+            controller: 'SettingsController'
+        }).when('/tools', {
+            templateUrl: './assets/html/tools.html',
+            controller: 'ToolsController'
+        }).when('/help', {
+            templateUrl: './assets/html/help.html',
+            controller: 'HelpController'
+        }).otherwise({redirectTo: '/'});
 
-        // Close the splash screen
-        win.close();
+        // Setup the NotificationProvider
+        NotificationProvider.setOptions({
+            delay: 10000,
+            startTop: 20,
+            startRight: 10,
+            verticalSpacing: 20,
+            horizontalSpacing: 20,
+            positionX: 'right',
+            positionY: 'top'
+        });
 
-        // Show the window
-        gui.Window.get().show();
+        // Setup the TwitchProvider
+        TwitchProvider.setOptions({
+            accessToken: '',
+            clientID: ''
+        });
     });
+});
+
+app.run(function () {
+    // Show the window
+    gui.Window.get().show();
 });

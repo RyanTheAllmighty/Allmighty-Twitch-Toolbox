@@ -20,6 +20,17 @@
 
 'use strict';
 
-app.controller('HelpController', ['$scope', function ($scope) {
+app.controller('HelpController', ['$scope', '$timeout', 'Twitch', function ($scope, $timeout, Twitch) {
     $scope.test = 'Help';
+
+    Twitch.getChannel('RyanTheAllmighty', function (err, data) {
+        if (err) {
+            return console.error(err);
+        }
+
+        $timeout(function () {
+            $scope.test = data;
+            $scope.$apply();
+        });
+    });
 }]);
