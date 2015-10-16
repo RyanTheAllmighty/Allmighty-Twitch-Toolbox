@@ -37,6 +37,7 @@ angular.module('socket-io').provider('SocketIO', function () {
 
     this.$get = function () {
         if (!clientSocketIO) {
+            console.log('New SocketIO Client');
             clientSocketIO = require('socket.io-client')('http://127.0.0.1:' + this.options.socketPort);
 
             clientSocketIO.on('disconnect', function () {

@@ -32,6 +32,9 @@
                         <li ng-class="{active: $location.path() === '/tools'}">
                             <a href="#/tools">Tools</a>
                         </li>
+                        <li ng-class="{active: $location.path() === '/test'}">
+                            <a href="#/test">Test</a>
+                        </li>
                         <li ng-class="{active: $location.path() === '/help'}">
                             <a href="#/help">Help</a>
                         </li>
@@ -66,6 +69,7 @@
         <!-- Our custom modules -->
         <script type="text/javascript" src="assets/js/modules/twitch.js"></script>
         <script type="text/javascript" src="assets/js/modules/socket-io.js"></script>
+        <script type="text/javascript" src="assets/js/modules/socket-io-server.js"></script>
 
         <!-- The main application endpoint -->
         <script type="text/javascript" src="assets/js/app.js"></script>
@@ -76,6 +80,7 @@
         <script type="text/javascript" src="assets/js/controllers/FollowersController.js"></script>
         <script type="text/javascript" src="assets/js/controllers/SettingsController.js"></script>
         <script type="text/javascript" src="assets/js/controllers/ToolsController.js"></script>
+        <script type="text/javascript" src="assets/js/controllers/TestController.js"></script>
         <script type="text/javascript" src="assets/js/controllers/HelpController.js"></script>
 
         <!-- The extra JS files used by the app/angular -->

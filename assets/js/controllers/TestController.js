@@ -20,20 +20,22 @@
 
 'use strict';
 
-let socketListening = false;
+app.controller('TestController', ['$scope', 'SocketIOServer', 'Notification', function ($scope, SocketIOServer, Notification) {
+    $scope.follower = {
+        username: ''
+    };
 
-app.controller('FollowersController', ['$scope', '$timeout', 'SocketIO', function ($scope, $timeout, SocketIO) {
-    $scope.followers = [];
+    $scope.testFollower = function () {
+        let username = $scope.follower.username;
 
-    if (!socketListening) {
-        socketListening = true;
-        SocketIO.on('follower', function (follower) {
-            $timeout(function () {
-                console.log($scope.followers.length);
-                $scope.followers.push(follower);
-                console.log($scope.followers.length);
-                $scope.$apply();
-            });
+        $scope.follower.username = '';
+
+        SocketIOServer.emit('follower', {username, date: new Date()}, function () {
+            Notification.success({message: 'New follower triggered!', delay: 3000});
         });
-    }
+    };
+
+    $scope.clearFollower = function () {
+        $scope.follower.username = '';
+    };
 }]);

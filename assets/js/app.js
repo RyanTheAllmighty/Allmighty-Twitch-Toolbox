@@ -23,12 +23,7 @@ var gui = require('nw.gui');
 var Datastore = require('nedb');
 var loadingService = require('./assets/js/services/loadingService');
 
-var io = require('socket.io')();
-
-// This is a list of all the sockets currently listening
-let sockets = [];
-
-var app = angular.module('AllmightyTwitchToolbox', ['ngRoute', 'ngSanitize', 'ui-notification', 'twitch', 'socket-io', 'datatables']);
+var app = angular.module('AllmightyTwitchToolbox', ['ngRoute', 'ngSanitize', 'ui-notification', 'twitch', 'socket-io', 'socket-io-server', 'datatables']);
 
 /**
  *
@@ -52,29 +47,12 @@ gui.Window.get().on('new-win-policy', function (frame, url, policy) {
     policy.ignore();
 });
 
-app.config(function ($routeProvider, NotificationProvider, TwitchProvider, SocketIOProvider) {
+app.config(function ($routeProvider, NotificationProvider, TwitchProvider, SocketIOProvider, SocketIOServerProvider) {
     // Load everything before we proceed
     loadingService.load(function (err) {
         if (err) {
             console.error(err);
         }
-
-        // Listen on our socket.io server
-        io.listen(global.App.settings.network.socketIOPort);
-
-        io.on('connection', function (socket) {
-            console.log('Socket connected');
-            // Add this socket to the list of active sockets
-            sockets.push(socket);
-
-            // This makes sure we don't try to send messages on the socket to disconnected clients
-            socket.on('disconnect', function () {
-                var index = sockets.indexOf(socket);
-                if (index > -1) {
-                    sockets.splice(index, 1);
-                }
-            });
-        });
 
         // Setup the routes
         $routeProvider.when('/', {
@@ -89,6 +67,9 @@ app.config(function ($routeProvider, NotificationProvider, TwitchProvider, Socke
         }).when('/tools', {
             templateUrl: './assets/html/tools.html',
             controller: 'ToolsController'
+        }).when('/test', {
+            templateUrl: './assets/html/test.html',
+            controller: 'TestController'
         }).when('/help', {
             templateUrl: './assets/html/help.html',
             controller: 'HelpController'
@@ -111,7 +92,15 @@ app.config(function ($routeProvider, NotificationProvider, TwitchProvider, Socke
             clientID: global.App.settings.twitch.apiClientID
         });
 
-        // Setup the TwitchProvider
+        // Setup the SocketIOServerProvider
+        SocketIOServerProvider.setOptions({
+            socketPort: global.App.settings.network.socketIOPort
+        });
+
+        // Start the SocketIO Server
+        SocketIOServerProvider.startServer();
+
+        // Setup the SocketIOProvider
         SocketIOProvider.setOptions({
             socketPort: global.App.settings.network.socketIOPort
         });
