@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-xs-12">
-        <table datatable="" class="row-border hover">
+        <table datatable="ng" class="row-border hover">
             <thead>
                 <tr>
                     <th>Username</th>
@@ -8,6 +8,10 @@
                 </tr>
             </thead>
             <tbody>
+                <tr ng-repeat="follower in followers | orderBy:'time'">
+                    <td>{{ follower.username }}</td>
+                    <td>{{ follower.time }}</td>
+                </tr>
             </tbody>
         </table>
     </div>
