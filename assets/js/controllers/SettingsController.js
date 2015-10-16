@@ -32,6 +32,14 @@ app.controller('SettingsController', ['$scope', 'Notification', function ($scope
     };
 
     $scope.save = function () {
+        if (document.getElementById('dataDirectory').files[0]) {
+            $scope.settings.directories.data = document.getElementById('dataDirectory').files[0].path.toString();
+        }
+
+        if (document.getElementById('musicDirectory').files[0]) {
+            $scope.settings.directories.music = document.getElementById('musicDirectory').files[0].path.toString();
+        }
+
         global.App.settings = angular.copy($scope.settings);
 
         settingsService.saveSettings(function (err) {

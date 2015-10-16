@@ -35,6 +35,10 @@ let defaultSettings = {
         followers: 10,
         viewers: 10
     },
+    directories: {
+        data: '',
+        music: ''
+    },
     network: {
         socketIOPort: 4000,
         webPort: 5000
@@ -63,7 +67,40 @@ module.exports.loadSettings = function (callback) {
 
             global.App.settings[doc.group][doc.name] = doc.value;
             next();
-        }, callback);
+        }, function (err) {
+            if (err) {
+                return callback(err);
+            }
+
+            let needToSave = false;
+
+            // This will set defaults for new settings that aren't defined in the settings DB yet
+            async.forEachOf(defaultSettings, function (value, group, next) {
+                if (typeof global.App.settings[group] === 'undefined') {
+                    needToSave = true;
+                    global.App.settings[group] = value;
+                } else {
+                    Object.keys(value).forEach(function (name) {
+                        if (typeof global.App.settings[group][name] === 'undefined') {
+                            needToSave = true;
+                            global.App.settings[group][name] = value[name];
+                        }
+                    });
+                }
+
+                next();
+            }, function (err) {
+                if (err) {
+                    return callback(err);
+                }
+
+                if (needToSave) {
+                    return self.saveSettings(callback);
+                }
+
+                callback();
+            });
+        });
     });
 };
 
