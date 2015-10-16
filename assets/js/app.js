@@ -21,6 +21,7 @@
 var path = require('path');
 var gui = require('nw.gui');
 var Datastore = require('nedb');
+var TwitchService = require('./assets/js/services/twitchService');
 var loadingService = require('./assets/js/services/loadingService');
 
 var app = angular.module('AllmightyTwitchToolbox', ['ngRoute', 'ngSanitize', 'ui-notification']);
@@ -65,7 +66,7 @@ var win = gui.Window.open('./splash-screen.html', {
 
 /**
  *
- * @type {{basePath: (String), db: {settings: (Datastore)}}}
+ * @type {{basePath: (String), db: {settings: (Datastore)}, twitch: (TwitchService}}
  */
 global.App = {
     // Setup the base path
@@ -73,7 +74,8 @@ global.App = {
     db: {
         settings: new Datastore({filename: path.join(gui.App.dataPath, 'ApplicationStorage', 'db', 'settings.db'), autoload: true})
     },
-    settings: {}
+    settings: {},
+    twitch: {}
 };
 
 gui.Window.get().on('closed', function () {
@@ -95,6 +97,9 @@ app.run(function ($rootScope) {
             gui.App.closeAllWindows();
             return gui.App.quit();
         }
+
+        // Load the Twitch service
+        global.App.twitch = new TwitchService();
 
         // Close the splash screen
         win.close();
