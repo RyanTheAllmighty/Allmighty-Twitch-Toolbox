@@ -56,18 +56,12 @@ module.exports.loadSettings = function (callback) {
 
             global.App.settings[doc.group][doc.name] = doc.value;
             next();
-        }, function (err) {
-            if (err) {
-                return callback(err);
-            }
-
-            callback();
-        });
+        }, callback);
     });
 };
 
 module.exports.saveSettings = function (callback) {
-    async.eachSeries(['twitch', 'streamtip', 'network'], function (group, nextMain) {
+    async.each(['twitch', 'streamtip', 'network'], function (group, nextMain) {
         async.forEachOf(global.App.settings[group], function (value, key, next) {
             global.App.db.settings.update({group, name: key}, {group, name: key, value}, {upsert: true}, next);
         }, nextMain);
