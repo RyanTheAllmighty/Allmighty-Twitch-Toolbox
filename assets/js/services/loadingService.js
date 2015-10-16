@@ -16,31 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* globals app */
-
 'use strict';
 
-let _ = require('lodash');
+let mkdirp = require('mkdirp').mkdirp;
 
-let settingsService = require('./assets/js/services/settingsService');
+let settingsService = require('./settingsService');
 
-app.controller('SettingsController', ['$scope', function ($scope) {
-    $scope.settings = angular.copy(global.App.settings);
-
-    $scope.reset = function () {
-        $scope.settings = angular.copy(global.App.settings);
-    };
-
-    $scope.save = function () {
-        global.App.settings = angular.copy($scope.settings);
-
-        settingsService.saveSettings(function (err) {
-            if (err) {
-                console.error(err);
-                return alert('Couldn\'t save settings!');
-            }
-
-            alert('Settings saved!');
-        });
-    };
-}]);
+module.exports.load = function (callback) {
+    // First make the directories
+    mkdirp(global.App.basePath, function () {
+        // Then load our settings
+        settingsService.loadSettings(callback);
+    });
+};

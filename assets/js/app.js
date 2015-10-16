@@ -21,7 +21,7 @@
 var path = require('path');
 var gui = require('nw.gui');
 var Datastore = require('nedb');
-var mkdirp = require('mkdirp').mkdirp;
+var loadingService = require('./assets/js/services/loadingService');
 
 var app = angular.module('AllmightyTwitchToolbox', ['ngRoute', 'ngSanitize']);
 
@@ -60,7 +60,8 @@ global.App = {
     basePath: path.join(gui.App.dataPath, 'ApplicationStorage'),
     db: {
         settings: new Datastore({filename: path.join(gui.App.dataPath, 'ApplicationStorage', 'db', 'settings.db'), autoload: true})
-    }
+    },
+    settings: {}
 };
 
 gui.Window.get().on('closed', function () {
@@ -76,7 +77,13 @@ app.run(function ($rootScope) {
     // Load the app into the root scope
     $rootScope.App = global.App;
 
-    mkdirp(global.App.basePath, function () {
+    loadingService.load(function (err) {
+        if (err) {
+            console.error(err);
+            gui.App.closeAllWindows();
+            return gui.App.quit();
+        }
+
         // Close the splash screen
         win.close();
 
