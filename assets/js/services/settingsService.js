@@ -20,6 +20,22 @@
 
 let async = require('async');
 
+let defaultSettings = {
+    twitch: {
+        username: '',
+        apiToken: '',
+        apiClientID: ''
+    },
+    streamtip: {
+        accessToken: '',
+        clientID: ''
+    },
+    network: {
+        socketIOPort: 4000,
+        webPort: 5000
+    }
+};
+
 module.exports.loadSettings = function (callback) {
     let self = this;
 
@@ -30,21 +46,7 @@ module.exports.loadSettings = function (callback) {
 
         // If there are no settings in the database then set some defaults and then save them
         if (docs.length === 0) {
-            global.App.settings = {
-                twitch: {
-                    username: '',
-                    apiToken: '',
-                    apiClientID: ''
-                },
-                streamtip: {
-                    accessToken: '',
-                    clientID: ''
-                },
-                network: {
-                    socketIOPort: 4000,
-                    webPort: 5000
-                }
-            };
+            global.App.settings = defaultSettings;
 
             return self.saveSettings(callback);
         }
