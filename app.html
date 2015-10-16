@@ -4,11 +4,12 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-        <link rel="stylesheet" type="text/css" href="assets/css/bootstrap-3.3.5.min.css"/>
+        <link rel="stylesheet" type="text/css" href="assets/css/libs/bootstrap-3.3.5.min.css"/>
+        <link rel="stylesheet" type="text/css" href="assets/css/app.css"/>
     </head>
 
     <body>
-        <nav class="navbar navbar-default" ng-controller="NavController">
+        <nav class="navbar navbar-default navbar-fixed-top" ng-controller="NavController">
             <div class="container-fluid">
                 <div class="navbar-header">
                     <a class="navbar-brand" href="#/">Allmighty Twitch Toolbox</a>
@@ -18,6 +19,15 @@
                     <ul class="nav navbar-nav">
                         <li ng-class="{active: $location.path() === '/'}">
                             <a href="#/">Home</a>
+                        </li>
+                        <li ng-class="{active: $location.path() === '/settings'}">
+                            <a href="#/settings">Settings</a>
+                        </li>
+                        <li ng-class="{active: $location.path() === '/tools'}">
+                            <a href="#/tools">Tools</a>
+                        </li>
+                        <li ng-class="{active: $location.path() === '/help'}">
+                            <a href="#/help">Help</a>
                         </li>
                     </ul>
                 </div>
@@ -47,6 +57,9 @@
 
         <!-- Controllers -->
         <script type="text/javascript" src="assets/js/controllers/NavController.js"></script>
+        <script type="text/javascript" src="assets/js/controllers/SettingsController.js"></script>
+        <script type="text/javascript" src="assets/js/controllers/ToolsController.js"></script>
+        <script type="text/javascript" src="assets/js/controllers/HelpController.js"></script>
 
         <!-- The extra JS files used by the app/angular -->
         <script type="text/javascript" src="assets/js/extra/filters.js"></script>

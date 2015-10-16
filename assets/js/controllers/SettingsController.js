@@ -20,6 +20,27 @@
 
 'use strict';
 
-app.controller('HomeController', ['$scope', function ($scope) {
-    $scope.test = 'Home';
+let _ = require('lodash');
+let async = require('async');
+
+app.controller('SettingsController', ['$scope', function ($scope) {
+    $scope.settings = {
+        network: {
+            socketIOPort: 4000,
+            webPort: 5000
+        }
+    };
+
+    $scope.save = function () {
+        async.forEachOf($scope.settings.network, function (value, key, next) {
+            $scope.App.db.settings.update({name: 'network.' + key}, {name: 'network.' + key, value}, {upsert: true}, next);
+        }, function (err) {
+            if (err) {
+                console.error(err);
+                alert('There was an issue saving the settings!');
+            } else {
+                alert('Settings saved!');
+            }
+        });
+    };
 }]);

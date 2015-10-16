@@ -20,6 +20,6 @@
 
 'use strict';
 
-app.controller('HomeController', ['$scope', function ($scope) {
-    $scope.test = 'Home';
+app.controller('ToolsController', ['$scope', function ($scope) {
+    $scope.test = 'Tools';
 }]);

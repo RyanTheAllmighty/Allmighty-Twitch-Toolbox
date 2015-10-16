@@ -29,6 +29,15 @@ app.config(function ($routeProvider) {
     $routeProvider.when('/', {
         templateUrl: './assets/html/home.html',
         controller: 'HomeController'
+    }).when('/settings', {
+        templateUrl: './assets/html/settings.html',
+        controller: 'SettingsController'
+    }).when('/tools', {
+        templateUrl: './assets/html/tools.html',
+        controller: 'ToolsController'
+    }).when('/help', {
+        templateUrl: './assets/html/help.html',
+        controller: 'HelpController'
     }).otherwise({redirectTo: '/'});
 });
 
@@ -42,11 +51,15 @@ var win = gui.Window.open('./splash-screen.html', {
     show: true
 });
 
+/**
+ *
+ * @type {{basePath: (String), db: {settings: (Datastore)}}}
+ */
 global.App = {
     // Setup the base path
     basePath: path.join(gui.App.dataPath, 'ApplicationStorage'),
     db: {
-        test: new Datastore({filename: path.join(gui.App.dataPath, 'ApplicationStorage', 'db', 'test.db'), autoload: true})
+        settings: new Datastore({filename: path.join(gui.App.dataPath, 'ApplicationStorage', 'db', 'settings.db'), autoload: true})
     }
 };
 
