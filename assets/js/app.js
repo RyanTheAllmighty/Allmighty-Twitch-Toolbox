@@ -23,11 +23,16 @@ var gui = require('nw.gui');
 var Datastore = require('nedb');
 var loadingService = require('./assets/js/services/loadingService');
 
-var app = angular.module('AllmightyTwitchToolbox', ['ngRoute', 'ngSanitize', 'ui-notification', 'twitch']);
+var io = require('socket.io')();
+
+// This is a list of all the sockets currently listening
+let sockets = [];
+
+var app = angular.module('AllmightyTwitchToolbox', ['ngRoute', 'ngSanitize', 'ui-notification', 'twitch', 'socket-io', 'datatables']);
 
 /**
  *
- * @type {{basePath: (String), db: {settings: (Datastore)}, twitch: (TwitchService}}
+ * @type {{basePath: (String), db: {settings: (Datastore)}}
  */
 global.App = {
     // Setup the base path
@@ -35,8 +40,7 @@ global.App = {
     db: {
         settings: new Datastore({filename: path.join(gui.App.dataPath, 'ApplicationStorage', 'db', 'settings.db'), autoload: true})
     },
-    settings: {},
-    twitch: {}
+    settings: {}
 };
 
 gui.Window.get().on('closed', function () {
@@ -48,17 +52,37 @@ gui.Window.get().on('new-win-policy', function (frame, url, policy) {
     policy.ignore();
 });
 
-app.config(function ($routeProvider, NotificationProvider, TwitchProvider) {
+app.config(function ($routeProvider, NotificationProvider, TwitchProvider, SocketIOProvider) {
     // Load everything before we proceed
     loadingService.load(function (err) {
         if (err) {
             console.error(err);
         }
 
+        // Listen on our socket.io server
+        io.listen(global.App.settings.network.socketIOPort);
+
+        io.on('connection', function (socket) {
+            console.log('Socket connected');
+            // Add this socket to the list of active sockets
+            sockets.push(socket);
+
+            // This makes sure we don't try to send messages on the socket to disconnected clients
+            socket.on('disconnect', function () {
+                var index = sockets.indexOf(socket);
+                if (index > -1) {
+                    sockets.splice(index, 1);
+                }
+            });
+        });
+
         // Setup the routes
         $routeProvider.when('/', {
             templateUrl: './assets/html/home.html',
             controller: 'HomeController'
+        }).when('/followers', {
+            templateUrl: './assets/html/followers.html',
+            controller: 'FollowersController'
         }).when('/settings', {
             templateUrl: './assets/html/settings.html',
             controller: 'SettingsController'
@@ -85,6 +109,11 @@ app.config(function ($routeProvider, NotificationProvider, TwitchProvider) {
         TwitchProvider.setOptions({
             accessToken: global.App.settings.twitch.apiToken,
             clientID: global.App.settings.twitch.apiClientID
+        });
+
+        // Setup the TwitchProvider
+        SocketIOProvider.setOptions({
+            socketPort: global.App.settings.network.socketIOPort
         });
     });
 });

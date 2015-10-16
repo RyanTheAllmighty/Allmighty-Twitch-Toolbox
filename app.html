@@ -6,6 +6,8 @@
 
         <link rel="stylesheet" type="text/css" href="assets/css/libs/bootstrap-3.3.5.min.css"/>
         <link rel="stylesheet" type="text/css" href="assets/css/libs/angular-ui-notification-0.0.14.min.css"/>
+        <link rel="stylesheet" type="text/css" href="assets/css/libs/dataTables-1.10.9.min.css"/>
+        <link rel="stylesheet" type="text/css" href="assets/css/libs/dataTables.bootstrap-1.10.9.min.css"/>
         <link rel="stylesheet" type="text/css" href="assets/css/app.css"/>
     </head>
 
@@ -20,6 +22,9 @@
                     <ul class="nav navbar-nav">
                         <li ng-class="{active: $location.path() === '/'}">
                             <a href="#/">Home</a>
+                        </li>
+                        <li ng-class="{active: $location.path() === '/followers'}">
+                            <a href="#/followers">Followers</a>
                         </li>
                         <li ng-class="{active: $location.path() === '/settings'}">
                             <a href="#/settings">Settings</a>
@@ -48,21 +53,27 @@
         <!-- Bootstrap -->
         <script type="text/javascript" src="assets/js/libs/bootstrap-3.3.5.min.js"></script>
 
+        <!-- Datatables -->
+        <script type="text/javascript" src="assets/js/libs/dataTables-1.10.9.min.js"></script>
+
         <!-- Angular & Plugins -->
         <script type="text/javascript" src="assets/js/libs/angular-1.4.7.min.js"></script>
         <script type="text/javascript" src="assets/js/libs/angular-route-1.4.7.min.js"></script>
         <script type="text/javascript" src="assets/js/libs/angular-sanitize-1.4.7.min.js"></script>
         <script type="text/javascript" src="assets/js/libs/angular-ui-notification-0.0.14.min.js"></script>
+        <script type="text/javascript" src="assets/js/libs/angular-datatables-0.5.0.min.js"></script>
 
         <!-- Our custom modules -->
         <script type="text/javascript" src="assets/js/modules/twitch.js"></script>
+        <script type="text/javascript" src="assets/js/modules/socket-io.js"></script>
 
         <!-- The main application endpoint -->
         <script type="text/javascript" src="assets/js/app.js"></script>
 
         <!-- Controllers -->
-        <script type="text/javascript" src="assets/js/controllers/HomeController.js"></script>
         <script type="text/javascript" src="assets/js/controllers/NavController.js"></script>
+        <script type="text/javascript" src="assets/js/controllers/HomeController.js"></script>
+        <script type="text/javascript" src="assets/js/controllers/FollowersController.js"></script>
         <script type="text/javascript" src="assets/js/controllers/SettingsController.js"></script>
         <script type="text/javascript" src="assets/js/controllers/ToolsController.js"></script>
         <script type="text/javascript" src="assets/js/controllers/HelpController.js"></script>
