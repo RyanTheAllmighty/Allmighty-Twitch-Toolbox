@@ -18,9 +18,12 @@
 
 'use strict';
 
-angular.module('follower-checker', []);
-
+/**
+ * This is our promise that is kept when we start the interval so that we can cancel it if we need to.
+ */
 let promise;
+
+angular.module('follower-checker', []);
 
 angular.module('follower-checker').provider('FollowerChecker', function () {
     this.options = {

@@ -20,8 +20,6 @@
 
 'use strict';
 
-let _ = require('lodash');
-
 let settingsService = require('./assets/js/services/settingsService');
 
 app.controller('SettingsController', ['$scope', 'Notification', function ($scope, Notification) {

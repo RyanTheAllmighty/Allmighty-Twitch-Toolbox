@@ -18,6 +18,7 @@
 
 'use strict';
 
+let _ = require('lodash');
 var path = require('path');
 var gui = require('nw.gui');
 var Datastore = require('nedb');

@@ -21,7 +21,7 @@
 angular.module('followers', []);
 
 angular.module('followers').provider('Followers', function () {
-    this.$get = ['SocketIOServer', function (SocketIOServer) {
+    this.$get = ['$rootScope', 'SocketIOServer', function ($rootScope, SocketIOServer) {
         return {
             getFollowers: function (limit, callback) {
                 if (limit && !callback) {
@@ -44,6 +44,10 @@ angular.module('followers').provider('Followers', function () {
                         return callback(err);
                     }
 
+                    // Send a broadcast to listening scopes
+                    $rootScope.$broadcast('follower', follower);
+
+                    // Send a broadcast to listening socket clients
                     SocketIOServer.emit('follower', follower, callback);
                 }
 

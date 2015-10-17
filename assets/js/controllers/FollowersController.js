@@ -16,24 +16,31 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* globals app */
+/* globals app, _ */
 
 'use strict';
 
-let socketListening = false;
-
-app.controller('FollowersController', ['$scope', '$timeout', 'SocketIO', function ($scope, $timeout, SocketIO) {
+app.controller('FollowersController', ['$scope', '$timeout', 'Followers', function ($scope, $timeout, Followers) {
     $scope.followers = [];
 
-    if (!socketListening) {
-        socketListening = true;
-        SocketIO.on('follower', function (follower) {
-            $timeout(function () {
-                console.log($scope.followers.length);
-                $scope.followers.push(follower);
-                console.log($scope.followers.length);
-                $scope.$apply();
-            });
+    Followers.getFollowers(100, function (err, followers) {
+        if (err) {
+            return console.error(err);
+        }
+
+        $scope.followers = followers;
+    });
+
+    $scope.$on('follower', function (event, data) {
+        // Remove any followers that already have this username (since it's being updated)
+        $scope.followers = _.reject($scope.followers, function (follower) {
+            return follower.username === data.username;
         });
-    }
+
+        // Then send the new data to the table
+        $timeout(function () {
+            $scope.followers.push(data);
+            $scope.$apply();
+        });
+    });
 }]);
