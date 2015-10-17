@@ -30,7 +30,7 @@ app.controller('TestController', ['$scope', 'Followers', 'Notification', functio
 
         $scope.follower.username = '';
 
-        Followers.newFollower({username, date: new Date(), test: true});
+        Followers.newFollower({username, display_name: username, id: 1, date: new Date(), test: true});
         Notification.success({message: 'New follower triggered!', delay: 3000});
     };
 
