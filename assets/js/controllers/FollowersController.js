@@ -20,16 +20,17 @@
 
 'use strict';
 
-app.controller('FollowersController', ['$scope', '$timeout', 'Followers', function ($scope, $timeout, Followers) {
+app.controller('FollowersController', ['$scope', '$timeout', 'Followers', 'DTOptionsBuilder', 'DTColumnBuilder', function ($scope, $timeout, Followers, DTOptionsBuilder, DTColumnBuilder) {
     $scope.followers = [];
 
-    Followers.getFollowers(100, function (err, followers) {
-        if (err) {
-            return console.error(err);
-        }
+    $scope.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
+        return Followers.getFollowersPromise(100);
+    }).withPaginationType('full_numbers').withOption('order', [[1, 'desc']]).withBootstrap();
 
-        $scope.followers = followers;
-    });
+    $scope.dtColumns = [
+        DTColumnBuilder.newColumn('username').withTitle('Username'),
+        DTColumnBuilder.newColumn('date').withTitle('Date Followed').withOption('bSearchable', false)
+    ];
 
     $scope.$on('follower', function (event, data) {
         // Remove any followers that already have this username (since it's being updated)

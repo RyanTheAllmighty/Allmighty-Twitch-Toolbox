@@ -21,7 +21,7 @@
 angular.module('followers', []);
 
 angular.module('followers').provider('Followers', function () {
-    this.$get = ['$rootScope', 'SocketIOServer', function ($rootScope, SocketIOServer) {
+    this.$get = ['$q', '$rootScope', 'SocketIOServer', function ($q, $rootScope, SocketIOServer) {
         return {
             getFollowers: function (limit, callback) {
                 if (limit && !callback) {
@@ -30,6 +30,19 @@ angular.module('followers').provider('Followers', function () {
                 }
 
                 global.App.db.followers.find({}).sort({date: 1}).limit(limit).exec(callback);
+            },
+            getFollowersPromise: function (limit) {
+                let self = this;
+
+                return $q(function (resolve, reject) {
+                    self.getFollowers(limit, function (err, followers) {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve(followers);
+                        }
+                    });
+                });
             },
             getFollowerCount: function (callback) {
                 global.App.db.followers.count({}).exec(callback);

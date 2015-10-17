@@ -24,7 +24,18 @@ var gui = require('nw.gui');
 var Datastore = require('nedb');
 var loadingService = require('./assets/js/services/loadingService');
 
-var app = angular.module('AllmightyTwitchToolbox', ['ngRoute', 'ngSanitize', 'ui-notification', 'twitch', 'socket-io', 'socket-io-server', 'follower-checker', 'datatables', 'followers']);
+var app = angular.module('AllmightyTwitchToolbox', [
+    'ngRoute',
+    'ngSanitize',
+    'ui-notification',
+    'twitch',
+    'socket-io',
+    'socket-io-server',
+    'follower-checker',
+    'datatables',
+    'datatables.bootstrap',
+    'followers'
+]);
 
 /**
  *
