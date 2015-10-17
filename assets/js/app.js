@@ -23,6 +23,7 @@ let path = require('path');
 let gui = require('nw.gui');
 let async = require('async');
 let Datastore = require('nedb');
+let request = require('request');
 let nwNotify = require('nw-notify');
 let loadingService = require('./assets/js/services/loadingService');
 
@@ -31,12 +32,15 @@ var app = angular.module('AllmightyTwitchToolbox', [
     'ngSanitize',
     'ui-notification',
     'twitch',
+    'streamtip',
     'socket-io',
     'socket-io-server',
     'follower-checker',
+    'donation-checker',
     'datatables',
     'datatables.bootstrap',
-    'followers'
+    'followers',
+    'donations'
 ]);
 
 /**
@@ -47,6 +51,7 @@ global.App = {
     // Setup the base path
     basePath: path.join(gui.App.dataPath, 'ApplicationStorage'),
     db: {
+        donations: new Datastore({filename: path.join(gui.App.dataPath, 'ApplicationStorage', 'db', 'donations.db'), autoload: true}),
         followers: new Datastore({filename: path.join(gui.App.dataPath, 'ApplicationStorage', 'db', 'followers.db'), autoload: true}),
         settings: new Datastore({filename: path.join(gui.App.dataPath, 'ApplicationStorage', 'db', 'settings.db'), autoload: true})
     },
@@ -63,7 +68,7 @@ gui.Window.get().on('new-win-policy', function (frame, url, policy) {
     policy.ignore();
 });
 
-app.config(function ($routeProvider, NotificationProvider, TwitchProvider, SocketIOProvider, SocketIOServerProvider, FollowerCheckerProvider) {
+app.config(function ($routeProvider, NotificationProvider, TwitchProvider, StreamTipProvider, SocketIOProvider, SocketIOServerProvider, FollowerCheckerProvider, DonationCheckerProvider) {
     // Load everything before we proceed
     loadingService.load(function (err) {
         if (err) {
@@ -77,6 +82,9 @@ app.config(function ($routeProvider, NotificationProvider, TwitchProvider, Socke
         }).when('/followers', {
             templateUrl: './assets/html/followers.html',
             controller: 'FollowersController'
+        }).when('/donations', {
+            templateUrl: './assets/html/donations.html',
+            controller: 'DonationsController'
         }).when('/settings', {
             templateUrl: './assets/html/settings.html',
             controller: 'SettingsController'
@@ -116,6 +124,12 @@ app.config(function ($routeProvider, NotificationProvider, TwitchProvider, Socke
             clientID: global.App.settings.twitch.apiClientID
         });
 
+        // Setup the StreamTipProvider
+        StreamTipProvider.setOptions({
+            clientId: global.App.settings.streamtip.clientID,
+            accessToken: global.App.settings.streamtip.accessToken
+        });
+
         // Setup the SocketIOServerProvider
         SocketIOServerProvider.setOptions({
             socketPort: global.App.settings.network.socketIOPort
@@ -133,12 +147,20 @@ app.config(function ($routeProvider, NotificationProvider, TwitchProvider, Socke
         FollowerCheckerProvider.setOptions({
             interval: global.App.settings.checks.followers
         });
+
+        // Setup the donation checker
+        DonationCheckerProvider.setOptions({
+            interval: global.App.settings.checks.donations
+        });
     });
 });
 
-app.run(['FollowerChecker', function (FollowerChecker) {
+app.run(['FollowerChecker', 'DonationChecker', function (FollowerChecker, DonationChecker) {
     // Start checking for new followers
     FollowerChecker.startChecking();
+
+    // Start checking for new donations
+    DonationChecker.startChecking();
 
     // Show the window
     gui.Window.get().show();

@@ -20,9 +20,9 @@
 
 'use strict';
 
-angular.module('follower-checker', []);
+angular.module('donation-checker', []);
 
-angular.module('follower-checker').provider('FollowerChecker', function () {
+angular.module('donation-checker').provider('DonationChecker', function () {
     this.options = {
         interval: 10
     };
@@ -40,7 +40,7 @@ angular.module('follower-checker').provider('FollowerChecker', function () {
         this.options = angular.extend({}, this.options, options);
     };
 
-    this.$get = ['$interval', 'Followers', 'Twitch', function ($interval, Followers, Twitch) {
+    this.$get = ['$interval', 'Donations', 'StreamTip', function ($interval, Donations, StreamTip) {
         let self = this;
 
         return {
@@ -55,17 +55,18 @@ angular.module('follower-checker').provider('FollowerChecker', function () {
 
                 // Save this timeout promise so we can cancel it if we get another one later
                 self.promise = $interval(function () {
-                    Twitch.getChannelFollows(global.App.settings.twitch.username, {limit: 2}, function (err, followers) {
+                    StreamTip.getTips({limit: 10}, function (err, tips) {
                         if (err) {
                             return console.error(err);
                         }
 
-                        async.each(followers.follows, function (follow, next) {
-                            Followers.processFollower({
-                                date: new Date(follow.created_at),
-                                id: follow.user._id,
-                                username: follow.user.name,
-                                display_name: follow.user.display_name
+                        async.each(tips.tips, function (tip, next) {
+                            Donations.processDonation({
+                                date: new Date(tip.date),
+                                id: tip._id,
+                                username: tip.username,
+                                amount: parseFloat(tip.amount),
+                                note: tip.note
                             }, next);
                         }, function (err) {
                             if (err) {

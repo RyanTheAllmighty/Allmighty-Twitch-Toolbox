@@ -20,7 +20,31 @@
 
 'use strict';
 
-app.controller('TestController', ['$scope', 'Followers', 'Notification', function ($scope, Followers, Notification) {
+app.controller('TestController', ['$scope', 'Followers', 'Donations', 'Notification', function ($scope, Followers, Donations, Notification) {
+    $scope.donation = {
+        username: '',
+        amount: 0
+    };
+
+    $scope.testDonation = function () {
+        if ($scope.donation.username === '') {
+            Notification.error({message: 'Username must be filled in!', delay: 3000});
+        } else {
+            let username = $scope.donation.username;
+            let amount = $scope.donation.amount;
+
+            $scope.clearDonation();
+
+            Donations.newDonation({username, amount, note: 'Test', id: 1, date: new Date(), test: true});
+            Notification.success({message: 'New donation triggered!', delay: 3000});
+        }
+    };
+
+    $scope.clearDonation = function () {
+        $scope.donation.username = '';
+        $scope.donation.amount = 0;
+    };
+
     $scope.follower = {
         username: ''
     };
@@ -31,7 +55,7 @@ app.controller('TestController', ['$scope', 'Followers', 'Notification', functio
         } else {
             let username = $scope.follower.username;
 
-            $scope.follower.username = '';
+            $scope.clearFollower();
 
             Followers.newFollower({username, display_name: username, id: 1, date: new Date(), test: true});
             Notification.success({message: 'New follower triggered!', delay: 3000});
