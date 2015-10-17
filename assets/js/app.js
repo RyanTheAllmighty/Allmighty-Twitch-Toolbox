@@ -95,7 +95,7 @@ app.config(function ($routeProvider, NotificationProvider, TwitchProvider, Socke
         nwNotify.setTemplatePath('notification.html');
         nwNotify.setConfig({
             appIcon: 'assets/image/icon.png',
-            displayTime: 3000,
+            displayTime: global.App.settings.notifications.notificationTime * 1000,
             maxVisibleNotifications: 1
         });
 

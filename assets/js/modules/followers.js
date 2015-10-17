@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* globals _, nwNotify, Audio */
+/* globals _, nwNotify, Howl */
 
 'use strict';
 
@@ -84,9 +84,13 @@ angular.module('followers').provider('Followers', function () {
                     nwNotify.notify({
                         title: 'New Follower!',
                         text: follower.display_name + ' has just followed!',
-                        onShowFunc: function (event) {
-                            var audio = new Audio('assets/sound/test.wav');
-                            audio.play();
+                        onShowFunc: function () {
+                            let sound = new Howl({
+                                urls: [global.App.settings.sounds.newFollower],
+                                volume: global.App.settings.sounds.newFollowerVolume
+                            });
+
+                            sound.play();
                         }
                     });
 

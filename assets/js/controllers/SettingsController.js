@@ -26,10 +26,21 @@ app.controller('SettingsController', ['$scope', 'Notification', function ($scope
     $scope.settings = angular.copy(global.App.settings);
 
     $scope.reset = function () {
+        console.log($scope.settings.sounds.newDonation);
+        console.log($scope.settings.sounds.newFollower);
+
         $scope.settings = angular.copy(global.App.settings);
     };
 
     $scope.save = function () {
+        if (document.getElementById('newDonation').files[0]) {
+            $scope.settings.sounds.newDonation = document.getElementById('newDonation').files[0].path.toString();
+        }
+
+        if (document.getElementById('newFollower').files[0]) {
+            $scope.settings.sounds.newFollower = document.getElementById('newFollower').files[0].path.toString();
+        }
+
         if (document.getElementById('dataDirectory').files[0]) {
             $scope.settings.directories.data = document.getElementById('dataDirectory').files[0].path.toString();
         }

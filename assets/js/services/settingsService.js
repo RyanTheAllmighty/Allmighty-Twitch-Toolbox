@@ -35,13 +35,22 @@ let defaultSettings = {
         followers: 10,
         viewers: 10
     },
-    directories: {
-        data: '',
-        music: ''
-    },
     network: {
         socketIOPort: 4000,
         webPort: 5000
+    },
+    sounds: {
+        newDonation: '',
+        newDonationVolume: 1.0,
+        newFollower: '',
+        newFollowerVolume: 1.0
+    },
+    notifications: {
+        notificationTime: 5
+    },
+    directories: {
+        data: '',
+        music: ''
     }
 };
 
