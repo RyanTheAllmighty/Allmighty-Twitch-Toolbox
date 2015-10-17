@@ -19,11 +19,12 @@
 'use strict';
 
 let _ = require('lodash');
-var path = require('path');
-var gui = require('nw.gui');
-var async = require('async');
-var Datastore = require('nedb');
-var loadingService = require('./assets/js/services/loadingService');
+let path = require('path');
+let gui = require('nw.gui');
+let async = require('async');
+let Datastore = require('nedb');
+let nwNotify = require('nw-notify');
+let loadingService = require('./assets/js/services/loadingService');
 
 var app = angular.module('AllmightyTwitchToolbox', [
     'ngRoute',
@@ -54,6 +55,7 @@ global.App = {
 
 gui.Window.get().on('closed', function () {
     gui.App.clearCache();
+    nwNotify.closeAll();
 });
 
 gui.Window.get().on('new-win-policy', function (frame, url, policy) {
@@ -88,6 +90,14 @@ app.config(function ($routeProvider, NotificationProvider, TwitchProvider, Socke
             templateUrl: './assets/html/help.html',
             controller: 'HelpController'
         }).otherwise({redirectTo: '/'});
+
+        // Setup the notifications
+        nwNotify.setTemplatePath('notification.html');
+        nwNotify.setConfig({
+            appIcon: 'assets/image/icon.png',
+            displayTime: 3000,
+            maxVisibleNotifications: 1
+        });
 
         // Setup the NotificationProvider
         NotificationProvider.setOptions({
