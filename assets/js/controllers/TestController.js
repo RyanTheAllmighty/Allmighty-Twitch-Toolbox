@@ -26,12 +26,16 @@ app.controller('TestController', ['$scope', 'Followers', 'Notification', functio
     };
 
     $scope.testFollower = function () {
-        let username = $scope.follower.username;
+        if ($scope.follower.username === '') {
+            Notification.error({message: 'Username must be filled in!', delay: 3000});
+        } else {
+            let username = $scope.follower.username;
 
-        $scope.follower.username = '';
+            $scope.follower.username = '';
 
-        Followers.newFollower({username, display_name: username, id: 1, date: new Date(), test: true});
-        Notification.success({message: 'New follower triggered!', delay: 3000});
+            Followers.newFollower({username, display_name: username, id: 1, date: new Date(), test: true});
+            Notification.success({message: 'New follower triggered!', delay: 3000});
+        }
     };
 
     $scope.clearFollower = function () {
