@@ -16,32 +16,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* globals app, _ */
+/* globals app */
 
 'use strict';
 
-app.controller('FollowersController', ['$scope', '$timeout', 'Followers', 'DTOptionsBuilder', 'DTColumnBuilder', function ($scope, $timeout, Followers, DTOptionsBuilder, DTColumnBuilder) {
-    $scope.followers = [];
-
-    $scope.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
+app.controller('FollowersController', ['$scope', 'Followers', 'DTOptionsBuilder', 'DTColumnBuilder', function ($scope, Followers, DTOptionsBuilder, DTColumnBuilder) {
+    let getFollowers = function () {
         return Followers.getFollowersPromise(100);
-    }).withPaginationType('full_numbers').withOption('order', [[1, 'desc']]).withBootstrap();
+    };
+
+    // The instance of the dataTable
+    $scope.dtInstance = {};
+
+    $scope.dtOptions = DTOptionsBuilder.fromFnPromise(getFollowers).withPaginationType('full_numbers').withOption('order', [[1, 'desc']]).withBootstrap();
 
     $scope.dtColumns = [
         DTColumnBuilder.newColumn('username').withTitle('Username'),
         DTColumnBuilder.newColumn('date').withTitle('Date Followed').withOption('bSearchable', false)
     ];
 
-    $scope.$on('follower', function (event, data) {
-        // Remove any followers that already have this username (since it's being updated)
-        $scope.followers = _.reject($scope.followers, function (follower) {
-            return follower.username === data.username;
-        });
-
-        // Then send the new data to the table
-        $timeout(function () {
-            $scope.followers.push(data);
-            $scope.$apply();
-        });
+    // New follower
+    $scope.$on('follower', function () {
+        // Reload the data in the table
+        $scope.dtInstance.changeData(getFollowers);
     });
 }]);
