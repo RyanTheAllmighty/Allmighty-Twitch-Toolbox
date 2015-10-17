@@ -16,6 +16,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* globals _ */
+
 'use strict';
 
 angular.module('followers', []);
@@ -47,6 +49,27 @@ angular.module('followers').provider('Followers', function () {
             getFollowerCount: function (callback) {
                 global.App.db.followers.count({}).exec(callback);
             },
+            processFollower: function (follower, callback) {
+                let self = this;
+
+                if (!follower.date) {
+                    follower.date = new Date();
+                }
+
+                global.App.db.followers.find({$or: [{id: follower.id}, {username: follower.username}]}).limit(1).exec(function (err, docs) {
+                    if (err) {
+                        return callback(err);
+                    }
+
+                    if (docs.length === 0) {
+                        // New follower
+                        self.newFollower(follower, callback);
+                    } else if (!_.isEqual(follower, _.omit(docs[0], '_id'))) {
+                        // The follower has different information in our DB than what Twitch says (refollow, username change) so update that
+                        self.updateFollower(follower, callback);
+                    }
+                });
+            },
             newFollower: function (follower, callback) {
                 if (!follower.date) {
                     follower.date = new Date();
@@ -58,14 +81,44 @@ angular.module('followers').provider('Followers', function () {
                     }
 
                     // Send a broadcast to listening scopes
-                    $rootScope.$broadcast('follower', follower);
+                    $rootScope.$broadcast('new-follower', follower);
+                    $rootScope.$broadcast('followers');
 
                     // Send a broadcast to listening socket clients
-                    SocketIOServer.emit('follower', follower, callback);
+                    SocketIOServer.emit('new-follower', follower, function (err) {
+                        if (err) {
+                            return callback(err);
+                        }
+
+                        SocketIOServer.emit('followers', callback);
+                    });
                 }
 
                 if (!follower.test) {
-                    global.App.db.followers.update({username: follower.username}, {username: follower.username, date: follower.date}, {upsert: true}, notify);
+                    global.App.db.followers.update({$or: [{username: follower.username}, {id: follower.id}]}, follower, {upsert: true}, notify);
+                } else {
+                    notify();
+                }
+            },
+            updateFollower: function (follower, callback) {
+                if (!follower.date) {
+                    follower.date = new Date();
+                }
+
+                function notify(err) {
+                    if (err) {
+                        return callback(err);
+                    }
+
+                    // Send a broadcast to listening scopes
+                    $rootScope.$broadcast('followers');
+
+                    // Send a broadcast to listening socket clients
+                    SocketIOServer.emit('followers', callback);
+                }
+
+                if (!follower.test) {
+                    global.App.db.followers.update({username: follower.username}, follower, {upsert: true}, notify);
                 } else {
                     notify();
                 }

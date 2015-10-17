@@ -21,6 +21,7 @@
 let _ = require('lodash');
 var path = require('path');
 var gui = require('nw.gui');
+var async = require('async');
 var Datastore = require('nedb');
 var loadingService = require('./assets/js/services/loadingService');
 

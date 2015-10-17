@@ -16,6 +16,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* globals async */
+
 'use strict';
 
 /**
@@ -38,7 +40,7 @@ angular.module('follower-checker').provider('FollowerChecker', function () {
         this.options = angular.extend({}, this.options, options);
     };
 
-    this.$get = ['$interval', 'Followers', function ($interval, Followers) {
+    this.$get = ['$interval', 'Followers', 'Twitch', function ($interval, Followers, Twitch) {
         let self = this;
 
         return {
@@ -53,8 +55,23 @@ angular.module('follower-checker').provider('FollowerChecker', function () {
 
                 // Save this timeout promise so we can cancel it if we get another one later
                 promise = $interval(function () {
-                    Followers.getFollowerCount(function (err, followers) {
-                        console.log('There are a total of ' + followers + ' followers!');
+                    Twitch.getChannelFollows(global.App.settings.twitch.username, {limit: 1}, function (err, followers) {
+                        if (err) {
+                            return console.error(err);
+                        }
+
+                        async.each(followers.follows, function (follow, next) {
+                            Followers.processFollower({
+                                date: new Date(follow.created_at),
+                                id: follow.user._id,
+                                username: follow.user.name,
+                                display_name: follow.user.display_name
+                            }, next);
+                        }, function (err) {
+                            if (err) {
+                                return console.error(err);
+                            }
+                        });
                     });
                 }, self.options.interval * 1000);
             }

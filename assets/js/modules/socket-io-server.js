@@ -72,8 +72,17 @@ angular.module('socket-io-server').provider('SocketIOServer', function () {
         return {
             emit: function (name, message, callback) {
                 if (!callback) {
-                    callback = function () {
-                    };
+                    if (message instanceof Function) {
+                        callback = message;
+                        message = null;
+                    } else {
+                        callback = function () {
+                        };
+                    }
+                }
+
+                if (!angular.isDefined(message)) {
+                    message = null;
                 }
 
                 async.each(sockets, function (socket, next) {

@@ -31,13 +31,18 @@ app.controller('FollowersController', ['$scope', 'Followers', 'DTOptionsBuilder'
     $scope.dtOptions = DTOptionsBuilder.fromFnPromise(getFollowers).withPaginationType('full_numbers').withOption('order', [[1, 'desc']]).withBootstrap();
 
     $scope.dtColumns = [
-        DTColumnBuilder.newColumn('username').withTitle('Username'),
+        DTColumnBuilder.newColumn('display_name').withTitle('Username'),
         DTColumnBuilder.newColumn('date').withTitle('Date Followed').withOption('bSearchable', false)
     ];
 
-    // New follower
-    $scope.$on('follower', function () {
+    function changeData() {
         // Reload the data in the table
         $scope.dtInstance.changeData(getFollowers);
-    });
+    }
+
+    // Followers list updated
+    $scope.$on('followers', changeData);
+
+    // New follower
+    $scope.$on('new-follower', changeData);
 }]);
