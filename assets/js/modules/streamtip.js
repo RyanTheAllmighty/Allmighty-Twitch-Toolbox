@@ -47,6 +47,8 @@ class StreamTipAPI {
     }
 
     getTips(options, callback) {
+        let self = this;
+
         if (!callback) {
             callback = options;
             options = {
@@ -64,7 +66,7 @@ class StreamTipAPI {
             url: 'https://streamtip.com/api/tips' + queryString,
             json: true,
             headers: {
-                'Authorization': global.App.settings.streamtip.clientID + ' ' + global.App.settings.streamtip.accessToken
+                'Authorization': self._options.clientID + ' ' + self._options.accessToken
             }
         }, function (err, res, body) {
             if (err) {

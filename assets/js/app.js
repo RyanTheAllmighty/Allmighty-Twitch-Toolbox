@@ -45,7 +45,7 @@ var app = angular.module('AllmightyTwitchToolbox', [
 
 /**
  *
- * @type {{basePath: (String), db: {settings: (Datastore)}}
+ * @type {{basePath: (String), db: {donations: (Datastore), followers: (Datastore), settings: (Datastore)}, settings: (Object)}}
  */
 global.App = {
     // Setup the base path

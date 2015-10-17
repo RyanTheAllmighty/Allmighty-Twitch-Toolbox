@@ -33,7 +33,7 @@ angular.module('twitch').provider('Twitch', function () {
             throw new Error('Options should be an object!');
         }
 
-        this.options = angular.extend({}, this.options, options);
+        this.options = angular.extend({}, this.options, options)
     };
 
     this.$get = function () {

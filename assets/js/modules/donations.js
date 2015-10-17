@@ -49,6 +49,17 @@ angular.module('donations').provider('Donations', function () {
             getDonationCount: function (callback) {
                 global.App.db.donations.count({}).exec(callback);
             },
+            getDonationTotal: function (callback) {
+                global.App.db.donations.find({}).exec(function (err, docs) {
+                    if (err) {
+                        return callback(err);
+                    }
+
+                    callback(null, _.reduce(docs, function (total, doc) {
+                        return total + doc.amount;
+                    }));
+                });
+            },
             processDonation: function (donation, callback) {
                 let self = this;
 
