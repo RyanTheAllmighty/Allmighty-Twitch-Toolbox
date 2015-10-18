@@ -6,17 +6,19 @@
                 <collapsible model="collapsed.tools.musicInformationParsing"/>
             </div>
 
-            <div class="panel-body" uib-collapse="collapsed.tools.musicInformationParsing">
-                <textarea class="logging-text-area" rows="10" ng-bind="log.musicInformationParsing" scroll-glue readonly></textarea>
-            </div>
-
-            <div class="panel-footer" uib-collapse="collapsed.tools.musicInformationParsing">
-                <div class="col-sm-12 text-center">
-                    <button type="submit" class="btn btn-primary" ng-click="runMusicInformationParsing()" ng-disabled="running.musicInformationParsing"
-                            ng-bind="running.musicInformationParsing ? 'Running' : 'Run'"></button>
+            <div uib-collapse="collapsed.tools.musicInformationParsing">
+                <div class="panel-body">
+                    <textarea class="logging-text-area" rows="10" ng-bind="log.musicInformationParsing" scroll-glue readonly></textarea>
                 </div>
 
-                <div class="clearfix"></div>
+                <div class="panel-footer">
+                    <div class="col-sm-12 text-center">
+                        <button type="submit" class="btn btn-primary" ng-click="runMusicInformationParsing()" ng-disabled="running.musicInformationParsing"
+                                ng-bind="running.musicInformationParsing ? 'Running' : 'Run'"></button>
+                    </div>
+
+                    <div class="clearfix"></div>
+                </div>
             </div>
         </div>
     </div>
