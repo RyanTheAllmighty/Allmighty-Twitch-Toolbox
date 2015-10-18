@@ -25,7 +25,7 @@ app.directive('collapsible', ['$compile', function ($compile) {
         restrict: 'E',
         link: function (scope, element, attrs) {
             var html = [];
-            html.push('<span class="pull-right clickable" ng-click="' + attrs.model + ' = !' + attrs.model + '">');
+            html.push('<span class="pull-right clickable" ng-click="_updateCollapse(\'' + attrs.model + '\')">');
             html.push('<i class="glyphicon" ng-class="{\'glyphicon-chevron-up\': ' + attrs.model + ', \'glyphicon-chevron-down\': !' + attrs.model + '}"></i>');
             html.push('</span>');
             element.html(html.join(''));

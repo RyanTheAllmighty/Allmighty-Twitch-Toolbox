@@ -42,7 +42,8 @@ var app = angular.module('AllmightyTwitchToolbox', [
     'datatables.bootstrap',
     'followers',
     'donations',
-    'luegg.directives'
+    'luegg.directives',
+    'LocalStorageModule'
 ]);
 
 /**
@@ -70,7 +71,7 @@ gui.Window.get().on('new-win-policy', function (frame, url, policy) {
     policy.ignore();
 });
 
-app.config(function ($routeProvider, NotificationProvider, TwitchProvider, StreamTipProvider, SocketIOProvider, SocketIOServerProvider, FollowerCheckerProvider, DonationCheckerProvider) {
+app.config(function ($routeProvider, localStorageServiceProvider, NotificationProvider, TwitchProvider, StreamTipProvider, SocketIOProvider, SocketIOServerProvider, FollowerCheckerProvider, DonationCheckerProvider) {
     // Load everything before we proceed
     loadingService.load(function (err) {
         if (err) {
@@ -100,6 +101,9 @@ app.config(function ($routeProvider, NotificationProvider, TwitchProvider, Strea
             templateUrl: './assets/html/help.html',
             controller: 'HelpController'
         }).otherwise({redirectTo: '/'});
+
+
+        localStorageServiceProvider.setPrefix('AllmightyTwitchToolbox');
 
         // Setup the notifications
         nwNotify.setTemplatePath('notification.html');
@@ -157,18 +161,32 @@ app.config(function ($routeProvider, NotificationProvider, TwitchProvider, Strea
     });
 });
 
-app.run(['$rootScope', 'FollowerChecker', 'DonationChecker', function ($rootScope, FollowerChecker, DonationChecker) {
+app.run(['$rootScope', 'localStorageService', function ($rootScope, localStorageService) {
+    $rootScope._updateCollapse = function (model) {
+        let parts = model.split('.').splice(1);
+
+        if (!$rootScope._collapsedPanels[parts[0]]) {
+            $rootScope._collapsedPanels[parts[0]] = {};
+        }
+
+        $rootScope._collapsedPanels[parts[0]][parts[1]] = !$rootScope._collapsedPanels[parts[0]][parts[1]];
+
+        localStorageService.set('collapsedPanels', $rootScope._collapsedPanels);
+    };
+
+    $rootScope._collapsedPanels = localStorageService.get('collapsedPanels');
+
+    if (!$rootScope._collapsedPanels) {
+        $rootScope._collapsedPanels = {};
+    }
+}]);
+
+app.run(['FollowerChecker', 'DonationChecker', function (FollowerChecker, DonationChecker) {
     // Start checking for new followers
     FollowerChecker.startChecking();
 
     // Start checking for new donations
     DonationChecker.startChecking();
-
-    $rootScope.collapsed = {
-        tools: {
-            musicInformationParsing: true
-        }
-    };
 
     // Show the window
     gui.Window.get().show();
