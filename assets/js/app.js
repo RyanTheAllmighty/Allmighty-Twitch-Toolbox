@@ -31,6 +31,7 @@ var app = angular.module('AllmightyTwitchToolbox', [
     'ngRoute',
     'ngSanitize',
     'ui-notification',
+    'ui.bootstrap',
     'twitch',
     'streamtip',
     'socket-io',
@@ -156,12 +157,18 @@ app.config(function ($routeProvider, NotificationProvider, TwitchProvider, Strea
     });
 });
 
-app.run(['FollowerChecker', 'DonationChecker', function (FollowerChecker, DonationChecker) {
+app.run(['$rootScope', 'FollowerChecker', 'DonationChecker', function ($rootScope, FollowerChecker, DonationChecker) {
     // Start checking for new followers
     FollowerChecker.startChecking();
 
     // Start checking for new donations
     DonationChecker.startChecking();
+
+    $rootScope.collapsed = {
+        tools: {
+            musicInformationParsing: true
+        }
+    };
 
     // Show the window
     gui.Window.get().show();

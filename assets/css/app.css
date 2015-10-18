@@ -9,3 +9,16 @@ textarea.logging-text-area {
     overflow-x: scroll;
     white-space: nowrap;
 }
+
+.nav, .pagination, .carousel, .panel-title a {
+    cursor: pointer;
+}
+
+.clickable{
+    cursor: pointer;
+}
+
+.panel-heading span {
+    margin-top: -18px;
+    font-size: 15px;
+}
