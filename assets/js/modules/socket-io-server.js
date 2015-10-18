@@ -37,6 +37,7 @@ angular.module('socket-io-server').provider('SocketIOServer', function () {
     };
 
     this.setOptions = function (options) {
+        console.log('SocketIOServerProvider::setOptions()');
         if (!angular.isObject(options)) {
             throw new Error('Options should be an object!');
         }
@@ -45,6 +46,7 @@ angular.module('socket-io-server').provider('SocketIOServer', function () {
     };
 
     this.startServer = function () {
+        console.log('SocketIOServerProvider::startServer()');
         if (listening) {
             return console.error(new Error('SocketIO server has already been started!'));
         }
@@ -70,6 +72,7 @@ angular.module('socket-io-server').provider('SocketIOServer', function () {
     };
 
     this.$get = function () {
+        console.log('SocketIOServerProvider::$get()');
         return {
             emit: function (name, message, callback) {
                 if (!callback) {

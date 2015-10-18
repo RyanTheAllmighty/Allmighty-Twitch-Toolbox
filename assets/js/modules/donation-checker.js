@@ -33,6 +33,7 @@ angular.module('donation-checker').provider('DonationChecker', function () {
     this.promise = null;
 
     this.setOptions = function (options) {
+        console.log('DonationCheckerProvider::setOptions()');
         if (!angular.isObject(options)) {
             throw new Error('Options should be an object!');
         }
@@ -41,6 +42,7 @@ angular.module('donation-checker').provider('DonationChecker', function () {
     };
 
     this.$get = ['$interval', 'Donations', 'StreamTip', function ($interval, Donations, StreamTip) {
+        console.log('DonationCheckerProvider::$get()');
         let self = this;
 
         return {

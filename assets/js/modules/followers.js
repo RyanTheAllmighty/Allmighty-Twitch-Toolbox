@@ -24,6 +24,7 @@ angular.module('followers', []);
 
 angular.module('followers').provider('Followers', function () {
     this.$get = ['$q', '$rootScope', 'SocketIOServer', function ($q, $rootScope, SocketIOServer) {
+        console.log('Followers::$get()');
         return {
             getFollowers: function (limit, callback) {
                 if (limit && !callback) {

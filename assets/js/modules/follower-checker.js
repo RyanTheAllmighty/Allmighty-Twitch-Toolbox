@@ -33,6 +33,7 @@ angular.module('follower-checker').provider('FollowerChecker', function () {
     this.promise = null;
 
     this.setOptions = function (options) {
+        console.log('FollowerCheckerProvider::setOptions()');
         if (!angular.isObject(options)) {
             throw new Error('Options should be an object!');
         }

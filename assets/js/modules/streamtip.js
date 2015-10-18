@@ -29,6 +29,7 @@ angular.module('streamtip').provider('StreamTip', function () {
     };
 
     this.setOptions = function (options) {
+        console.log('StreamTipProvider::setOptions()');
         if (!angular.isObject(options)) {
             throw new Error('Options should be an object!');
         }
@@ -37,6 +38,7 @@ angular.module('streamtip').provider('StreamTip', function () {
     };
 
     this.$get = function () {
+        console.log('StreamTip::$get()');
         return new StreamTipAPI(this.options);
     };
 });

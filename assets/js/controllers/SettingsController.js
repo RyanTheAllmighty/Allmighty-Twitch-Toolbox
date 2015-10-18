@@ -26,9 +26,6 @@ app.controller('SettingsController', ['$scope', 'Notification', function ($scope
     $scope.settings = angular.copy(global.App.settings);
 
     $scope.reset = function () {
-        console.log($scope.settings.sounds.newDonation);
-        console.log($scope.settings.sounds.newFollower);
-
         $scope.settings = angular.copy(global.App.settings);
     };
 

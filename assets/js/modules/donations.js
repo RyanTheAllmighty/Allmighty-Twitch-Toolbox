@@ -24,6 +24,7 @@ angular.module('donations', []);
 
 angular.module('donations').provider('Donations', function () {
     this.$get = ['$q', '$rootScope', 'SocketIOServer', function ($q, $rootScope, SocketIOServer) {
+        console.log('Donations::$get()');
         return {
             getDonations: function (limit, callback) {
                 if (limit && !callback) {

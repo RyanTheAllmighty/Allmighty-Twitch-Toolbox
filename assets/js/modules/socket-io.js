@@ -28,6 +28,7 @@ angular.module('socket-io').provider('SocketIO', function () {
     };
 
     this.setOptions = function (options) {
+        console.log('SocketIOProvider::setOptions()');
         if (!angular.isObject(options)) {
             throw new Error('Options should be an object!');
         }
@@ -36,6 +37,7 @@ angular.module('socket-io').provider('SocketIO', function () {
     };
 
     this.$get = function () {
+        console.log('SocketIO::$get()');
         if (!clientSocketIO) {
             console.log('New SocketIO Client');
             clientSocketIO = require('socket.io-client')('http://127.0.0.1:' + this.options.socketPort);
