@@ -53,7 +53,7 @@ nw .
 Alternatively if you've built the application as said above you can run that with the following command:
 
 ```sh
-nw app.atar
+nw app.nw
 ```
 
 ### Getting Started
