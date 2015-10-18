@@ -11,7 +11,7 @@
 
             <div class="panel-footer">
                 <div class="col-sm-12 text-center">
-                    <button type="submit" class="btn btn-primary" ng-click="runMusicInformationParsing()" ng-bind="running.musicInformationParsing ? 'Running' : 'Run'"></button>
+                    <button type="submit" class="btn btn-primary" ng-click="runMusicInformationParsing()" ng-disabled="running.musicInformationParsing" ng-bind="running.musicInformationParsing ? 'Running' : 'Run'"></button>
                 </div>
 
                 <div class="clearfix"></div>
