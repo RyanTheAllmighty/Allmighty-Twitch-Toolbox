@@ -1,5 +1,21 @@
 <div class="row">
     <div class="col-xs-12">
-        <p ng-bind="test"></p>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Music Information Parsing</h3>
+            </div>
+
+            <div class="panel-body">
+                <textarea class="logging-text-area" rows="10" ng-bind="log.musicInformationParsing" scroll-glue readonly></textarea>
+            </div>
+
+            <div class="panel-footer">
+                <div class="col-sm-12 text-center">
+                    <button type="submit" class="btn btn-primary" ng-click="runMusicInformationParsing()" ng-bind="running.musicInformationParsing ? 'Running' : 'Run'"></button>
+                </div>
+
+                <div class="clearfix"></div>
+            </div>
+        </div>
     </div>
 </div>

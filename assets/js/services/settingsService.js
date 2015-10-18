@@ -30,6 +30,9 @@ let defaultSettings = {
         accessToken: '',
         clientID: ''
     },
+    soundcloud: {
+        clientID: ''
+    },
     checks: {
         donations: 10,
         followers: 10,
@@ -49,6 +52,7 @@ let defaultSettings = {
         notificationTime: 5
     },
     directories: {
+        binary: '',
         data: '',
         music: ''
     }

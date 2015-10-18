@@ -38,6 +38,10 @@ app.controller('SettingsController', ['$scope', 'Notification', function ($scope
             $scope.settings.sounds.newFollower = document.getElementById('newFollower').files[0].path.toString();
         }
 
+        if (document.getElementById('binaryDirectory').files[0]) {
+            $scope.settings.directories.binary = document.getElementById('binaryDirectory').files[0].path.toString();
+        }
+
         if (document.getElementById('dataDirectory').files[0]) {
             $scope.settings.directories.data = document.getElementById('dataDirectory').files[0].path.toString();
         }

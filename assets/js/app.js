@@ -40,7 +40,8 @@ var app = angular.module('AllmightyTwitchToolbox', [
     'datatables',
     'datatables.bootstrap',
     'followers',
-    'donations'
+    'donations',
+    'luegg.directives'
 ]);
 
 /**

@@ -20,6 +20,52 @@
 
 'use strict';
 
-app.controller('ToolsController', ['$scope', function ($scope) {
-    $scope.test = 'Tools';
+let musicInformationParser = require('./assets/js/tools/musicInformationParser');
+
+app.controller('ToolsController', ['$scope', '$timeout', function ($scope, $timeout) {
+    $scope.log = {
+        musicInformationParsing: ''
+    };
+
+    $scope.running = {
+        musicInformationParsing: false
+    };
+
+    $scope.runMusicInformationParsing = function () {
+        if (!$scope.running.musicInformationParsing) {
+            $scope.log.musicInformationParsing = '';
+            $scope.running.musicInformationParsing = true;
+
+            let ee = musicInformationParser.run({
+                clientID: global.App.settings.soundcloud.clientID,
+                ffmpegPath: global.App.settings.directories.binary + '/ffmpeg.exe',
+                path: global.App.settings.directories.music
+            });
+
+            ee.on('info', function (message) {
+                $timeout(function () {
+                    $scope.log.musicInformationParsing += message;
+                    $scope.$apply();
+                });
+            });
+
+            ee.on('error', function (err) {
+                $timeout(function () {
+                    $scope.log.musicInformationParsing += '\nError: ' + err.message;
+                    $scope.$apply();
+                });
+
+                $scope.running.musicInformationParsing = false;
+            });
+
+            ee.on('done', function () {
+                $timeout(function () {
+                    $scope.log.musicInformationParsing += '\nDone';
+                    $scope.$apply();
+                });
+
+                $scope.running.musicInformationParsing = false;
+            });
+        }
+    };
 }]);
