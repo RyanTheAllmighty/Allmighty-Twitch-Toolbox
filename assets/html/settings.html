@@ -3,29 +3,33 @@
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h3 class="panel-title">Twitch Settings</h3>
+                <collapsible model="_collapsedPanels.settings.twitch"/>
             </div>
-            <div class="panel-body">
-                <div class="form-group">
-                    <label for="twitchUsername" class="col-lg-2 control-label">Username</label>
 
-                    <div class="col-lg-10">
-                        <input ng-model="settings.twitch.username" type="text" class="form-control" id="twitchUsername"/>
+            <div uib-collapse="_collapsedPanels.settings.twitch">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="twitchUsername" class="col-lg-2 control-label">Username</label>
+
+                        <div class="col-lg-10">
+                            <input ng-model="settings.twitch.username" type="text" class="form-control" id="twitchUsername"/>
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="twitchApiToken" class="col-lg-2 control-label">API Token</label>
+                    <div class="form-group">
+                        <label for="twitchApiToken" class="col-lg-2 control-label">API Token</label>
 
-                    <div class="col-lg-10">
-                        <input ng-model="settings.twitch.apiToken" type="password" class="form-control" id="twitchApiToken"/>
+                        <div class="col-lg-10">
+                            <input ng-model="settings.twitch.apiToken" type="password" class="form-control" id="twitchApiToken"/>
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="twitchApiClientID" class="col-lg-2 control-label">API Client ID</label>
+                    <div class="form-group">
+                        <label for="twitchApiClientID" class="col-lg-2 control-label">API Client ID</label>
 
-                    <div class="col-lg-10">
-                        <input ng-model="settings.twitch.apiClientID" type="password" class="form-control" id="twitchApiClientID"/>
+                        <div class="col-lg-10">
+                            <input ng-model="settings.twitch.apiClientID" type="password" class="form-control" id="twitchApiClientID"/>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -36,21 +40,25 @@
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h3 class="panel-title">Stream Tip Settings</h3>
+                <collapsible model="_collapsedPanels.settings.streamtip"/>
             </div>
-            <div class="panel-body">
-                <div class="form-group">
-                    <label for="streamTipAccessToken" class="col-lg-2 control-label">Access Token</label>
 
-                    <div class="col-lg-10">
-                        <input ng-model="settings.streamtip.accessToken" type="password" class="form-control" id="streamTipAccessToken"/>
+            <div uib-collapse="_collapsedPanels.settings.streamtip">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="streamTipAccessToken" class="col-lg-2 control-label">Access Token</label>
+
+                        <div class="col-lg-10">
+                            <input ng-model="settings.streamtip.accessToken" type="password" class="form-control" id="streamTipAccessToken"/>
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="streamTipClientID" class="col-lg-2 control-label">Client ID</label>
+                    <div class="form-group">
+                        <label for="streamTipClientID" class="col-lg-2 control-label">Client ID</label>
 
-                    <div class="col-lg-10">
-                        <input ng-model="settings.streamtip.clientID" type="password" class="form-control" id="streamTipClientID"/>
+                        <div class="col-lg-10">
+                            <input ng-model="settings.streamtip.clientID" type="password" class="form-control" id="streamTipClientID"/>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -63,13 +71,66 @@
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h3 class="panel-title">Soundcloud Settings</h3>
+                <collapsible model="_collapsedPanels.settings.soundcloud"/>
             </div>
-            <div class="panel-body">
-                <div class="form-group">
-                    <label for="soundcloudClientID" class="col-lg-2 control-label">Client ID</label>
 
-                    <div class="col-lg-10">
-                        <input ng-model="settings.soundcloud.clientID" type="password" class="form-control" id="soundcloudClientID"/>
+            <div uib-collapse="_collapsedPanels.settings.soundcloud">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="soundcloudClientID" class="col-lg-2 control-label">Client ID</label>
+
+                        <div class="col-lg-10">
+                            <input ng-model="settings.soundcloud.clientID" type="password" class="form-control" id="soundcloudClientID"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-6">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Directories</h3>
+                <collapsible model="_collapsedPanels.settings.directories"/>
+            </div>
+
+            <div uib-collapse="_collapsedPanels.settings.directories">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="binaryDirectory" class="col-lg-2 control-label">Binary Directory</label>
+
+                        <div class="col-lg-2">
+                            <input type="file" class="form-control" id="binaryDirectory" nwdirectory/>
+                        </div>
+
+                        <div class="col-lg-8">
+                            <p ng-bind="settings.directories.binary"></p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dataDirectory" class="col-lg-2 control-label">Data Directory</label>
+
+                        <div class="col-lg-2">
+                            <input type="file" class="form-control" id="dataDirectory" nwdirectory/>
+                        </div>
+
+                        <div class="col-lg-8">
+                            <p ng-bind="settings.directories.data"></p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="musicDirectory" class="col-lg-2 control-label">Music Directory</label>
+
+                        <div class="col-lg-2">
+                            <input type="file" class="form-control" id="musicDirectory" nwdirectory/>
+                        </div>
+
+                        <div class="col-lg-8">
+                            <p ng-bind="settings.directories.music"></p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -82,29 +143,33 @@
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h3 class="panel-title">Checking Settings</h3>
+                <collapsible model="_collapsedPanels.settings.checking"/>
             </div>
-            <div class="panel-body">
-                <div class="form-group">
-                    <label for="checksDonations" class="col-lg-2 control-label">Time between donation checks</label>
 
-                    <div class="col-lg-10">
-                        <input ng-model="settings.checks.donations" type="number" class="form-control" id="checksDonations" min="1" max="60"/>
+            <div uib-collapse="_collapsedPanels.settings.checking">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="checksDonations" class="col-lg-2 control-label">Time between donation checks</label>
+
+                        <div class="col-lg-10">
+                            <input ng-model="settings.checks.donations" type="number" class="form-control" id="checksDonations" min="1" max="60"/>
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="checksFollowers" class="col-lg-2 control-label">Time between follower checks</label>
+                    <div class="form-group">
+                        <label for="checksFollowers" class="col-lg-2 control-label">Time between follower checks</label>
 
-                    <div class="col-lg-10">
-                        <input ng-model="settings.checks.followers" type="number" class="form-control" id="checksFollowers" min="1" max="60"/>
+                        <div class="col-lg-10">
+                            <input ng-model="settings.checks.followers" type="number" class="form-control" id="checksFollowers" min="1" max="60"/>
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="checksViewers" class="col-lg-2 control-label">Time between viewer checks</label>
+                    <div class="form-group">
+                        <label for="checksViewers" class="col-lg-2 control-label">Time between viewer checks</label>
 
-                    <div class="col-lg-10">
-                        <input ng-model="settings.checks.viewers" type="number" class="form-control" id="checksViewers" min="1" max="60"/>
+                        <div class="col-lg-10">
+                            <input ng-model="settings.checks.viewers" type="number" class="form-control" id="checksViewers" min="1" max="60"/>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -115,21 +180,25 @@
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h3 class="panel-title">Network Settings</h3>
+                <collapsible model="_collapsedPanels.settings.network"/>
             </div>
-            <div class="panel-body">
-                <div class="form-group">
-                    <label for="socketIOPort" class="col-lg-2 control-label">Socket.IO Port</label>
 
-                    <div class="col-lg-10">
-                        <input ng-model="settings.network.socketIOPort" type="number" class="form-control" id="socketIOPort" min="1" max="65535"/>
+            <div uib-collapse="_collapsedPanels.settings.network">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="socketIOPort" class="col-lg-2 control-label">Socket.IO Port</label>
+
+                        <div class="col-lg-10">
+                            <input ng-model="settings.network.socketIOPort" type="number" class="form-control" id="socketIOPort" min="1" max="65535"/>
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="webPort" class="col-lg-2 control-label">Web Port</label>
+                    <div class="form-group">
+                        <label for="webPort" class="col-lg-2 control-label">Web Port</label>
 
-                    <div class="col-lg-10">
-                        <input ng-model="settings.network.webPort" type="number" class="form-control" id="webPort" min="1" max="65535"/>
+                        <div class="col-lg-10">
+                            <input ng-model="settings.network.webPort" type="number" class="form-control" id="webPort" min="1" max="65535"/>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -142,45 +211,49 @@
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h3 class="panel-title">Sound Settings</h3>
+                <collapsible model="_collapsedPanels.settings.sound"/>
             </div>
-            <div class="panel-body">
-                <div class="form-group">
-                    <label for="newDonation" class="col-lg-2 control-label">New Donation Sound</label>
 
-                    <div class="col-lg-2">
-                        <input type="file" class="form-control" id="newDonation"/>
+            <div uib-collapse="_collapsedPanels.settings.sound">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="newDonation" class="col-lg-2 control-label">New Donation Sound</label>
+
+                        <div class="col-lg-2">
+                            <input type="file" class="form-control" id="newDonation"/>
+                        </div>
+
+                        <div class="col-lg-8">
+                            <p ng-bind="settings.sounds.newDonation"></p>
+                        </div>
                     </div>
 
-                    <div class="col-lg-8">
-                        <p ng-bind="settings.sounds.newDonation"></p>
-                    </div>
-                </div>
+                    <div class="form-group">
+                        <label for="newDonationVolume" class="col-lg-2 control-label">New Donation Sound Volume</label>
 
-                <div class="form-group">
-                    <label for="newDonationVolume" class="col-lg-2 control-label">New Donation Sound Volume</label>
-
-                    <div class="col-lg-10">
-                        <input ng-model="settings.sounds.newDonationVolume" type="number" class="form-control" id="newDonationVolume" min="0" max="1" step="0.01"/>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="newFollower" class="col-lg-2 control-label">New Follower Sound</label>
-
-                    <div class="col-lg-2">
-                        <input type="file" class="form-control" id="newFollower"/>
+                        <div class="col-lg-10">
+                            <input ng-model="settings.sounds.newDonationVolume" type="number" class="form-control" id="newDonationVolume" min="0" max="1" step="0.01"/>
+                        </div>
                     </div>
 
-                    <div class="col-lg-8">
-                        <p ng-bind="settings.sounds.newFollower"></p>
+                    <div class="form-group">
+                        <label for="newFollower" class="col-lg-2 control-label">New Follower Sound</label>
+
+                        <div class="col-lg-2">
+                            <input type="file" class="form-control" id="newFollower"/>
+                        </div>
+
+                        <div class="col-lg-8">
+                            <p ng-bind="settings.sounds.newFollower"></p>
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="newFollowerVolume" class="col-lg-2 control-label">New Follower Sound Volume</label>
+                    <div class="form-group">
+                        <label for="newFollowerVolume" class="col-lg-2 control-label">New Follower Sound Volume</label>
 
-                    <div class="col-lg-10">
-                        <input ng-model="settings.sounds.newFollowerVolume" type="number" class="form-control" id="newFollowerVolume" min="0" max="1" step="0.01"/>
+                        <div class="col-lg-10">
+                            <input ng-model="settings.sounds.newFollowerVolume" type="number" class="form-control" id="newFollowerVolume" min="0" max="1" step="0.01"/>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -191,60 +264,17 @@
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h3 class="panel-title">Notification Settings</h3>
+                <collapsible model="_collapsedPanels.settings.notification"/>
             </div>
-            <div class="panel-body">
-                <div class="form-group">
-                    <label for="notificationTime" class="col-lg-2 control-label">Notification Time</label>
 
-                    <div class="col-lg-10">
-                        <input ng-model="settings.notifications.notificationTime" type="number" class="form-control" id="notificationTime" min="1" max="60"/>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+            <div uib-collapse="_collapsedPanels.settings.notification">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="notificationTime" class="col-lg-2 control-label">Notification Time</label>
 
-<div class="row">
-    <div class="col-xs-12">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h3 class="panel-title">Directories</h3>
-            </div>
-            <div class="panel-body">
-                <div class="form-group">
-                    <label for="binaryDirectory" class="col-lg-2 control-label">Binary Directory</label>
-
-                    <div class="col-lg-2">
-                        <input type="file" class="form-control" id="binaryDirectory" nwdirectory/>
-                    </div>
-
-                    <div class="col-lg-8">
-                        <p ng-bind="settings.directories.binary"></p>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="dataDirectory" class="col-lg-2 control-label">Data Directory</label>
-
-                    <div class="col-lg-2">
-                        <input type="file" class="form-control" id="dataDirectory" nwdirectory/>
-                    </div>
-
-                    <div class="col-lg-8">
-                        <p ng-bind="settings.directories.data"></p>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="musicDirectory" class="col-lg-2 control-label">Music Directory</label>
-
-                    <div class="col-lg-2">
-                        <input type="file" class="form-control" id="musicDirectory" nwdirectory/>
-                    </div>
-
-                    <div class="col-lg-8">
-                        <p ng-bind="settings.directories.music"></p>
+                        <div class="col-lg-10">
+                            <input ng-model="settings.notifications.notificationTime" type="number" class="form-control" id="notificationTime" min="1" max="60"/>
+                        </div>
                     </div>
                 </div>
             </div>
