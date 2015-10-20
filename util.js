@@ -9,7 +9,11 @@
 'use strict';
 
 var fs = require('fs');
-var archiver = require('archiver');
+var del = require('del');
+var tmp = require('tmp');
+var asar = require('asar');
+var path = require('path');
+var ncp = require('ncp').ncp;
 
 if (process.argv.length === 2) {
     console.error('No argument provided!');
@@ -27,46 +31,58 @@ switch (process.argv[2]) {
 }
 
 function packageApp() {
-    fs.unlink('./app.nw', function (err) {
-        if (err && fs.existsSync('./app.nw')) {
+    fs.unlink('./app.asar', function (err) {
+        if (err && fs.existsSync('./app.asar')) {
             return console.error(err);
         }
 
-        var output = fs.createWriteStream('./app.nw');
-        var archive = archiver('zip');
+        tmp.dir(function (err, tempPath) {
+            console.log(tempPath);
+            if (err) {
+                del(tempPath + '/', {force: true}).then(function () {
+                    console.error(err);
+                });
+            } else {
+                ncp('./', tempPath, function (err) {
+                    if (err) {
+                        del(tempPath + '/', {force: true}).then(function () {
+                            console.error(err);
+                        });
+                    } else {
+                        let thingsToDelete = [
+                            tempPath + '/node_modules/.bin/',
+                            tempPath + '/node_modules/chai/',
+                            tempPath + '/node_modules/grunt/',
+                            tempPath + '/node_modules/grunt-cli/',
+                            tempPath + '/node_modules/grunt-contrib-jshint/',
+                            tempPath + '/node_modules/grunt-mocha-test/',
+                            tempPath + '/node_modules/jshint/',
+                            tempPath + '/node_modules/mocha/',
+                            tempPath + '/node_modules/sinon/',
+                            tempPath + '/.git/',
+                            tempPath + '/.idea/',
+                            tempPath + '/test/',
+                            tempPath + '/.gitignore',
+                            tempPath + '/.jshintrc',
+                            tempPath + '/.jshintignore',
+                            tempPath + '/README.md',
+                            tempPath + '/STYLE.md',
+                            tempPath + '/util.js',
+                            tempPath + '/Gruntfile.js'
+                        ];
 
-        archive.on('error', function (err) {
-            throw err;
+                        del(thingsToDelete, {force: true, dot: true}).then(function () {
+                            console.log('Packaging up application!');
+                            console.log(path.resolve('./app.asar'));
+                            asar.createPackage(tempPath, './app.asar', function () {
+                                del(tempPath + '/', {force: true}).then(function () {
+                                    console.log('Application packaged successfully!');
+                                });
+                            });
+                        });
+                    }
+                });
+            }
         });
-
-        archive.pipe(output);
-
-
-        let toArchive = [
-            '**',
-            '!node_modules/.bin/**',
-            '!node_modules/chai/**',
-            '!node_modules/grunt/**',
-            '!node_modules/grunt-cli/**',
-            '!node_modules/grunt-contrib-jshint/**',
-            '!node_modules/grunt-mocha-test/**',
-            '!node_modules/jshint/**',
-            '!node_modules/mocha/**',
-            '!node_modules/sinon/**',
-            '!.git/**',
-            '!.idea/**',
-            '!test/**',
-            '!.gitignore',
-            '!.jshintrc',
-            '!.jshintignore',
-            '!README.md',
-            '!STYLE.md',
-            '!util.js',
-            '!Gruntfile.js'
-        ];
-
-        archive.bulk([
-            {src: toArchive, data: {date: new Date()}}
-        ]).finalize();
     });
 }

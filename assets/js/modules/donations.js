@@ -32,7 +32,7 @@ angular.module('donations').provider('Donations', function () {
                     limit = 100;
                 }
 
-                global.App.db.donations.find({}).sort({date: 1}).limit(limit).exec(callback);
+                $rootScope.App.db.donations.find({}).sort({date: 1}).limit(limit).exec(callback);
             },
             getDonationsPromise: function (limit) {
                 let self = this;
@@ -48,10 +48,10 @@ angular.module('donations').provider('Donations', function () {
                 });
             },
             getDonationCount: function (callback) {
-                global.App.db.donations.count({}).exec(callback);
+                $rootScope.App.db.donations.count({}).exec(callback);
             },
             getDonationTotal: function (callback) {
-                global.App.db.donations.find({}).exec(function (err, docs) {
+                $rootScope.App.db.donations.find({}).exec(function (err, docs) {
                     if (err) {
                         return callback(err);
                     }
@@ -68,7 +68,7 @@ angular.module('donations').provider('Donations', function () {
                     donation.date = new Date();
                 }
 
-                global.App.db.donations.find({id: donation.id}).limit(1).exec(function (err, docs) {
+                $rootScope.App.db.donations.find({id: donation.id}).limit(1).exec(function (err, docs) {
                     if (err) {
                         return callback(err);
                     }
@@ -95,8 +95,8 @@ angular.module('donations').provider('Donations', function () {
                         text: donation.username + ' just donated $' + donation.amount + '!',
                         onShowFunc: function () {
                             let sound = new Howl({
-                                urls: [global.App.settings.sounds.newDonation],
-                                volume: global.App.settings.sounds.newDonationVolume
+                                urls: [$rootScope.App.settings.sounds.newDonation],
+                                volume: $rootScope.App.settings.sounds.newDonationVolume
                             });
 
                             sound.play();
@@ -118,7 +118,7 @@ angular.module('donations').provider('Donations', function () {
                 }
 
                 if (!donation.test) {
-                    global.App.db.donations.update({id: donation.id}, donation, {upsert: true}, notify);
+                    $rootScope.App.db.donations.update({id: donation.id}, donation, {upsert: true}, notify);
                 } else {
                     notify();
                 }

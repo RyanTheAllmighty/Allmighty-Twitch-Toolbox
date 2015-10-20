@@ -32,7 +32,7 @@ angular.module('followers').provider('Followers', function () {
                     limit = 100;
                 }
 
-                global.App.db.followers.find({}).sort({date: 1}).limit(limit).exec(callback);
+                $rootScope.App.db.followers.find({}).sort({date: 1}).limit(limit).exec(callback);
             },
             getFollowersPromise: function (limit) {
                 let self = this;
@@ -48,7 +48,7 @@ angular.module('followers').provider('Followers', function () {
                 });
             },
             getFollowerCount: function (callback) {
-                global.App.db.followers.count({}).exec(callback);
+                $rootScope.App.db.followers.count({}).exec(callback);
             },
             processFollower: function (follower, callback) {
                 let self = this;
@@ -57,7 +57,7 @@ angular.module('followers').provider('Followers', function () {
                     follower.date = new Date();
                 }
 
-                global.App.db.followers.find({$or: [{id: follower.id}, {username: follower.username}]}).limit(1).exec(function (err, docs) {
+                $rootScope.App.db.followers.find({$or: [{id: follower.id}, {username: follower.username}]}).limit(1).exec(function (err, docs) {
                     if (err) {
                         return callback(err);
                     }
@@ -87,8 +87,8 @@ angular.module('followers').provider('Followers', function () {
                         text: follower.display_name + ' has just followed!',
                         onShowFunc: function () {
                             let sound = new Howl({
-                                urls: [global.App.settings.sounds.newFollower],
-                                volume: global.App.settings.sounds.newFollowerVolume
+                                urls: [$rootScope.App.settings.sounds.newFollower],
+                                volume: $rootScope.App.settings.sounds.newFollowerVolume
                             });
 
                             sound.play();
@@ -110,7 +110,7 @@ angular.module('followers').provider('Followers', function () {
                 }
 
                 if (!follower.test) {
-                    global.App.db.followers.update({$or: [{username: follower.username}, {id: follower.id}]}, follower, {upsert: true}, notify);
+                    $rootScope.App.db.followers.update({$or: [{username: follower.username}, {id: follower.id}]}, follower, {upsert: true}, notify);
                 } else {
                     notify();
                 }
@@ -133,7 +133,7 @@ angular.module('followers').provider('Followers', function () {
                 }
 
                 if (!follower.test) {
-                    global.App.db.followers.update({username: follower.username}, follower, {upsert: true}, notify);
+                    $rootScope.App.db.followers.update({username: follower.username}, follower, {upsert: true}, notify);
                 } else {
                     notify();
                 }

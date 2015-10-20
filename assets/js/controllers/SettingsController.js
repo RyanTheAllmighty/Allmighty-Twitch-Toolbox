@@ -23,10 +23,10 @@
 let settingsService = require('./assets/js/services/settingsService');
 
 app.controller('SettingsController', ['$scope', 'Notification', function ($scope, Notification) {
-    $scope.settings = angular.copy(global.App.settings);
+    $scope.settings = angular.copy($scope.App.settings);
 
     $scope.reset = function () {
-        $scope.settings = angular.copy(global.App.settings);
+        $scope.settings = angular.copy($scope.App.settings);
     };
 
     $scope.save = function () {
@@ -50,7 +50,7 @@ app.controller('SettingsController', ['$scope', 'Notification', function ($scope
             $scope.settings.directories.music = document.getElementById('musicDirectory').files[0].path.toString();
         }
 
-        global.App.settings = angular.copy($scope.settings);
+        $scope.App.settings = angular.copy($scope.settings);
 
         settingsService.saveSettings(function (err) {
             if (err) {

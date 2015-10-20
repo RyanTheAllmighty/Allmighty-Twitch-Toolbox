@@ -37,9 +37,9 @@ app.controller('ToolsController', ['$scope', '$timeout', function ($scope, $time
             $scope.running.musicInformationParsing = true;
 
             let ee = musicInformationParser.run({
-                clientID: global.App.settings.soundcloud.clientID,
-                ffmpegPath: global.App.settings.directories.binary + '/ffmpeg.exe',
-                path: global.App.settings.directories.music
+                clientID: $scope.App.settings.soundcloud.clientID,
+                ffmpegPath: $scope.App.settings.directories.binary + '/ffmpeg.exe',
+                path: $scope.App.settings.directories.music
             });
 
             ee.on('info', function (message) {

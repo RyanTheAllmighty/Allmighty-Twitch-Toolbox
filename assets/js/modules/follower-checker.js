@@ -41,7 +41,7 @@ angular.module('follower-checker').provider('FollowerChecker', function () {
         this.options = angular.extend({}, this.options, options);
     };
 
-    this.$get = ['$interval', 'Followers', 'Twitch', function ($interval, Followers, Twitch) {
+    this.$get = ['$rootScope', '$interval', 'Followers', 'Twitch', function ($rootScope, $interval, Followers, Twitch) {
         let self = this;
 
         return {
@@ -56,7 +56,7 @@ angular.module('follower-checker').provider('FollowerChecker', function () {
 
                 // Save this timeout promise so we can cancel it if we get another one later
                 self.promise = $interval(function () {
-                    Twitch.getChannelFollows(global.App.settings.twitch.username, {limit: 2}, function (err, followers) {
+                    Twitch.getChannelFollows($rootScope.App.settings.twitch.username, {limit: 2}, function (err, followers) {
                         if (err) {
                             return console.error(err);
                         }

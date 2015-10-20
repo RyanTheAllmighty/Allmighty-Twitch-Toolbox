@@ -18,6 +18,62 @@
 
 'use strict';
 
+var app = require('app');
+var path = require('path');
+var shell = require('shell');
+var Datastore = require('nedb');
+var mkdirp = require('mkdirp').mkdirp;
+var BrowserWindow = require('browser-window');
+
+let loadingService = require('./assets/js/services/loadingService');
+
+var mainWindow = null;
+
 process.on('uncaughtException', function (e) {
     console.error(e);
+});
+
+app.on('ready', function () {
+    mainWindow = new BrowserWindow({width: 800, height: 500, show: false, center: true, icon: './assets/image/icon.png'});
+
+    /**
+     *
+     * @type {{basePath: (String), db: {donations: (Datastore), followers: (Datastore), settings: (Datastore)}, settings: (Object)}}
+     */
+    global.App = {
+        // Setup the base path
+        basePath: path.join(app.getPath('userData'), 'ApplicationStorage'),
+        db: {
+            donations: new Datastore({filename: path.join(app.getPath('userData'), 'ApplicationStorage', 'db', 'donations.db'), autoload: true}),
+            followers: new Datastore({filename: path.join(app.getPath('userData'), 'ApplicationStorage', 'db', 'followers.db'), autoload: true}),
+            settings: new Datastore({filename: path.join(app.getPath('userData'), 'ApplicationStorage', 'db', 'settings.db'), autoload: true})
+        },
+        settings: {}
+    };
+
+    mainWindow.App = global.App;
+
+    // Make the main directory
+    loadingService.load(function (err) {
+        if (err) {
+            console.error(err);
+        }
+
+        mainWindow.loadUrl('file://' + __dirname + '/app.html');
+        mainWindow.setMenu(null);
+        mainWindow.show();
+        mainWindow.openDevTools();
+
+        mainWindow.webContents.on('new-window', function (event, url) {
+            event.preventDefault();
+
+            shell.openExternal(url);
+        });
+
+        mainWindow.on('closed', function () {
+            mainWindow = null;
+
+            app.quit();
+        });
+    });
 });

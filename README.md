@@ -13,14 +13,14 @@ Please see the STYLE.md file for coding standards and style guidelines.
 To get started you need a couple pieces of software installed on your computer. The versions next to the package is the version we build against so you would be best to get that version or newer:
 
 - [NodeJS](https://nodejs.org/) (4.2.1)
-- [NW.js](http://nwjs.io/) (0.12.3)
+- [Electron](http://electron.atom.io/) (0.34.0)
 
 To make sure you have those all installed correctly, open up a command line/terminal and run the following commands and make sure they all work with no errors:
 
 ```javascript
 node -v
 npm -v
-nw -v
+electron -v
 ```
 
 Once you have those installed on your system you can clone the repository and get started.
@@ -38,22 +38,22 @@ Then, assuming there were no errors, all you need to do is run our util.js file 
 node util.js package
 ```
 
-This will create an app.nw file in the current directory.
+This will create an app.asar file in the current directory.
 
 Alternatively if you just want the latest build binary you can download it from 
 [here](https://build.atlcdn.net/job/Allmighty%20Twitch%20Toolbox/)
 
 #### Running the application
-To run the application you can simply go into the root directory of the project and run the below command, making sure that NW.js is in your PATH:
+To run the application you can simply go into the root directory of the project and run the below command, making sure that Electron is in your PATH:
 
 ```sh
-nw .
+electron .
 ```
 
 Alternatively if you've built the application as said above you can run that with the following command:
 
 ```sh
-nw app.nw
+electron app.asar
 ```
 
 ### Getting Started
