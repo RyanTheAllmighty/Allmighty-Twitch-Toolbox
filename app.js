@@ -62,7 +62,9 @@ app.on('ready', function () {
         mainWindow.loadUrl('file://' + __dirname + '/app.html');
         mainWindow.setMenu(null);
         mainWindow.show();
-        mainWindow.openDevTools();
+        mainWindow.openDevTools({
+            detach: true
+        });
 
         mainWindow.webContents.on('new-window', function (event, url) {
             event.preventDefault();
