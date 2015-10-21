@@ -38,6 +38,7 @@
         'datatables.bootstrap',
         'followers',
         'donations',
+        'notifications',
         'luegg.directives',
         'LocalStorageModule'
     ]);

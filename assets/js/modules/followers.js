@@ -19,10 +19,12 @@
 (function () {
     'use strict';
 
+    let _ = require('lodash');
+
     angular.module('followers', []);
 
     angular.module('followers').provider('Followers', function () {
-        this.$get = ['$q', '$rootScope', 'SocketIOServer', function ($q, $rootScope, SocketIOServer) {
+        this.$get = ['$q', '$rootScope', 'SocketIOServer', 'Notifications', function ($q, $rootScope, SocketIOServer, Notifications) {
             console.log('Followers::$get()');
             return {
                 getFollowers: function (limit, callback) {
@@ -81,7 +83,7 @@
                         }
 
                         // Send a desktop notification
-                        nwNotify.notify({
+                        Notifications.notify({
                             title: 'New Follower!',
                             text: follower.display_name + ' has just followed!',
                             onShowFunc: function () {
