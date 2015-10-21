@@ -36,6 +36,7 @@ var app = angular.module('AllmightyTwitchToolbox', [
     'socket-io-server',
     'follower-checker',
     'donation-checker',
+    'music-checker',
     'datatables',
     'datatables.bootstrap',
     'followers',
@@ -44,7 +45,7 @@ var app = angular.module('AllmightyTwitchToolbox', [
     'LocalStorageModule'
 ]);
 
-app.config(function ($routeProvider, localStorageServiceProvider, NotificationProvider, TwitchProvider, StreamTipProvider, SocketIOProvider, SocketIOServerProvider, FollowerCheckerProvider, DonationCheckerProvider) {
+app.config(function ($routeProvider, localStorageServiceProvider, NotificationProvider, TwitchProvider, StreamTipProvider, SocketIOProvider, SocketIOServerProvider, FollowerCheckerProvider, DonationCheckerProvider, MusicCheckerProvider) {
     // Setup the routes
     $routeProvider.when('/', {
         templateUrl: './assets/html/home.html',
@@ -117,6 +118,11 @@ app.config(function ($routeProvider, localStorageServiceProvider, NotificationPr
     DonationCheckerProvider.setOptions({
         interval: remote.getCurrentWindow().App.settings.checks.donations
     });
+
+    MusicCheckerProvider.setOptions({
+        nowPlayingPath: path.join(remote.getCurrentWindow().App.settings.directories.data, 'NowPlaying.txt'),
+        ffmpegPath: path.join(remote.getCurrentWindow().App.settings.directories.binary, 'ffmpeg.exe')
+    });
 });
 
 app.run(['$rootScope', 'localStorageService', function ($rootScope, localStorageService) {
@@ -142,10 +148,13 @@ app.run(['$rootScope', 'localStorageService', function ($rootScope, localStorage
     }
 }]);
 
-app.run(['FollowerChecker', 'DonationChecker', function (FollowerChecker, DonationChecker) {
+app.run(['FollowerChecker', 'DonationChecker', 'MusicChecker', function (FollowerChecker, DonationChecker, MusicChecker) {
     // Start checking for new followers
     FollowerChecker.startChecking();
 
     // Start checking for new donations
     DonationChecker.startChecking();
+
+    // Start checking for song changes
+    MusicChecker.startChecking();
 }]);

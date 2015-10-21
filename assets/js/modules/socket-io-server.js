@@ -22,9 +22,6 @@
 
 angular.module('socket-io-server', []);
 
-var serverApp = require('http').createServer();
-var io = require('socket.io')(serverApp);
-
 // This is a list of all the sockets currently listening
 let sockets = [];
 
@@ -51,12 +48,15 @@ angular.module('socket-io-server').provider('SocketIOServer', function () {
             return console.error(new Error('SocketIO server has already been started!'));
         }
 
+        var serverApp = require('http').createServer();
+        var io = require('socket.io')(serverApp);
+
         listening = true;
 
         // Listen on our socket.io server
-        serverApp.listen(this.socketPort);
+        serverApp.listen(this.options.socketPort);
 
-        serverApp.on('connection', function (socket) {
+        io.on('connection', function (socket) {
             console.log('Socket connected');
             // Add this socket to the list of active sockets
             sockets.push(socket);
