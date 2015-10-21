@@ -31,6 +31,7 @@
     "async": "^1.4.2",
     "autolinker": "^0.18.1",
     "del": "^2.0.2",
+    "express": "^4.13.3",
     "ffmetadata": "git://github.com/RyanTheAllmighty/node-ffmetadata.git",
     "lodash": "^3.10.1",
     "mkdirp": "^0.5.1",

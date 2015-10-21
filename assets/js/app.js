@@ -68,12 +68,13 @@
         'donations',
         'notifications',
         'luegg.directives',
-        'LocalStorageModule'
+        'LocalStorageModule',
+        'web-server'
     ]);
 
     // Load everything before we proceed
     loadingService.load(function () {
-        app.config(function ($routeProvider, localStorageServiceProvider, NotificationsProvider, NotificationProvider, TwitchProvider, StreamTipProvider, SocketIOProvider, SocketIOServerProvider, FollowerCheckerProvider, DonationCheckerProvider, MusicCheckerProvider) {
+        app.config(function ($routeProvider, localStorageServiceProvider, WebServerProvider, NotificationsProvider, NotificationProvider, TwitchProvider, StreamTipProvider, SocketIOProvider, SocketIOServerProvider, FollowerCheckerProvider, DonationCheckerProvider, MusicCheckerProvider) {
             // Setup the routes
             $routeProvider.when('/', {
                 templateUrl: './assets/html/home.html',
@@ -98,8 +99,11 @@
                 controller: 'HelpController'
             }).otherwise({redirectTo: '/'});
 
-
             localStorageServiceProvider.setPrefix('AllmightyTwitchToolbox');
+
+            WebServerProvider.setOptions({
+                port: global.App.settings.network.webPort
+            });
 
             NotificationsProvider.setOptions({
                 displayTime: global.App.settings.notifications.notificationTime
@@ -180,7 +184,7 @@
             }
         }]);
 
-        app.run(['FollowerChecker', 'DonationChecker', 'MusicChecker', function (FollowerChecker, DonationChecker, MusicChecker) {
+        app.run(['FollowerChecker', 'DonationChecker', 'MusicChecker', 'WebServer', function (FollowerChecker, DonationChecker, MusicChecker, WebServer) {
             // Start checking for new followers
             FollowerChecker.startChecking();
 
@@ -189,6 +193,9 @@
 
             // Start checking for song changes
             MusicChecker.startChecking();
+
+            // Start the web server
+            WebServer.startServer();
 
             // Show the window
             gui.Window.get().show();
