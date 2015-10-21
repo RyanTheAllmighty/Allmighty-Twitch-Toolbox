@@ -104,6 +104,7 @@ module.exports = {
                         let artist = res[0];
 
                         data.artist = artist.username;
+                        data.title = readData.title || name;
                         data.website = artist.permalink_url;
 
                         ee.emit('info', ' - ' + artist.username);
