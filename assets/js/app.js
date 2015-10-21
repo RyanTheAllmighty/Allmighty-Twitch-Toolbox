@@ -16,145 +16,143 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-'use strict';
+(function () {
+    'use strict';
 
-let _ = require('lodash');
-let path = require('path');
-let async = require('async');
-let remote = require('remote');
-let Datastore = require('nedb');
-let request = require('request');
+    let path = require('path');
+    let remote = require('remote');
 
-var app = angular.module('AllmightyTwitchToolbox', [
-    'ngRoute',
-    'ngSanitize',
-    'ui-notification',
-    'ui.bootstrap',
-    'twitch',
-    'streamtip',
-    'socket-io',
-    'socket-io-server',
-    'follower-checker',
-    'donation-checker',
-    'music-checker',
-    'datatables',
-    'datatables.bootstrap',
-    'followers',
-    'donations',
-    'luegg.directives',
-    'LocalStorageModule'
-]);
+    let app = angular.module('AllmightyTwitchToolbox', [
+        'ngRoute',
+        'ngSanitize',
+        'ui-notification',
+        'ui.bootstrap',
+        'twitch',
+        'streamtip',
+        'socket-io',
+        'socket-io-server',
+        'follower-checker',
+        'donation-checker',
+        'music-checker',
+        'datatables',
+        'datatables.bootstrap',
+        'followers',
+        'donations',
+        'luegg.directives',
+        'LocalStorageModule'
+    ]);
 
-app.config(function ($routeProvider, localStorageServiceProvider, NotificationProvider, TwitchProvider, StreamTipProvider, SocketIOProvider, SocketIOServerProvider, FollowerCheckerProvider, DonationCheckerProvider, MusicCheckerProvider) {
-    // Setup the routes
-    $routeProvider.when('/', {
-        templateUrl: './assets/html/home.html',
-        controller: 'HomeController'
-    }).when('/followers', {
-        templateUrl: './assets/html/followers.html',
-        controller: 'FollowersController'
-    }).when('/donations', {
-        templateUrl: './assets/html/donations.html',
-        controller: 'DonationsController'
-    }).when('/settings', {
-        templateUrl: './assets/html/settings.html',
-        controller: 'SettingsController'
-    }).when('/tools', {
-        templateUrl: './assets/html/tools.html',
-        controller: 'ToolsController'
-    }).when('/test', {
-        templateUrl: './assets/html/test.html',
-        controller: 'TestController'
-    }).when('/help', {
-        templateUrl: './assets/html/help.html',
-        controller: 'HelpController'
-    }).otherwise({redirectTo: '/'});
+    app.config(function ($routeProvider, localStorageServiceProvider, NotificationProvider, TwitchProvider, StreamTipProvider, SocketIOProvider, SocketIOServerProvider, FollowerCheckerProvider, DonationCheckerProvider, MusicCheckerProvider) {
+        // Setup the routes
+        $routeProvider.when('/', {
+            templateUrl: './assets/html/home.html',
+            controller: 'HomeController'
+        }).when('/followers', {
+            templateUrl: './assets/html/followers.html',
+            controller: 'FollowersController'
+        }).when('/donations', {
+            templateUrl: './assets/html/donations.html',
+            controller: 'DonationsController'
+        }).when('/settings', {
+            templateUrl: './assets/html/settings.html',
+            controller: 'SettingsController'
+        }).when('/tools', {
+            templateUrl: './assets/html/tools.html',
+            controller: 'ToolsController'
+        }).when('/test', {
+            templateUrl: './assets/html/test.html',
+            controller: 'TestController'
+        }).when('/help', {
+            templateUrl: './assets/html/help.html',
+            controller: 'HelpController'
+        }).otherwise({redirectTo: '/'});
 
 
-    localStorageServiceProvider.setPrefix('AllmightyTwitchToolbox');
+        localStorageServiceProvider.setPrefix('AllmightyTwitchToolbox');
 
-    // Setup the NotificationProvider
-    NotificationProvider.setOptions({
-        delay: 10000,
-        startTop: 20,
-        startRight: 10,
-        verticalSpacing: 20,
-        horizontalSpacing: 20,
-        positionX: 'right',
-        positionY: 'top'
+        // Setup the NotificationProvider
+        NotificationProvider.setOptions({
+            delay: 10000,
+            startTop: 20,
+            startRight: 10,
+            verticalSpacing: 20,
+            horizontalSpacing: 20,
+            positionX: 'right',
+            positionY: 'top'
+        });
+
+        // Setup the TwitchProvider
+        TwitchProvider.setOptions({
+            accessToken: remote.getCurrentWindow().App.settings.twitch.apiToken,
+            clientID: remote.getCurrentWindow().App.settings.twitch.apiClientID
+        });
+
+        // Setup the StreamTipProvider
+        StreamTipProvider.setOptions({
+            clientId: remote.getCurrentWindow().App.settings.streamtip.clientID,
+            accessToken: remote.getCurrentWindow().App.settings.streamtip.accessToken
+        });
+
+        // Setup the SocketIOServerProvider
+        SocketIOServerProvider.setOptions({
+            socketPort: remote.getCurrentWindow().App.settings.network.socketIOPort
+        });
+
+        // Start the SocketIO Server
+        SocketIOServerProvider.startServer();
+
+        // Setup the SocketIOProvider
+        SocketIOProvider.setOptions({
+            socketPort: remote.getCurrentWindow().App.settings.network.socketIOPort
+        });
+
+        // Setup the follower checker
+        FollowerCheckerProvider.setOptions({
+            interval: remote.getCurrentWindow().App.settings.checks.followers
+        });
+
+        // Setup the donation checker
+        DonationCheckerProvider.setOptions({
+            interval: remote.getCurrentWindow().App.settings.checks.donations
+        });
+
+        MusicCheckerProvider.setOptions({
+            nowPlayingPath: path.join(remote.getCurrentWindow().App.settings.directories.data, 'NowPlaying.txt'),
+            ffmpegPath: path.join(remote.getCurrentWindow().App.settings.directories.binary, 'ffmpeg.exe')
+        });
     });
 
-    // Setup the TwitchProvider
-    TwitchProvider.setOptions({
-        accessToken: remote.getCurrentWindow().App.settings.twitch.apiToken,
-        clientID: remote.getCurrentWindow().App.settings.twitch.apiClientID
-    });
+    app.run(['$rootScope', 'localStorageService', function ($rootScope, localStorageService) {
+        // Load the app into the root scope
+        $rootScope.App = remote.getCurrentWindow().App;
 
-    // Setup the StreamTipProvider
-    StreamTipProvider.setOptions({
-        clientId: remote.getCurrentWindow().App.settings.streamtip.clientID,
-        accessToken: remote.getCurrentWindow().App.settings.streamtip.accessToken
-    });
+        $rootScope._updateCollapse = function (model) {
+            let parts = model.split('.').splice(1);
 
-    // Setup the SocketIOServerProvider
-    SocketIOServerProvider.setOptions({
-        socketPort: remote.getCurrentWindow().App.settings.network.socketIOPort
-    });
+            if (!$rootScope._collapsedPanels[parts[0]]) {
+                $rootScope._collapsedPanels[parts[0]] = {};
+            }
 
-    // Start the SocketIO Server
-    SocketIOServerProvider.startServer();
+            $rootScope._collapsedPanels[parts[0]][parts[1]] = !$rootScope._collapsedPanels[parts[0]][parts[1]];
 
-    // Setup the SocketIOProvider
-    SocketIOProvider.setOptions({
-        socketPort: remote.getCurrentWindow().App.settings.network.socketIOPort
-    });
+            localStorageService.set('collapsedPanels', $rootScope._collapsedPanels);
+        };
 
-    // Setup the follower checker
-    FollowerCheckerProvider.setOptions({
-        interval: remote.getCurrentWindow().App.settings.checks.followers
-    });
+        $rootScope._collapsedPanels = localStorageService.get('collapsedPanels');
 
-    // Setup the donation checker
-    DonationCheckerProvider.setOptions({
-        interval: remote.getCurrentWindow().App.settings.checks.donations
-    });
-
-    MusicCheckerProvider.setOptions({
-        nowPlayingPath: path.join(remote.getCurrentWindow().App.settings.directories.data, 'NowPlaying.txt'),
-        ffmpegPath: path.join(remote.getCurrentWindow().App.settings.directories.binary, 'ffmpeg.exe')
-    });
-});
-
-app.run(['$rootScope', 'localStorageService', function ($rootScope, localStorageService) {
-    // Load the app into the root scope
-    $rootScope.App = remote.getCurrentWindow().App;
-
-    $rootScope._updateCollapse = function (model) {
-        let parts = model.split('.').splice(1);
-
-        if (!$rootScope._collapsedPanels[parts[0]]) {
-            $rootScope._collapsedPanels[parts[0]] = {};
+        if (!$rootScope._collapsedPanels) {
+            $rootScope._collapsedPanels = {};
         }
+    }]);
 
-        $rootScope._collapsedPanels[parts[0]][parts[1]] = !$rootScope._collapsedPanels[parts[0]][parts[1]];
+    app.run(['FollowerChecker', 'DonationChecker', 'MusicChecker', function (FollowerChecker, DonationChecker, MusicChecker) {
+        // Start checking for new followers
+        FollowerChecker.startChecking();
 
-        localStorageService.set('collapsedPanels', $rootScope._collapsedPanels);
-    };
+        // Start checking for new donations
+        DonationChecker.startChecking();
 
-    $rootScope._collapsedPanels = localStorageService.get('collapsedPanels');
-
-    if (!$rootScope._collapsedPanels) {
-        $rootScope._collapsedPanels = {};
-    }
-}]);
-
-app.run(['FollowerChecker', 'DonationChecker', 'MusicChecker', function (FollowerChecker, DonationChecker, MusicChecker) {
-    // Start checking for new followers
-    FollowerChecker.startChecking();
-
-    // Start checking for new donations
-    DonationChecker.startChecking();
-
-    // Start checking for song changes
-    MusicChecker.startChecking();
-}]);
+        // Start checking for song changes
+        MusicChecker.startChecking();
+    }]);
+})();

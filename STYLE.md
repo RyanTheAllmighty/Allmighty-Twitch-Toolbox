@@ -33,6 +33,7 @@ For details on JSDoc used for all JavaScript files, see [this website](http://us
 + Make sure all comments not in doc blocks don't end in a period.
 + Make sure there is a blank line between any main doc block information and any @elements.
 + Make sure all callbacks are documented at the very bottom of the file.
++ Make sure all JS files included with script tags are wrapped in IIFE's.
 + Make sure there are no multi line variables. All variables should be declared one per line with no multi line declarations.
 + Make sure to use let instead of var wherever possible.
 + When needing to access this in a callback of a method, the variable to store this should be called self. For example (let self = this;).

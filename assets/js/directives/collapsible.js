@@ -16,20 +16,20 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* globals app */
+(function () {
+    'use strict';
 
-'use strict';
-
-app.directive('collapsible', ['$compile', function ($compile) {
-    return {
-        restrict: 'E',
-        link: function (scope, element, attrs) {
-            var html = [];
-            html.push('<span class="pull-right clickable" ng-click="_updateCollapse(\'' + attrs.model + '\')">');
-            html.push('<i class="glyphicon" ng-class="{\'glyphicon-chevron-up\': ' + attrs.model + ', \'glyphicon-chevron-down\': !' + attrs.model + '}"></i>');
-            html.push('</span>');
-            element.html(html.join(''));
-            $compile(element.contents())(scope);
-        }
-    };
-}]);
+    angular.module('AllmightyTwitchToolbox').directive('collapsible', ['$compile', function ($compile) {
+        return {
+            restrict: 'E',
+            link: function (scope, element, attrs) {
+                var html = [];
+                html.push('<span class="pull-right clickable" ng-click="_updateCollapse(\'' + attrs.model + '\')">');
+                html.push('<i class="glyphicon" ng-class="{\'glyphicon-chevron-up\': ' + attrs.model + ', \'glyphicon-chevron-down\': !' + attrs.model + '}"></i>');
+                html.push('</span>');
+                element.html(html.join(''));
+                $compile(element.contents())(scope);
+            }
+        };
+    }]);
+})();

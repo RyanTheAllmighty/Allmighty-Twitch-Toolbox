@@ -16,37 +16,39 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-'use strict';
+(function () {
+    'use strict';
 
-angular.module('socket-io', []);
+    angular.module('socket-io', []);
 
-let clientSocketIO;
+    let clientSocketIO;
 
-angular.module('socket-io').provider('SocketIO', function () {
-    this.options = {
-        socketPort: 4000
-    };
+    angular.module('socket-io').provider('SocketIO', function () {
+        this.options = {
+            socketPort: 4000
+        };
 
-    this.setOptions = function (options) {
-        console.log('SocketIOProvider::setOptions()');
-        if (!angular.isObject(options)) {
-            throw new Error('Options should be an object!');
-        }
+        this.setOptions = function (options) {
+            console.log('SocketIOProvider::setOptions()');
+            if (!angular.isObject(options)) {
+                throw new Error('Options should be an object!');
+            }
 
-        this.options = angular.extend({}, this.options, options);
-    };
+            this.options = angular.extend({}, this.options, options);
+        };
 
-    this.$get = function () {
-        console.log('SocketIO::$get()');
-        if (!clientSocketIO) {
-            console.log('New SocketIO Client');
-            clientSocketIO = require('socket.io-client')('http://127.0.0.1:' + this.options.socketPort);
+        this.$get = function () {
+            console.log('SocketIO::$get()');
+            if (!clientSocketIO) {
+                console.log('New SocketIO Client');
+                clientSocketIO = require('socket.io-client')('http://127.0.0.1:' + this.options.socketPort);
 
-            clientSocketIO.on('disconnect', function () {
-                clientSocketIO = undefined;
-            });
-        }
+                clientSocketIO.on('disconnect', function () {
+                    clientSocketIO = undefined;
+                });
+            }
 
-        return clientSocketIO;
-    };
-});
+            return clientSocketIO;
+        };
+    });
+})();

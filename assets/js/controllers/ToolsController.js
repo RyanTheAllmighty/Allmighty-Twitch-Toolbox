@@ -16,56 +16,56 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* globals app */
+(function () {
+    'use strict';
 
-'use strict';
+    let musicInformationParser = require('./assets/js/tools/musicInformationParser');
 
-let musicInformationParser = require('./assets/js/tools/musicInformationParser');
+    angular.module('AllmightyTwitchToolbox').controller('ToolsController', ['$scope', '$timeout', function ($scope, $timeout) {
+        $scope.log = {
+            musicInformationParsing: ''
+        };
 
-app.controller('ToolsController', ['$scope', '$timeout', function ($scope, $timeout) {
-    $scope.log = {
-        musicInformationParsing: ''
-    };
+        $scope.running = {
+            musicInformationParsing: false
+        };
 
-    $scope.running = {
-        musicInformationParsing: false
-    };
+        $scope.runMusicInformationParsing = function () {
+            if (!$scope.running.musicInformationParsing) {
+                $scope.log.musicInformationParsing = '';
+                $scope.running.musicInformationParsing = true;
 
-    $scope.runMusicInformationParsing = function () {
-        if (!$scope.running.musicInformationParsing) {
-            $scope.log.musicInformationParsing = '';
-            $scope.running.musicInformationParsing = true;
-
-            let ee = musicInformationParser.run({
-                clientID: $scope.App.settings.soundcloud.clientID,
-                ffmpegPath: $scope.App.settings.directories.binary + '/ffmpeg.exe',
-                path: $scope.App.settings.directories.music
-            });
-
-            ee.on('info', function (message) {
-                $timeout(function () {
-                    $scope.log.musicInformationParsing += message;
-                    $scope.$apply();
-                });
-            });
-
-            ee.on('error', function (err) {
-                $timeout(function () {
-                    $scope.log.musicInformationParsing += '\nError: ' + err.message;
-                    $scope.$apply();
+                let ee = musicInformationParser.run({
+                    clientID: $scope.App.settings.soundcloud.clientID,
+                    ffmpegPath: $scope.App.settings.directories.binary + '/ffmpeg.exe',
+                    path: $scope.App.settings.directories.music
                 });
 
-                $scope.running.musicInformationParsing = false;
-            });
-
-            ee.on('done', function () {
-                $timeout(function () {
-                    $scope.log.musicInformationParsing += '\nDone';
-                    $scope.$apply();
+                ee.on('info', function (message) {
+                    $timeout(function () {
+                        $scope.log.musicInformationParsing += message;
+                        $scope.$apply();
+                    });
                 });
 
-                $scope.running.musicInformationParsing = false;
-            });
-        }
-    };
-}]);
+                ee.on('error', function (err) {
+                    $timeout(function () {
+                        $scope.log.musicInformationParsing += '\nError: ' + err.message;
+                        $scope.$apply();
+                    });
+
+                    $scope.running.musicInformationParsing = false;
+                });
+
+                ee.on('done', function () {
+                    $timeout(function () {
+                        $scope.log.musicInformationParsing += '\nDone';
+                        $scope.$apply();
+                    });
+
+                    $scope.running.musicInformationParsing = false;
+                });
+            }
+        };
+    }]);
+})();

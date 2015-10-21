@@ -16,17 +16,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* globals app */
+(function () {
+    'use strict';
 
-'use strict';
+    angular.module('AllmightyTwitchToolbox').controller('HelpController', ['$scope', '$timeout', 'Twitch', function ($scope, $timeout, Twitch) {
+        $scope.test = Twitch.accessToken;
 
-app.controller('HelpController', ['$scope', '$timeout', 'Twitch', function ($scope, $timeout, Twitch) {
-    $scope.test = Twitch.accessToken;
-
-    Twitch.getBlocks('RyanTheAllmighty', Twitch.accessToken, function (err, data) {
-        $timeout(function () {
-            $scope.test = err || data;
-            $scope.$apply();
+        Twitch.getBlocks('RyanTheAllmighty', Twitch.accessToken, function (err, data) {
+            $timeout(function () {
+                $scope.test = err || data;
+                $scope.$apply();
+            });
         });
-    });
-}]);
+    }]);
+})();

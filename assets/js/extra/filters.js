@@ -16,29 +16,29 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* globals app */
+(function () {
+    'use strict';
 
-'use strict';
+    var AutoLinker = require('autolinker');
 
-var AutoLinker = require('autolinker');
+    angular.module('AllmightyTwitchToolbox').filter('capitalize', function () {
+        return function (input) {
+            if (input !== null) {
+                input = input.toLowerCase();
+            }
 
-app.filter('capitalize', function () {
-    return function (input) {
-        if (input !== null) {
-            input = input.toLowerCase();
-        }
-
-        return input.substring(0, 1).toUpperCase() + input.substring(1);
-    };
-});
-
-app.filter('autolink', function () {
-    var linker = new AutoLinker({
-        email: false,
-        phone: false
+            return input.substring(0, 1).toUpperCase() + input.substring(1);
+        };
     });
 
-    return function (input) {
-        return linker.link(input).replace('href=', 'ng-click="openLinkInBrowser()" href=');
-    };
-});
+    angular.module('AllmightyTwitchToolbox').filter('autolink', function () {
+        var linker = new AutoLinker({
+            email: false,
+            phone: false
+        });
+
+        return function (input) {
+            return linker.link(input).replace('href=', 'ng-click="openLinkInBrowser()" href=');
+        };
+    });
+})();

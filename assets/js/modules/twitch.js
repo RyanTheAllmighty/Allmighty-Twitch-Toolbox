@@ -16,44 +16,46 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-'use strict';
+(function () {
+    'use strict';
 
-let TwitchAPI = require('twitch-api');
+    let TwitchAPI = require('twitch-api');
 
-angular.module('twitch', []);
+    angular.module('twitch', []);
 
-angular.module('twitch').provider('Twitch', function () {
-    this.options = {
-        accessToken: '',
-        clientID: ''
-    };
+    angular.module('twitch').provider('Twitch', function () {
+        this.options = {
+            accessToken: '',
+            clientID: ''
+        };
 
-    this.setOptions = function (options) {
-        console.log('TwitchProvider::setOptions()');
-        if (!angular.isObject(options)) {
-            throw new Error('Options should be an object!');
+        this.setOptions = function (options) {
+            console.log('TwitchProvider::setOptions()');
+            if (!angular.isObject(options)) {
+                throw new Error('Options should be an object!');
+            }
+
+            this.options = angular.extend({}, this.options, options)
+        };
+
+        this.$get = function () {
+            console.log('Twitch::$get()');
+            return new OurTwitchAPI({
+                clientId: this.options.clientID,
+                accessToken: this.options.accessToken
+            });
+        };
+    });
+
+    class OurTwitchAPI extends TwitchAPI {
+        constructor(options) {
+            super(options);
+
+            this._options = options;
         }
 
-        this.options = angular.extend({}, this.options, options)
-    };
-
-    this.$get = function () {
-        console.log('Twitch::$get()');
-        return new OurTwitchAPI({
-            clientId: this.options.clientID,
-            accessToken: this.options.accessToken
-        });
-    };
-});
-
-class OurTwitchAPI extends TwitchAPI {
-    constructor(options) {
-        super(options);
-
-        this._options = options;
+        get accessToken() {
+            return this._options.accessToken;
+        }
     }
-
-    get accessToken() {
-        return this._options.accessToken;
-    }
-}
+})();

@@ -16,113 +16,113 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* globals _, nwNotify, Howl */
+(function () {
+    'use strict';
 
-'use strict';
+    angular.module('donations', []);
 
-angular.module('donations', []);
+    angular.module('donations').provider('Donations', function () {
+        this.$get = ['$q', '$rootScope', 'SocketIOServer', function ($q, $rootScope, SocketIOServer) {
+            console.log('Donations::$get()');
+            return {
+                getDonations: function (limit, callback) {
+                    if (limit && !callback) {
+                        callback = limit;
+                        limit = 100;
+                    }
 
-angular.module('donations').provider('Donations', function () {
-    this.$get = ['$q', '$rootScope', 'SocketIOServer', function ($q, $rootScope, SocketIOServer) {
-        console.log('Donations::$get()');
-        return {
-            getDonations: function (limit, callback) {
-                if (limit && !callback) {
-                    callback = limit;
-                    limit = 100;
-                }
+                    $rootScope.App.db.donations.find({}).sort({date: 1}).limit(limit).exec(callback);
+                },
+                getDonationsPromise: function (limit) {
+                    let self = this;
 
-                $rootScope.App.db.donations.find({}).sort({date: 1}).limit(limit).exec(callback);
-            },
-            getDonationsPromise: function (limit) {
-                let self = this;
-
-                return $q(function (resolve, reject) {
-                    self.getDonations(limit, function (err, donations) {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            resolve(donations);
-                        }
+                    return $q(function (resolve, reject) {
+                        self.getDonations(limit, function (err, donations) {
+                            if (err) {
+                                reject(err);
+                            } else {
+                                resolve(donations);
+                            }
+                        });
                     });
-                });
-            },
-            getDonationCount: function (callback) {
-                $rootScope.App.db.donations.count({}).exec(callback);
-            },
-            getDonationTotal: function (callback) {
-                $rootScope.App.db.donations.find({}).exec(function (err, docs) {
-                    if (err) {
-                        return callback(err);
-                    }
-
-                    callback(null, _.reduce(docs, function (total, doc) {
-                        return total + doc.amount;
-                    }));
-                });
-            },
-            processDonation: function (donation, callback) {
-                let self = this;
-
-                if (!donation.date) {
-                    donation.date = new Date();
-                }
-
-                $rootScope.App.db.donations.find({id: donation.id}).limit(1).exec(function (err, docs) {
-                    if (err) {
-                        return callback(err);
-                    }
-
-                    if (docs.length === 0) {
-                        // New donation
-                        self.newDonation(donation, callback);
-                    }
-                });
-            },
-            newDonation: function (donation, callback) {
-                if (!donation.date) {
-                    donation.date = new Date();
-                }
-
-                function notify(err) {
-                    if (err) {
-                        return callback(err);
-                    }
-
-                    // Send a desktop notification
-                    nwNotify.notify({
-                        title: 'New Donation!',
-                        text: donation.username + ' just donated $' + donation.amount + '!',
-                        onShowFunc: function () {
-                            let sound = new Howl({
-                                urls: [$rootScope.App.settings.sounds.newDonation],
-                                volume: $rootScope.App.settings.sounds.newDonationVolume
-                            });
-
-                            sound.play();
-                        }
-                    });
-
-                    // Send a broadcast to listening scopes
-                    $rootScope.$broadcast('new-donation', donation);
-                    $rootScope.$broadcast('donations');
-
-                    // Send a broadcast to listening socket clients
-                    SocketIOServer.emit('new-donation', donation, function (err) {
+                },
+                getDonationCount: function (callback) {
+                    $rootScope.App.db.donations.count({}).exec(callback);
+                },
+                getDonationTotal: function (callback) {
+                    $rootScope.App.db.donations.find({}).exec(function (err, docs) {
                         if (err) {
                             return callback(err);
                         }
 
-                        SocketIOServer.emit('donations', callback);
+                        callback(null, _.reduce(docs, function (total, doc) {
+                            return total + doc.amount;
+                        }));
                     });
-                }
+                },
+                processDonation: function (donation, callback) {
+                    let self = this;
 
-                if (!donation.test) {
-                    $rootScope.App.db.donations.update({id: donation.id}, donation, {upsert: true}, notify);
-                } else {
-                    notify();
+                    if (!donation.date) {
+                        donation.date = new Date();
+                    }
+
+                    $rootScope.App.db.donations.find({id: donation.id}).limit(1).exec(function (err, docs) {
+                        if (err) {
+                            return callback(err);
+                        }
+
+                        if (docs.length === 0) {
+                            // New donation
+                            self.newDonation(donation, callback);
+                        }
+                    });
+                },
+                newDonation: function (donation, callback) {
+                    if (!donation.date) {
+                        donation.date = new Date();
+                    }
+
+                    function notify(err) {
+                        if (err) {
+                            return callback(err);
+                        }
+
+                        // Send a desktop notification
+                        nwNotify.notify({
+                            title: 'New Donation!',
+                            text: donation.username + ' just donated $' + donation.amount + '!',
+                            onShowFunc: function () {
+                                let sound = new Howl({
+                                    urls: [$rootScope.App.settings.sounds.newDonation],
+                                    volume: $rootScope.App.settings.sounds.newDonationVolume
+                                });
+
+                                sound.play();
+                            }
+                        });
+
+                        // Send a broadcast to listening scopes
+                        $rootScope.$broadcast('new-donation', donation);
+                        $rootScope.$broadcast('donations');
+
+                        // Send a broadcast to listening socket clients
+                        SocketIOServer.emit('new-donation', donation, function (err) {
+                            if (err) {
+                                return callback(err);
+                            }
+
+                            SocketIOServer.emit('donations', callback);
+                        });
+                    }
+
+                    if (!donation.test) {
+                        $rootScope.App.db.donations.update({id: donation.id}, donation, {upsert: true}, notify);
+                    } else {
+                        notify();
+                    }
                 }
-            }
-        };
-    }];
-});
+            };
+        }];
+    });
+})();

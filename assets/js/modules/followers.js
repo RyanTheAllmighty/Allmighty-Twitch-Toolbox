@@ -16,128 +16,128 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* globals _, nwNotify, Howl */
+(function () {
+    'use strict';
 
-'use strict';
+    angular.module('followers', []);
 
-angular.module('followers', []);
+    angular.module('followers').provider('Followers', function () {
+        this.$get = ['$q', '$rootScope', 'SocketIOServer', function ($q, $rootScope, SocketIOServer) {
+            console.log('Followers::$get()');
+            return {
+                getFollowers: function (limit, callback) {
+                    if (limit && !callback) {
+                        callback = limit;
+                        limit = 100;
+                    }
 
-angular.module('followers').provider('Followers', function () {
-    this.$get = ['$q', '$rootScope', 'SocketIOServer', function ($q, $rootScope, SocketIOServer) {
-        console.log('Followers::$get()');
-        return {
-            getFollowers: function (limit, callback) {
-                if (limit && !callback) {
-                    callback = limit;
-                    limit = 100;
-                }
+                    $rootScope.App.db.followers.find({}).sort({date: 1}).limit(limit).exec(callback);
+                },
+                getFollowersPromise: function (limit) {
+                    let self = this;
 
-                $rootScope.App.db.followers.find({}).sort({date: 1}).limit(limit).exec(callback);
-            },
-            getFollowersPromise: function (limit) {
-                let self = this;
-
-                return $q(function (resolve, reject) {
-                    self.getFollowers(limit, function (err, followers) {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            resolve(followers);
-                        }
+                    return $q(function (resolve, reject) {
+                        self.getFollowers(limit, function (err, followers) {
+                            if (err) {
+                                reject(err);
+                            } else {
+                                resolve(followers);
+                            }
+                        });
                     });
-                });
-            },
-            getFollowerCount: function (callback) {
-                $rootScope.App.db.followers.count({}).exec(callback);
-            },
-            processFollower: function (follower, callback) {
-                let self = this;
+                },
+                getFollowerCount: function (callback) {
+                    $rootScope.App.db.followers.count({}).exec(callback);
+                },
+                processFollower: function (follower, callback) {
+                    let self = this;
 
-                if (!follower.date) {
-                    follower.date = new Date();
-                }
-
-                $rootScope.App.db.followers.find({$or: [{id: follower.id}, {username: follower.username}]}).limit(1).exec(function (err, docs) {
-                    if (err) {
-                        return callback(err);
+                    if (!follower.date) {
+                        follower.date = new Date();
                     }
 
-                    if (docs.length === 0) {
-                        // New follower
-                        self.newFollower(follower, callback);
-                    } else if (!_.isEqual(follower, _.omit(docs[0], '_id'))) {
-                        // The follower has different information in our DB than what Twitch says (refollow, username change) so update that
-                        self.updateFollower(follower, callback);
-                    }
-                });
-            },
-            newFollower: function (follower, callback) {
-                if (!follower.date) {
-                    follower.date = new Date();
-                }
-
-                function notify(err) {
-                    if (err) {
-                        return callback(err);
-                    }
-
-                    // Send a desktop notification
-                    nwNotify.notify({
-                        title: 'New Follower!',
-                        text: follower.display_name + ' has just followed!',
-                        onShowFunc: function () {
-                            let sound = new Howl({
-                                urls: [$rootScope.App.settings.sounds.newFollower],
-                                volume: $rootScope.App.settings.sounds.newFollowerVolume
-                            });
-
-                            sound.play();
-                        }
-                    });
-
-                    // Send a broadcast to listening scopes
-                    $rootScope.$broadcast('new-follower', follower);
-                    $rootScope.$broadcast('followers');
-
-                    // Send a broadcast to listening socket clients
-                    SocketIOServer.emit('new-follower', follower, function (err) {
+                    $rootScope.App.db.followers.find({$or: [{id: follower.id}, {username: follower.username}]}).limit(1).exec(function (err, docs) {
                         if (err) {
                             return callback(err);
                         }
 
-                        SocketIOServer.emit('followers', callback);
+                        if (docs.length === 0) {
+                            // New follower
+                            self.newFollower(follower, callback);
+                        } else if (!_.isEqual(follower, _.omit(docs[0], '_id'))) {
+                            // The follower has different information in our DB than what Twitch says (refollow, username change) so update that
+                            self.updateFollower(follower, callback);
+                        }
                     });
-                }
-
-                if (!follower.test) {
-                    $rootScope.App.db.followers.update({$or: [{username: follower.username}, {id: follower.id}]}, follower, {upsert: true}, notify);
-                } else {
-                    notify();
-                }
-            },
-            updateFollower: function (follower, callback) {
-                if (!follower.date) {
-                    follower.date = new Date();
-                }
-
-                function notify(err) {
-                    if (err) {
-                        return callback(err);
+                },
+                newFollower: function (follower, callback) {
+                    if (!follower.date) {
+                        follower.date = new Date();
                     }
 
-                    // Send a broadcast to listening scopes
-                    $rootScope.$broadcast('followers');
+                    function notify(err) {
+                        if (err) {
+                            return callback(err);
+                        }
 
-                    // Send a broadcast to listening socket clients
-                    SocketIOServer.emit('followers', callback);
-                }
+                        // Send a desktop notification
+                        nwNotify.notify({
+                            title: 'New Follower!',
+                            text: follower.display_name + ' has just followed!',
+                            onShowFunc: function () {
+                                let sound = new Howl({
+                                    urls: [$rootScope.App.settings.sounds.newFollower],
+                                    volume: $rootScope.App.settings.sounds.newFollowerVolume
+                                });
 
-                if (!follower.test) {
-                    $rootScope.App.db.followers.update({username: follower.username}, follower, {upsert: true}, notify);
-                } else {
-                    notify();
+                                sound.play();
+                            }
+                        });
+
+                        // Send a broadcast to listening scopes
+                        $rootScope.$broadcast('new-follower', follower);
+                        $rootScope.$broadcast('followers');
+
+                        // Send a broadcast to listening socket clients
+                        SocketIOServer.emit('new-follower', follower, function (err) {
+                            if (err) {
+                                return callback(err);
+                            }
+
+                            SocketIOServer.emit('followers', callback);
+                        });
+                    }
+
+                    if (!follower.test) {
+                        $rootScope.App.db.followers.update({$or: [{username: follower.username}, {id: follower.id}]}, follower, {upsert: true}, notify);
+                    } else {
+                        notify();
+                    }
+                },
+                updateFollower: function (follower, callback) {
+                    if (!follower.date) {
+                        follower.date = new Date();
+                    }
+
+                    function notify(err) {
+                        if (err) {
+                            return callback(err);
+                        }
+
+                        // Send a broadcast to listening scopes
+                        $rootScope.$broadcast('followers');
+
+                        // Send a broadcast to listening socket clients
+                        SocketIOServer.emit('followers', callback);
+                    }
+
+                    if (!follower.test) {
+                        $rootScope.App.db.followers.update({username: follower.username}, follower, {upsert: true}, notify);
+                    } else {
+                        notify();
+                    }
                 }
-            }
-        };
-    }];
-});
+            };
+        }];
+    });
+})();

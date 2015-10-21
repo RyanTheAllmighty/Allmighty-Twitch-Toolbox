@@ -16,49 +16,49 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* globals app */
+(function () {
+    'use strict';
 
-'use strict';
+    let settingsService = require('./assets/js/services/settingsService');
 
-let settingsService = require('./assets/js/services/settingsService');
-
-app.controller('SettingsController', ['$scope', 'Notification', function ($scope, Notification) {
-    $scope.settings = angular.copy($scope.App.settings);
-
-    $scope.reset = function () {
+    angular.module('AllmightyTwitchToolbox').controller('SettingsController', ['$scope', 'Notification', function ($scope, Notification) {
         $scope.settings = angular.copy($scope.App.settings);
-    };
 
-    $scope.save = function () {
-        if (document.getElementById('newDonation').files[0]) {
-            $scope.settings.sounds.newDonation = document.getElementById('newDonation').files[0].path.toString();
-        }
+        $scope.reset = function () {
+            $scope.settings = angular.copy($scope.App.settings);
+        };
 
-        if (document.getElementById('newFollower').files[0]) {
-            $scope.settings.sounds.newFollower = document.getElementById('newFollower').files[0].path.toString();
-        }
-
-        if (document.getElementById('binaryDirectory').files[0]) {
-            $scope.settings.directories.binary = document.getElementById('binaryDirectory').files[0].path.toString();
-        }
-
-        if (document.getElementById('dataDirectory').files[0]) {
-            $scope.settings.directories.data = document.getElementById('dataDirectory').files[0].path.toString();
-        }
-
-        if (document.getElementById('musicDirectory').files[0]) {
-            $scope.settings.directories.music = document.getElementById('musicDirectory').files[0].path.toString();
-        }
-
-        $scope.App.settings = angular.copy($scope.settings);
-
-        settingsService.saveSettings(function (err) {
-            if (err) {
-                console.error(err);
-                return Notification.error({message: 'Couldn\'t save settings!', delay: 3000});
+        $scope.save = function () {
+            if (document.getElementById('newDonation').files[0]) {
+                $scope.settings.sounds.newDonation = document.getElementById('newDonation').files[0].path.toString();
             }
 
-            Notification.success({message: 'Settings saved!', delay: 3000});
-        });
-    };
-}]);
+            if (document.getElementById('newFollower').files[0]) {
+                $scope.settings.sounds.newFollower = document.getElementById('newFollower').files[0].path.toString();
+            }
+
+            if (document.getElementById('binaryDirectory').files[0]) {
+                $scope.settings.directories.binary = document.getElementById('binaryDirectory').files[0].path.toString();
+            }
+
+            if (document.getElementById('dataDirectory').files[0]) {
+                $scope.settings.directories.data = document.getElementById('dataDirectory').files[0].path.toString();
+            }
+
+            if (document.getElementById('musicDirectory').files[0]) {
+                $scope.settings.directories.music = document.getElementById('musicDirectory').files[0].path.toString();
+            }
+
+            $scope.App.settings = angular.copy($scope.settings);
+
+            settingsService.saveSettings(function (err) {
+                if (err) {
+                    console.error(err);
+                    return Notification.error({message: 'Couldn\'t save settings!', delay: 3000});
+                }
+
+                Notification.success({message: 'Settings saved!', delay: 3000});
+            });
+        };
+    }]);
+})();

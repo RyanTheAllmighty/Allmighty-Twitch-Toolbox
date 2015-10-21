@@ -16,84 +16,86 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* globals async */
+(function () {
+    'use strict';
 
-'use strict';
+    let async = require('async');
 
-angular.module('socket-io-server', []);
+    angular.module('socket-io-server', []);
 
-// This is a list of all the sockets currently listening
-let sockets = [];
+    // This is a list of all the sockets currently listening
+    let sockets = [];
 
-// If the socket is listening
-let listening = false;
+    // If the socket is listening
+    let listening = false;
 
-angular.module('socket-io-server').provider('SocketIOServer', function () {
-    this.options = {
-        socketPort: 4000
-    };
-
-    this.setOptions = function (options) {
-        console.log('SocketIOServerProvider::setOptions()');
-        if (!angular.isObject(options)) {
-            throw new Error('Options should be an object!');
-        }
-
-        this.options = angular.extend({}, this.options, options);
-    };
-
-    this.startServer = function () {
-        console.log('SocketIOServerProvider::startServer()');
-        if (listening) {
-            return console.error(new Error('SocketIO server has already been started!'));
-        }
-
-        var serverApp = require('http').createServer();
-        var io = require('socket.io')(serverApp);
-
-        listening = true;
-
-        // Listen on our socket.io server
-        serverApp.listen(this.options.socketPort);
-
-        io.on('connection', function (socket) {
-            console.log('Socket connected');
-            // Add this socket to the list of active sockets
-            sockets.push(socket);
-
-            // This makes sure we don't try to send messages on the socket to disconnected clients
-            socket.on('disconnect', function () {
-                var index = sockets.indexOf(socket);
-                if (index > -1) {
-                    sockets.splice(index, 1);
-                }
-            });
-        });
-    };
-
-    this.$get = function () {
-        console.log('SocketIOServerProvider::$get()');
-        return {
-            emit: function (name, message, callback) {
-                if (!callback) {
-                    if (message instanceof Function) {
-                        callback = message;
-                        message = null;
-                    } else {
-                        callback = function () {
-                        };
-                    }
-                }
-
-                if (!angular.isDefined(message)) {
-                    message = null;
-                }
-
-                async.each(sockets, function (socket, next) {
-                    socket.emit(name, message);
-                    next();
-                }, callback);
-            }
+    angular.module('socket-io-server').provider('SocketIOServer', function () {
+        this.options = {
+            socketPort: 4000
         };
-    };
-});
+
+        this.setOptions = function (options) {
+            console.log('SocketIOServerProvider::setOptions()');
+            if (!angular.isObject(options)) {
+                throw new Error('Options should be an object!');
+            }
+
+            this.options = angular.extend({}, this.options, options);
+        };
+
+        this.startServer = function () {
+            console.log('SocketIOServerProvider::startServer()');
+            if (listening) {
+                return console.error(new Error('SocketIO server has already been started!'));
+            }
+
+            var serverApp = require('http').createServer();
+            var io = require('socket.io')(serverApp);
+
+            listening = true;
+
+            // Listen on our socket.io server
+            serverApp.listen(this.options.socketPort);
+
+            io.on('connection', function (socket) {
+                console.log('Socket connected');
+                // Add this socket to the list of active sockets
+                sockets.push(socket);
+
+                // This makes sure we don't try to send messages on the socket to disconnected clients
+                socket.on('disconnect', function () {
+                    var index = sockets.indexOf(socket);
+                    if (index > -1) {
+                        sockets.splice(index, 1);
+                    }
+                });
+            });
+        };
+
+        this.$get = function () {
+            console.log('SocketIOServerProvider::$get()');
+            return {
+                emit: function (name, message, callback) {
+                    if (!callback) {
+                        if (message instanceof Function) {
+                            callback = message;
+                            message = null;
+                        } else {
+                            callback = function () {
+                            };
+                        }
+                    }
+
+                    if (!angular.isDefined(message)) {
+                        message = null;
+                    }
+
+                    async.each(sockets, function (socket, next) {
+                        socket.emit(name, message);
+                        next();
+                    }, callback);
+                }
+            };
+        };
+    });
+})();

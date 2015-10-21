@@ -16,37 +16,37 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* globals app, accounting */
+(function () {
+    'use strict';
 
-'use strict';
+    angular.module('AllmightyTwitchToolbox').controller('DonationsController', ['$scope', 'Donations', 'DTOptionsBuilder', 'DTColumnBuilder', function ($scope, Donations, DTOptionsBuilder, DTColumnBuilder) {
+        let getDonations = function () {
+            return Donations.getDonationsPromise(100);
+        };
 
-app.controller('DonationsController', ['$scope', 'Donations', 'DTOptionsBuilder', 'DTColumnBuilder', function ($scope, Donations, DTOptionsBuilder, DTColumnBuilder) {
-    let getDonations = function () {
-        return Donations.getDonationsPromise(100);
-    };
+        // The instance of the dataTable
+        $scope.dtInstance = {};
 
-    // The instance of the dataTable
-    $scope.dtInstance = {};
+        $scope.dtOptions = DTOptionsBuilder.fromFnPromise(getDonations).withPaginationType('full_numbers').withOption('order', [[3, 'desc']]).withBootstrap();
 
-    $scope.dtOptions = DTOptionsBuilder.fromFnPromise(getDonations).withPaginationType('full_numbers').withOption('order', [[3, 'desc']]).withBootstrap();
+        $scope.dtColumns = [
+            DTColumnBuilder.newColumn('username').withTitle('Username'),
+            DTColumnBuilder.newColumn('amount').withTitle('Amount').renderWith(function (data) {
+                return accounting.formatMoney(data);
+            }),
+            DTColumnBuilder.newColumn('note').withTitle('Note'),
+            DTColumnBuilder.newColumn('date').withTitle('Date Donated').withOption('bSearchable', false)
+        ];
 
-    $scope.dtColumns = [
-        DTColumnBuilder.newColumn('username').withTitle('Username'),
-        DTColumnBuilder.newColumn('amount').withTitle('Amount').renderWith(function (data) {
-            return accounting.formatMoney(data);
-        }),
-        DTColumnBuilder.newColumn('note').withTitle('Note'),
-        DTColumnBuilder.newColumn('date').withTitle('Date Donated').withOption('bSearchable', false)
-    ];
+        function changeData() {
+            // Reload the data in the table
+            $scope.dtInstance.changeData(getDonations);
+        }
 
-    function changeData() {
-        // Reload the data in the table
-        $scope.dtInstance.changeData(getDonations);
-    }
+        // Donations list updated
+        $scope.$on('donations', changeData);
 
-    // Donations list updated
-    $scope.$on('donations', changeData);
-
-    // New donation
-    $scope.$on('new-donation', changeData);
-}]);
+        // New donation
+        $scope.$on('new-donation', changeData);
+    }]);
+})();

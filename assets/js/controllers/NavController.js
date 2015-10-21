@@ -16,10 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* globals app */
+(function () {
+    'use strict';
 
-'use strict';
-
-app.controller('NavController', ['$scope', '$location', function ($scope, $location) {
-    $scope.$location = $location;
-}]);
+    angular.module('AllmightyTwitchToolbox').controller('NavController', ['$scope', '$location', function ($scope, $location) {
+        $scope.$location = $location;
+    }]);
+})();

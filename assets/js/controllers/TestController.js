@@ -16,53 +16,53 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* globals app */
+(function () {
+    'use strict';
 
-'use strict';
+    angular.module('AllmightyTwitchToolbox').controller('TestController', ['$scope', 'Followers', 'Donations', 'Notification', function ($scope, Followers, Donations, Notification) {
+        $scope.donation = {
+            username: '',
+            amount: 0
+        };
 
-app.controller('TestController', ['$scope', 'Followers', 'Donations', 'Notification', function ($scope, Followers, Donations, Notification) {
-    $scope.donation = {
-        username: '',
-        amount: 0
-    };
+        $scope.testDonation = function () {
+            if ($scope.donation.username === '') {
+                Notification.error({message: 'Username must be filled in!', delay: 3000});
+            } else {
+                let username = $scope.donation.username;
+                let amount = $scope.donation.amount;
 
-    $scope.testDonation = function () {
-        if ($scope.donation.username === '') {
-            Notification.error({message: 'Username must be filled in!', delay: 3000});
-        } else {
-            let username = $scope.donation.username;
-            let amount = $scope.donation.amount;
+                $scope.clearDonation();
 
-            $scope.clearDonation();
+                Donations.newDonation({username, amount, note: 'Test', id: 1, date: new Date(), test: true});
+                Notification.success({message: 'New donation triggered!', delay: 3000});
+            }
+        };
 
-            Donations.newDonation({username, amount, note: 'Test', id: 1, date: new Date(), test: true});
-            Notification.success({message: 'New donation triggered!', delay: 3000});
-        }
-    };
+        $scope.clearDonation = function () {
+            $scope.donation.username = '';
+            $scope.donation.amount = 0;
+        };
 
-    $scope.clearDonation = function () {
-        $scope.donation.username = '';
-        $scope.donation.amount = 0;
-    };
+        $scope.follower = {
+            username: ''
+        };
 
-    $scope.follower = {
-        username: ''
-    };
+        $scope.testFollower = function () {
+            if ($scope.follower.username === '') {
+                Notification.error({message: 'Username must be filled in!', delay: 3000});
+            } else {
+                let username = $scope.follower.username;
 
-    $scope.testFollower = function () {
-        if ($scope.follower.username === '') {
-            Notification.error({message: 'Username must be filled in!', delay: 3000});
-        } else {
-            let username = $scope.follower.username;
+                $scope.clearFollower();
 
-            $scope.clearFollower();
+                Followers.newFollower({username, display_name: username, id: 1, date: new Date(), test: true});
+                Notification.success({message: 'New follower triggered!', delay: 3000});
+            }
+        };
 
-            Followers.newFollower({username, display_name: username, id: 1, date: new Date(), test: true});
-            Notification.success({message: 'New follower triggered!', delay: 3000});
-        }
-    };
-
-    $scope.clearFollower = function () {
-        $scope.follower.username = '';
-    };
-}]);
+        $scope.clearFollower = function () {
+            $scope.follower.username = '';
+        };
+    }]);
+})();

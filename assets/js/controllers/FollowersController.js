@@ -16,33 +16,33 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* globals app */
+(function () {
+    'use strict';
 
-'use strict';
+    angular.module('AllmightyTwitchToolbox').controller('FollowersController', ['$scope', 'Followers', 'DTOptionsBuilder', 'DTColumnBuilder', function ($scope, Followers, DTOptionsBuilder, DTColumnBuilder) {
+        let getFollowers = function () {
+            return Followers.getFollowersPromise(100);
+        };
 
-app.controller('FollowersController', ['$scope', 'Followers', 'DTOptionsBuilder', 'DTColumnBuilder', function ($scope, Followers, DTOptionsBuilder, DTColumnBuilder) {
-    let getFollowers = function () {
-        return Followers.getFollowersPromise(100);
-    };
+        // The instance of the dataTable
+        $scope.dtInstance = {};
 
-    // The instance of the dataTable
-    $scope.dtInstance = {};
+        $scope.dtOptions = DTOptionsBuilder.fromFnPromise(getFollowers).withPaginationType('full_numbers').withOption('order', [[1, 'desc']]).withBootstrap();
 
-    $scope.dtOptions = DTOptionsBuilder.fromFnPromise(getFollowers).withPaginationType('full_numbers').withOption('order', [[1, 'desc']]).withBootstrap();
+        $scope.dtColumns = [
+            DTColumnBuilder.newColumn('display_name').withTitle('Username'),
+            DTColumnBuilder.newColumn('date').withTitle('Date Followed').withOption('bSearchable', false)
+        ];
 
-    $scope.dtColumns = [
-        DTColumnBuilder.newColumn('display_name').withTitle('Username'),
-        DTColumnBuilder.newColumn('date').withTitle('Date Followed').withOption('bSearchable', false)
-    ];
+        function changeData() {
+            // Reload the data in the table
+            $scope.dtInstance.changeData(getFollowers);
+        }
 
-    function changeData() {
-        // Reload the data in the table
-        $scope.dtInstance.changeData(getFollowers);
-    }
+        // Followers list updated
+        $scope.$on('followers', changeData);
 
-    // Followers list updated
-    $scope.$on('followers', changeData);
-
-    // New follower
-    $scope.$on('new-follower', changeData);
-}]);
+        // New follower
+        $scope.$on('new-follower', changeData);
+    }]);
+})();

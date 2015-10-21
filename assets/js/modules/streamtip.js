@@ -16,66 +16,68 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* globals request */
+(function () {
+    'use strict';
 
-'use strict';
+    let request = require('request');
 
-angular.module('streamtip', []);
+    angular.module('streamtip', []);
 
-angular.module('streamtip').provider('StreamTip', function () {
-    this.options = {
-        clientId: '',
-        accessToken: ''
-    };
+    angular.module('streamtip').provider('StreamTip', function () {
+        this.options = {
+            clientId: '',
+            accessToken: ''
+        };
 
-    this.setOptions = function (options) {
-        console.log('StreamTipProvider::setOptions()');
-        if (!angular.isObject(options)) {
-            throw new Error('Options should be an object!');
-        }
-
-        this.options = angular.extend({}, this.options, options);
-    };
-
-    this.$get = function () {
-        console.log('StreamTip::$get()');
-        return new StreamTipAPI(this.options);
-    };
-});
-
-class StreamTipAPI {
-    constructor(options) {
-        this._options = options;
-    }
-
-    getTips(options, callback) {
-        let self = this;
-
-        if (!callback) {
-            callback = options;
-            options = {
-                limit: 25
-            };
-        }
-
-        let queryString = '?';
-
-        if (options.limit) {
-            queryString += 'limit=' + options.limit;
-        }
-
-        request.get({
-            url: 'https://streamtip.com/api/tips' + queryString,
-            json: true,
-            headers: {
-                'Authorization': self._options.clientID + ' ' + self._options.accessToken
-            }
-        }, function (err, res, body) {
-            if (err) {
-                return callback(err);
+        this.setOptions = function (options) {
+            console.log('StreamTipProvider::setOptions()');
+            if (!angular.isObject(options)) {
+                throw new Error('Options should be an object!');
             }
 
-            callback(null, body);
-        });
+            this.options = angular.extend({}, this.options, options);
+        };
+
+        this.$get = function () {
+            console.log('StreamTip::$get()');
+            return new StreamTipAPI(this.options);
+        };
+    });
+
+    class StreamTipAPI {
+        constructor(options) {
+            this._options = options;
+        }
+
+        getTips(options, callback) {
+            let self = this;
+
+            if (!callback) {
+                callback = options;
+                options = {
+                    limit: 25
+                };
+            }
+
+            let queryString = '?';
+
+            if (options.limit) {
+                queryString += 'limit=' + options.limit;
+            }
+
+            request.get({
+                url: 'https://streamtip.com/api/tips' + queryString,
+                json: true,
+                headers: {
+                    'Authorization': self._options.clientID + ' ' + self._options.accessToken
+                }
+            }, function (err, res, body) {
+                if (err) {
+                    return callback(err);
+                }
+
+                callback(null, body);
+            });
+        }
     }
-}
+})();
