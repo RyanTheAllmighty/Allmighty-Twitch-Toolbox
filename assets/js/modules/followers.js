@@ -83,17 +83,9 @@
                         }
 
                         // Send a desktop notification
-                        Notifications.notify({
-                            title: 'New Follower!',
-                            text: follower.display_name + ' has just followed!',
-                            onShowFunc: function () {
-                                let sound = new Howl({
-                                    urls: [$rootScope.App.settings.sounds.newFollower],
-                                    volume: $rootScope.App.settings.sounds.newFollowerVolume
-                                });
-
-                                sound.play();
-                            }
+                        Notifications.notify('New Follower!', follower.display_name + ' has just followed!', {
+                            url: $rootScope.App.settings.sounds.newFollower,
+                            volume: $rootScope.App.settings.sounds.newFollowerVolume
                         });
 
                         // Send a broadcast to listening scopes

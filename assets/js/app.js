@@ -19,34 +19,12 @@
 (function () {
     'use strict';
 
-    let _ = require('lodash');
     let path = require('path');
     let gui = require('nw.gui');
     let Datastore = require('nedb');
     let nwNotify = require('nw-notify');
 
     let loadingService = require('./assets/js/services/loadingService');
-
-    let app = angular.module('AllmightyTwitchToolbox', [
-        'ngRoute',
-        'ngSanitize',
-        'ui-notification',
-        'ui.bootstrap',
-        'twitch',
-        'streamtip',
-        'socket-io',
-        'socket-io-server',
-        'follower-checker',
-        'donation-checker',
-        'music-checker',
-        'datatables',
-        'datatables.bootstrap',
-        'followers',
-        'donations',
-        'notifications',
-        'luegg.directives',
-        'LocalStorageModule'
-    ]);
 
     /**
      * @type {{basePath: (String), db: {donations: (Datastore), followers: (Datastore), settings: (Datastore)}, settings: (Object)}}
@@ -72,13 +50,30 @@
         policy.ignore();
     });
 
-    app.config(function ($routeProvider, localStorageServiceProvider, NotificationProvider, TwitchProvider, StreamTipProvider, SocketIOProvider, SocketIOServerProvider, FollowerCheckerProvider, DonationCheckerProvider, MusicCheckerProvider) {
-        // Load everything before we proceed
-        loadingService.load(function (err) {
-            if (err) {
-                console.error(err);
-            }
+    let app = angular.module('AllmightyTwitchToolbox', [
+        'ngRoute',
+        'ngSanitize',
+        'ui-notification',
+        'ui.bootstrap',
+        'twitch',
+        'streamtip',
+        'socket-io',
+        'socket-io-server',
+        'follower-checker',
+        'donation-checker',
+        'music-checker',
+        'datatables',
+        'datatables.bootstrap',
+        'followers',
+        'donations',
+        'notifications',
+        'luegg.directives',
+        'LocalStorageModule'
+    ]);
 
+    // Load everything before we proceed
+    loadingService.load(function () {
+        app.config(function ($routeProvider, localStorageServiceProvider, NotificationsProvider, NotificationProvider, TwitchProvider, StreamTipProvider, SocketIOProvider, SocketIOServerProvider, FollowerCheckerProvider, DonationCheckerProvider, MusicCheckerProvider) {
             // Setup the routes
             $routeProvider.when('/', {
                 templateUrl: './assets/html/home.html',
@@ -105,6 +100,10 @@
 
 
             localStorageServiceProvider.setPrefix('AllmightyTwitchToolbox');
+
+            NotificationsProvider.setOptions({
+                displayTime: global.App.settings.notifications.notificationTime
+            });
 
             // Setup the NotificationProvider
             NotificationProvider.setOptions({
@@ -157,39 +156,42 @@
                 ffmpegPath: path.join(global.App.settings.directories.binary, 'ffmpeg.exe')
             });
         });
-    });
 
-    app.run(['$rootScope', 'localStorageService', function ($rootScope, localStorageService) {
-        // Load the app into the root scope
-        $rootScope.App = global.App;
+        app.run(['$rootScope', 'localStorageService', function ($rootScope, localStorageService) {
+            // Load the app into the root scope
+            $rootScope.App = global.App;
 
-        $rootScope._updateCollapse = function (model) {
-            let parts = model.split('.').splice(1);
+            $rootScope._updateCollapse = function (model) {
+                let parts = model.split('.').splice(1);
 
-            if (!$rootScope._collapsedPanels[parts[0]]) {
-                $rootScope._collapsedPanels[parts[0]] = {};
+                if (!$rootScope._collapsedPanels[parts[0]]) {
+                    $rootScope._collapsedPanels[parts[0]] = {};
+                }
+
+                $rootScope._collapsedPanels[parts[0]][parts[1]] = !$rootScope._collapsedPanels[parts[0]][parts[1]];
+
+                localStorageService.set('collapsedPanels', $rootScope._collapsedPanels);
+            };
+
+            $rootScope._collapsedPanels = localStorageService.get('collapsedPanels');
+
+            if (!$rootScope._collapsedPanels) {
+                $rootScope._collapsedPanels = {};
             }
+        }]);
 
-            $rootScope._collapsedPanels[parts[0]][parts[1]] = !$rootScope._collapsedPanels[parts[0]][parts[1]];
+        app.run(['FollowerChecker', 'DonationChecker', 'MusicChecker', function (FollowerChecker, DonationChecker, MusicChecker) {
+            // Start checking for new followers
+            FollowerChecker.startChecking();
 
-            localStorageService.set('collapsedPanels', $rootScope._collapsedPanels);
-        };
+            // Start checking for new donations
+            DonationChecker.startChecking();
 
-        $rootScope._collapsedPanels = localStorageService.get('collapsedPanels');
+            // Start checking for song changes
+            MusicChecker.startChecking();
 
-        if (!$rootScope._collapsedPanels) {
-            $rootScope._collapsedPanels = {};
-        }
-    }]);
-
-    app.run(['FollowerChecker', 'DonationChecker', 'MusicChecker', function (FollowerChecker, DonationChecker, MusicChecker) {
-        // Start checking for new followers
-        FollowerChecker.startChecking();
-
-        // Start checking for new donations
-        DonationChecker.startChecking();
-
-        // Start checking for song changes
-        MusicChecker.startChecking();
-    }]);
+            // Show the window
+            gui.Window.get().show();
+        }]);
+    });
 })();

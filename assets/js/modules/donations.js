@@ -22,7 +22,7 @@
     angular.module('donations', []);
 
     angular.module('donations').provider('Donations', function () {
-        this.$get = ['$q', '$rootScope', 'SocketIOServer', function ($q, $rootScope, SocketIOServer) {
+        this.$get = ['$q', '$rootScope', 'SocketIOServer', 'Notifications', function ($q, $rootScope, SocketIOServer, Notifications) {
             console.log('Donations::$get()');
             return {
                 getDonations: function (limit, callback) {
@@ -89,17 +89,9 @@
                         }
 
                         // Send a desktop notification
-                        nwNotify.notify({
-                            title: 'New Donation!',
-                            text: donation.username + ' just donated $' + donation.amount + '!',
-                            onShowFunc: function () {
-                                let sound = new Howl({
-                                    urls: [$rootScope.App.settings.sounds.newDonation],
-                                    volume: $rootScope.App.settings.sounds.newDonationVolume
-                                });
-
-                                sound.play();
-                            }
+                        Notifications.notify('New Donation!', donation.username + ' just donated $' + donation.amount + '!', {
+                            url: $rootScope.App.settings.sounds.newDonation,
+                            volume: $rootScope.App.settings.sounds.newDonationVolume
                         });
 
                         // Send a broadcast to listening scopes

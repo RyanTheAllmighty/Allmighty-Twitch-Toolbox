@@ -19,18 +19,62 @@
 (function () {
     'use strict';
 
-    let path = require('path');
     let nwNotify = require('nw-notify');
 
     angular.module('notifications', []);
 
     angular.module('notifications').provider('Notifications', function () {
+        this.options = {
+            displayTime: 1
+        };
+
+        this.setOptions = function (options) {
+            console.log('NotificationsProvider::setOptions()');
+            if (!angular.isObject(options)) {
+                throw new Error('Options should be an object!');
+            }
+
+            this.options = angular.extend({}, this.options, options);
+        };
+
+        this.setup = function () {
+            // Setup the notifications
+            nwNotify.setTemplatePath('notification.html');
+            nwNotify.setConfig({
+                appIcon: 'assets/image/icon.png',
+                displayTime: this.options.displayTime * 1000,
+                maxVisibleNotifications: 1
+            });
+        };
+
         this.$get = function () {
-            console.log('Notifications::$get()');
+            let self = this;
+
+            this.setup();
 
             return {
-                notify: function (obj) {
-                    nwNotify.notify(obj);
+                setOptions: function (options) {
+                    self.setOptions(options);
+                },
+                notify: function (title, text, sound) {
+                    let onShowFunc;
+
+                    if (sound) {
+                        onShowFunc = function () {
+                            let toPlay = new Howl({
+                                urls: [sound.url],
+                                volume: sound.volume
+                            });
+
+                            toPlay.play();
+                        };
+                    }
+
+                    nwNotify.notify({
+                        title,
+                        text,
+                        onShowFunc
+                    });
                 }
             };
         };

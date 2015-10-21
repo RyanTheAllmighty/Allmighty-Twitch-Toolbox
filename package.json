@@ -37,7 +37,6 @@
     "musicmetadata": "^2.0.2",
     "ncp": "^2.0.0",
     "nedb": "^1.2.1",
-    "node-notifier": "^4.3.1",
     "node-soundcloud": "0.0.3",
     "nw-notify": "^0.2.2",
     "request": "^2.65.0",
