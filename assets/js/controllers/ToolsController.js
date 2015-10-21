@@ -30,7 +30,7 @@
             musicInformationParsing: false
         };
 
-        $scope.runMusicInformationParsing = function () {
+        $scope.runMusicInformationParsing = function (force) {
             if (!$scope.running.musicInformationParsing) {
                 $scope.log.musicInformationParsing = '';
                 $scope.running.musicInformationParsing = true;
@@ -38,7 +38,8 @@
                 let ee = musicInformationParser.run({
                     clientID: $scope.App.settings.soundcloud.clientID,
                     ffmpegPath: $scope.App.settings.directories.binary + '/ffmpeg.exe',
-                    path: $scope.App.settings.directories.music
+                    path: $scope.App.settings.directories.music,
+                    force
                 });
 
                 ee.on('info', function (message) {
