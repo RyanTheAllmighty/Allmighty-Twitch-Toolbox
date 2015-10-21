@@ -19,8 +19,13 @@
 (function () {
     'use strict';
 
+    let _ = require('lodash');
     let path = require('path');
-    let remote = require('remote');
+    let gui = require('nw.gui');
+    let Datastore = require('nedb');
+    let nwNotify = require('nw-notify');
+
+    let loadingService = require('./assets/js/services/loadingService');
 
     let app = angular.module('AllmightyTwitchToolbox', [
         'ngRoute',
@@ -43,89 +48,120 @@
         'LocalStorageModule'
     ]);
 
+    /**
+     * @type {{basePath: (String), db: {donations: (Datastore), followers: (Datastore), settings: (Datastore)}, settings: (Object)}}
+     */
+    global.App = {
+        // Setup the base path
+        basePath: path.join(gui.App.dataPath, 'ApplicationStorage'),
+        db: {
+            donations: new Datastore({filename: path.join(gui.App.dataPath, 'ApplicationStorage', 'db', 'donations.db'), autoload: true}),
+            followers: new Datastore({filename: path.join(gui.App.dataPath, 'ApplicationStorage', 'db', 'followers.db'), autoload: true}),
+            settings: new Datastore({filename: path.join(gui.App.dataPath, 'ApplicationStorage', 'db', 'settings.db'), autoload: true})
+        },
+        settings: {}
+    };
+
+    gui.Window.get().on('closed', function () {
+        gui.App.clearCache();
+        nwNotify.closeAll();
+    });
+
+    gui.Window.get().on('new-win-policy', function (frame, url, policy) {
+        gui.Shell.openExternal(url);
+        policy.ignore();
+    });
+
     app.config(function ($routeProvider, localStorageServiceProvider, NotificationProvider, TwitchProvider, StreamTipProvider, SocketIOProvider, SocketIOServerProvider, FollowerCheckerProvider, DonationCheckerProvider, MusicCheckerProvider) {
-        // Setup the routes
-        $routeProvider.when('/', {
-            templateUrl: './assets/html/home.html',
-            controller: 'HomeController'
-        }).when('/followers', {
-            templateUrl: './assets/html/followers.html',
-            controller: 'FollowersController'
-        }).when('/donations', {
-            templateUrl: './assets/html/donations.html',
-            controller: 'DonationsController'
-        }).when('/settings', {
-            templateUrl: './assets/html/settings.html',
-            controller: 'SettingsController'
-        }).when('/tools', {
-            templateUrl: './assets/html/tools.html',
-            controller: 'ToolsController'
-        }).when('/test', {
-            templateUrl: './assets/html/test.html',
-            controller: 'TestController'
-        }).when('/help', {
-            templateUrl: './assets/html/help.html',
-            controller: 'HelpController'
-        }).otherwise({redirectTo: '/'});
+        // Load everything before we proceed
+        loadingService.load(function (err) {
+            if (err) {
+                console.error(err);
+            }
+
+            // Setup the routes
+            $routeProvider.when('/', {
+                templateUrl: './assets/html/home.html',
+                controller: 'HomeController'
+            }).when('/followers', {
+                templateUrl: './assets/html/followers.html',
+                controller: 'FollowersController'
+            }).when('/donations', {
+                templateUrl: './assets/html/donations.html',
+                controller: 'DonationsController'
+            }).when('/settings', {
+                templateUrl: './assets/html/settings.html',
+                controller: 'SettingsController'
+            }).when('/tools', {
+                templateUrl: './assets/html/tools.html',
+                controller: 'ToolsController'
+            }).when('/test', {
+                templateUrl: './assets/html/test.html',
+                controller: 'TestController'
+            }).when('/help', {
+                templateUrl: './assets/html/help.html',
+                controller: 'HelpController'
+            }).otherwise({redirectTo: '/'});
 
 
-        localStorageServiceProvider.setPrefix('AllmightyTwitchToolbox');
+            localStorageServiceProvider.setPrefix('AllmightyTwitchToolbox');
 
-        // Setup the NotificationProvider
-        NotificationProvider.setOptions({
-            delay: 10000,
-            startTop: 20,
-            startRight: 10,
-            verticalSpacing: 20,
-            horizontalSpacing: 20,
-            positionX: 'right',
-            positionY: 'top'
-        });
+            // Setup the NotificationProvider
+            NotificationProvider.setOptions({
+                delay: 10000,
+                startTop: 20,
+                startRight: 10,
+                verticalSpacing: 20,
+                horizontalSpacing: 20,
+                positionX: 'right',
+                positionY: 'top'
+            });
 
-        // Setup the TwitchProvider
-        TwitchProvider.setOptions({
-            accessToken: remote.getCurrentWindow().App.settings.twitch.apiToken,
-            clientID: remote.getCurrentWindow().App.settings.twitch.apiClientID
-        });
+            // Setup the TwitchProvider
+            TwitchProvider.setOptions({
+                accessToken: global.App.settings.twitch.apiToken,
+                clientID: global.App.settings.twitch.apiClientID
+            });
 
-        // Setup the StreamTipProvider
-        StreamTipProvider.setOptions({
-            clientId: remote.getCurrentWindow().App.settings.streamtip.clientID,
-            accessToken: remote.getCurrentWindow().App.settings.streamtip.accessToken
-        });
+            // Setup the StreamTipProvider
+            StreamTipProvider.setOptions({
+                clientId: global.App.settings.streamtip.clientID,
+                accessToken: global.App.settings.streamtip.accessToken
+            });
 
-        // Setup the SocketIOServerProvider
-        SocketIOServerProvider.setOptions({
-            socketPort: remote.getCurrentWindow().App.settings.network.socketIOPort
-        });
+            // Setup the SocketIOServerProvider
+            SocketIOServerProvider.setOptions({
+                socketPort: global.App.settings.network.socketIOPort
+            });
 
-        // Start the SocketIO Server
-        SocketIOServerProvider.startServer();
+            // Start the SocketIO Server
+            SocketIOServerProvider.startServer();
 
-        // Setup the SocketIOProvider
-        SocketIOProvider.setOptions({
-            socketPort: remote.getCurrentWindow().App.settings.network.socketIOPort
-        });
+            // Setup the SocketIOProvider
+            SocketIOProvider.setOptions({
+                socketPort: global.App.settings.network.socketIOPort
+            });
 
-        // Setup the follower checker
-        FollowerCheckerProvider.setOptions({
-            interval: remote.getCurrentWindow().App.settings.checks.followers
-        });
+            // Setup the follower checker
+            FollowerCheckerProvider.setOptions({
+                interval: global.App.settings.checks.followers
+            });
 
-        // Setup the donation checker
-        DonationCheckerProvider.setOptions({
-            interval: remote.getCurrentWindow().App.settings.checks.donations
-        });
+            // Setup the donation checker
+            DonationCheckerProvider.setOptions({
+                interval: global.App.settings.checks.donations
+            });
 
-        MusicCheckerProvider.setOptions({
-            nowPlayingPath: path.join(remote.getCurrentWindow().App.settings.directories.data, 'NowPlaying.txt'),
-            ffmpegPath: path.join(remote.getCurrentWindow().App.settings.directories.binary, 'ffmpeg.exe')
+            MusicCheckerProvider.setOptions({
+                nowPlayingPath: path.join(global.App.settings.directories.data, 'NowPlaying.txt'),
+                ffmpegPath: path.join(global.App.settings.directories.binary, 'ffmpeg.exe')
+            });
         });
     });
 
     app.run(['$rootScope', 'localStorageService', function ($rootScope, localStorageService) {
         // Load the app into the root scope
-        $rootScope.App = remote.getCurrentWindow().App;
+        $rootScope.App = global.App;
 
         $rootScope._updateCollapse = function (model) {
             let parts = model.split('.').splice(1);

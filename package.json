@@ -15,10 +15,19 @@
     "test": "node_modules/.bin/grunt"
   },
   "homepage": "https://github.com/RyanTheAllmighty/Allmighty-Twitch-Toolbox",
-  "main": "app.js",
+  "main": "app.html",
+  "node-main": "app.js",
+  "window": {
+    "show": false,
+    "icon": "./assets/image/icon.png",
+    "toolbar": true,
+    "width": 800,
+    "height": 500,
+    "min_width": 800,
+    "min_height": 500
+  },
   "dependencies": {
     "archiver": "^0.14.3",
-    "asar": "^0.8.0",
     "async": "^1.4.2",
     "autolinker": "^0.18.1",
     "del": "^2.0.2",
