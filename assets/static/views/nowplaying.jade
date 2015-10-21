@@ -1,0 +1,25 @@
+doctype html
+html(lang='en')
+    head
+        meta(charset='UTF-8')
+        title Now Playing
+        link(href='https://fonts.googleapis.com/css?family=Rubik:400,300', rel='stylesheet', type='text/css')
+        link(href='/css/nowplaying.css', rel='stylesheet', type='text/css')
+    body
+        .songInfo
+            .artwork(v-show='nowPlaying.artwork')
+                img(width='150px', src='data:image/jpeg;base64,{{nowPlaying.artwork}}')
+            .info
+                .title(v-text='nowPlaying.title')
+                .strike
+                    span By
+                .artist(v-text='nowPlaying.artist')
+        script(src='/js/libs/jquery-2.1.4.min.js')
+        script(src='/js/libs/jquery.transit-0.9.12.min.js')
+        script(src='/js/libs/socket.io-1.3.7.min.js')
+        script(src='/js/libs/vue-0.12.16.min.js')
+
+        script(type='text/javascript').
+            window.customData = !{JSON.stringify(data)};
+
+        script(src='/js/nowplaying.js')

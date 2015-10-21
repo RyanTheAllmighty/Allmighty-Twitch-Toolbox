@@ -102,7 +102,8 @@
             localStorageServiceProvider.setPrefix('AllmightyTwitchToolbox');
 
             WebServerProvider.setOptions({
-                port: global.App.settings.network.webPort
+                port: global.App.settings.network.webPort,
+                socketIOPort: global.App.settings.network.socketIOPort
             });
 
             NotificationsProvider.setOptions({

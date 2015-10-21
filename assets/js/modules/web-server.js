@@ -19,15 +19,14 @@
 (function () {
     'use strict';
 
-    let fs = require('fs');
-    let path = require('path');
     let express = require('express');
 
     angular.module('web-server', []);
 
     angular.module('web-server').provider('WebServer', function () {
         this.options = {
-            port: 5000
+            port: 5000,
+            socketIOPort: 4000
         };
 
         this.expressApp = null;
@@ -42,13 +41,16 @@
         };
 
         this.setup = function () {
+            let self = this;
+
             this.expressApp = express();
             this.expressApp.use(express.static('assets/static/'));
 
+            this.expressApp.set('views', 'assets/static/views/');
+            this.expressApp.set('view engine', 'jade');
+
             this.expressApp.get('/nowplaying', function (req, res) {
-                res.sendFile('nowplaying.html', {
-                    root: 'assets/static/html/'
-                });
+                res.render('nowplaying', {data: {port: self.options.socketIOPort}});
             });
         };
 

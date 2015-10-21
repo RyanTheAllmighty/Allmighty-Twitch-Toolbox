@@ -33,6 +33,7 @@
     "del": "^2.0.2",
     "express": "^4.13.3",
     "ffmetadata": "git://github.com/RyanTheAllmighty/node-ffmetadata.git",
+    "jade": "^1.11.0",
     "lodash": "^3.10.1",
     "mkdirp": "^0.5.1",
     "musicmetadata": "^2.0.2",
