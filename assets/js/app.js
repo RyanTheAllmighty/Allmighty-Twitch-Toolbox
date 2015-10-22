@@ -104,7 +104,7 @@
             nwNotify.setTemplatePath('notification.html');
             nwNotify.setConfig({
                 appIcon: 'assets/image/icon.png',
-                displayTime: global.App.settings.notifications.notificationTime * 1000
+                displayTime: 1000000
             });
 
             WebServerProvider.setOptions({

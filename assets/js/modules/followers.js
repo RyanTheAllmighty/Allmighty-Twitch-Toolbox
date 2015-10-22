@@ -101,15 +101,6 @@
                                 toPlay.play();
                                 next();
                             })
-                            .onAction(function (next) {
-                                let toPlay = new Howl({
-                                    urls: [$rootScope.App.settings.sounds.newDonation],
-                                    volume: $rootScope.App.settings.sounds.newDonationVolume
-                                });
-
-                                toPlay.play();
-                                next();
-                            })
                             .onDone(callback);
 
                         NotificationQueue.add(noti);

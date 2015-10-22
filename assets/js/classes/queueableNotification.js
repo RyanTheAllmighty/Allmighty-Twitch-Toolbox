@@ -104,8 +104,8 @@ module.exports = class QueueableNotification {
         nwNotify.notify({
             title: self.data.title,
             text: self.data.message,
-            onShowFunc: function (id, eventName, close) {
-                nWClose = close;
+            onShowFunc: function (obj) {
+                nWClose = obj.closeNotification;
 
                 if (self.data.onAction) {
                     async.each(self.data.onAction, function (func, next) {
