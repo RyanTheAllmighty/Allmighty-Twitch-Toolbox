@@ -41,6 +41,7 @@
         "nedb": "^1.2.1",
         "node-soundcloud": "0.0.3",
         "nw-notify": "git://github.com/RyanTheAllmighty/nw-notify.git",
+        "obs-remote": "^1.0.1",
         "request": "^2.65.0",
         "socket.io": "^1.3.7",
         "socket.io-client": "^1.3.7",
