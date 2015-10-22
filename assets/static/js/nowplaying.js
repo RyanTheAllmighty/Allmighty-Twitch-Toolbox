@@ -48,6 +48,6 @@
     function showSongInfo() {
         var $songInfo = $('.songInfo');
 
-        $songInfo.transition({x: '-170px'}).transition({opacity: 0, delay: 5000}, 500, 'linear').transition({x: '165px'}).transition({opacity: 100});
+        $songInfo.transition({x: '-170px'}).transition({opacity: 0, delay: 5000 - 500}, 500, 'linear').transition({x: '165px'}).transition({opacity: 100});
     }
 })();
