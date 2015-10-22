@@ -112,6 +112,10 @@ module.exports = class QueueableNotification {
                         func(next);
                     });
                 }
+            },
+            onClickFunc: function (obj) {
+                nWClose = null; // Set this to null since we've already closed it
+                obj.closeNotification();
             }
         });
 
