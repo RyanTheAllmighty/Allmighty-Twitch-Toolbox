@@ -48,6 +48,10 @@ let defaultSettings = {
         newFollower: '',
         newFollowerVolume: 1.0
     },
+    notifications: {
+        donationNotificationTime: 5,
+        followerNotificationTime: 5
+    },
     directories: {
         binary: '',
         data: '',

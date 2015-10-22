@@ -24,9 +24,26 @@
     angular.module('donations', []);
 
     angular.module('donations').provider('Donations', function () {
+        this.options = {
+            notificationTime: 5
+        };
+
+        this.setOptions = function (options) {
+            if (!angular.isObject(options)) {
+                throw new Error('Options should be an object!');
+            }
+
+            this.options = angular.extend({}, this.options, options);
+        };
+
         this.$get = ['$q', '$rootScope', 'SocketIOServer', 'NotificationQueue', function ($q, $rootScope, SocketIOServer, NotificationQueue) {
+            let options = this.options;
+
             console.log('Donations::$get()');
             return {
+                setOptions: function (opts) {
+                    options = opts;
+                },
                 getDonations: function (limit, callback) {
                     if (limit && !callback) {
                         callback = limit;
@@ -93,7 +110,7 @@
                         let noti = new QueueableNotification()
                             .title('New Donation!')
                             .message(donation.username + ' just donated $' + donation.amount + '!')
-                            .timeout(5000)
+                            .timeout(options.notificationTime * 1000)
                             .socketIO('new-donation', donation)
                             .socketIO('donations')
                             .scope('new-donation', donation)

@@ -74,7 +74,7 @@
 
     // Load everything before we proceed
     loadingService.load(function () {
-        app.config(function ($routeProvider, localStorageServiceProvider, WebServerProvider, NotificationProvider, TwitchProvider, StreamTipProvider, SocketIOProvider, SocketIOServerProvider, FollowerCheckerProvider, DonationCheckerProvider, MusicCheckerProvider) {
+        app.config(function ($routeProvider, localStorageServiceProvider, WebServerProvider, NotificationProvider, TwitchProvider, StreamTipProvider, SocketIOProvider, SocketIOServerProvider, FollowersProvider, FollowerCheckerProvider, DonationsProvider, DonationCheckerProvider, MusicCheckerProvider) {
             // Setup the routes
             $routeProvider.when('/', {
                 templateUrl: './assets/html/home.html',
@@ -147,9 +147,19 @@
                 socketPort: global.App.settings.network.socketIOPort
             });
 
+            // Setup the follower provider
+            FollowersProvider.setOptions({
+                notificationTime: global.App.settings.notifications.followerNotificationTime
+            });
+
             // Setup the follower checker
             FollowerCheckerProvider.setOptions({
                 interval: global.App.settings.checks.followers
+            });
+
+            // Setup the donation provider
+            DonationsProvider.setOptions({
+                notificationTime: global.App.settings.notifications.donationNotificationTime
             });
 
             // Setup the donation checker

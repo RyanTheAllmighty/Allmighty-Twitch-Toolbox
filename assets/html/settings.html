@@ -259,6 +259,35 @@
             </div>
         </div>
     </div>
+
+    <div class="col-xs-6">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Notification Settings</h3>
+                <collapsible model="_collapsedPanels.settings.notification"/>
+            </div>
+
+            <div uib-collapse="_collapsedPanels.settings.notification">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="donationNotificationTime" class="col-lg-2 control-label">Donation Notification Time</label>
+
+                        <div class="col-lg-10">
+                            <input ng-model="settings.notifications.donationNotificationTime" type="number" class="form-control" id="donationNotificationTime" min="1" max="60"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="followerNotificationTime" class="col-lg-2 control-label">Follower Notification Time</label>
+
+                        <div class="col-lg-10">
+                            <input ng-model="settings.notifications.followerNotificationTime" type="number" class="form-control" id="followerNotificationTime" min="1" max="60"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="row">
