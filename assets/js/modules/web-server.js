@@ -32,7 +32,6 @@
         this.expressApp = null;
 
         this.setOptions = function (options) {
-            console.log('WebServerProvider::setOptions()');
             if (!angular.isObject(options)) {
                 throw new Error('Options should be an object!');
             }
@@ -55,7 +54,6 @@
         };
 
         this.$get = function () {
-            console.log('WebServer::$get()');
             let self = this;
 
             return {

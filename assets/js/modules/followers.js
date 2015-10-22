@@ -41,7 +41,6 @@
         this.$get = ['$q', '$rootScope', 'SocketIOServer', 'NotificationQueue', function ($q, $rootScope, SocketIOServer, NotificationQueue) {
             let options = this.options;
 
-            console.log('Followers::$get()');
             return {
                 setOptions: function (opts) {
                     options = opts;

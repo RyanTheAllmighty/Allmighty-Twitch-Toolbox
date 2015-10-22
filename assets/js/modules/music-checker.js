@@ -29,7 +29,6 @@
         this.options = {};
 
         this.setOptions = function (options) {
-            console.log('MusicCheckerProvider::setOptions()');
             if (!angular.isObject(options)) {
                 throw new Error('Options should be an object!');
             }
@@ -38,7 +37,6 @@
         };
 
         this.$get = ['SocketIOServer', function (SocketIOServer) {
-            console.log('MusicChecker::$get()');
             let self = this;
 
             return {

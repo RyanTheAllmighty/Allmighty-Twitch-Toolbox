@@ -30,7 +30,6 @@
         };
 
         this.setOptions = function (options) {
-            console.log('TwitchProvider::setOptions()');
             if (!angular.isObject(options)) {
                 throw new Error('Options should be an object!');
             }
@@ -39,7 +38,6 @@
         };
 
         this.$get = function () {
-            console.log('Twitch::$get()');
             return new OurTwitchAPI({
                 clientId: this.options.clientID,
                 accessToken: this.options.accessToken

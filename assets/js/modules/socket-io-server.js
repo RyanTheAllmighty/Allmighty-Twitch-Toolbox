@@ -35,7 +35,6 @@
         };
 
         this.setOptions = function (options) {
-            console.log('SocketIOServerProvider::setOptions()');
             if (!angular.isObject(options)) {
                 throw new Error('Options should be an object!');
             }
@@ -44,7 +43,6 @@
         };
 
         this.startServer = function () {
-            console.log('SocketIOServerProvider::startServer()');
             if (listening) {
                 return console.error(new Error('SocketIO server has already been started!'));
             }
@@ -58,7 +56,6 @@
             serverApp.listen(this.options.socketPort);
 
             io.on('connection', function (socket) {
-                console.log('Socket connected');
                 // Add this socket to the list of active sockets
                 sockets.push(socket);
 
@@ -73,7 +70,6 @@
         };
 
         this.$get = function () {
-            console.log('SocketIOServerProvider::$get()');
             return {
                 emit: function (name, message, callback) {
                     if (!callback) {
