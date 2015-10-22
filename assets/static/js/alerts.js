@@ -48,6 +48,6 @@
     function showAlert(time) {
         var $alert = $('.alert');
 
-        $alert.transition({x: '170px'}).transition({opacity: 0, delay: time}, 500, 'linear').transition({x: '-165px'}).transition({opacity: 100});
+        $alert.transition({x: '505px'}).transition({opacity: 0, delay: time}, 500, 'linear').transition({x: '-505px'}).transition({opacity: 100});
     }
 })();
