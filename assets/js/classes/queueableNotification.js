@@ -18,6 +18,7 @@
 
 'use strict';
 
+let _ = require('lodash');
 let async = require('async');
 let nwNotify = require('nw-notify');
 
@@ -106,17 +107,17 @@ module.exports = class QueueableNotification {
             text: self.data.message,
             onShowFunc: function (obj) {
                 nWClose = obj.closeNotification;
-
-                if (self.data.onAction) {
-                    async.each(self.data.onAction, function (func, next) {
-                        func(next);
-                    });
-                }
             },
             onClickFunc: function (obj) {
                 nWClose = null; // Set this to null since we've already closed it
                 obj.closeNotification();
             }
+        });
+
+        let toDo = self.generateActionFunctions($injector);
+
+        async.each(toDo, function (func, next) {
+            func(next);
         });
 
         $injector.get('$timeout')(function () {
@@ -136,5 +137,45 @@ module.exports = class QueueableNotification {
                 allDone();
             }
         }, self.data.timeout || 5000);
+    }
+
+    generateActionFunctions($injector) {
+        let toDo = [];
+
+        if (this.data.onAction) {
+            _.forEach(this.data.onAction, function (func) {
+                toDo.push(func);
+            });
+        }
+
+        if (this.data.scope) {
+            _.forEach(this.data.scope, function (data, key) {
+                if (data) {
+                    toDo.push(function () {
+                        $injector.get('$rootScope').$broadcast(key, data);
+                    });
+                } else {
+                    toDo.push(function () {
+                        $injector.get('$rootScope').$broadcast(key);
+                    });
+                }
+            });
+        }
+
+        if (this.data.socketIO) {
+            _.forEach(this.data.socketIO, function (data, key) {
+                if (data) {
+                    toDo.push(function () {
+                        $injector.get('SocketIOServer').emit(key, data);
+                    });
+                } else {
+                    toDo.push(function () {
+                        $injector.get('SocketIOServer').emit(key);
+                    });
+                }
+            });
+        }
+
+        return toDo;
     }
 };

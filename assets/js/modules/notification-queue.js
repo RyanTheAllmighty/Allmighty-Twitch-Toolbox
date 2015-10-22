@@ -33,7 +33,6 @@
 
             return {
                 add: function (item) {
-                    console.log('Added item to queue!');
                     self.queue.push(item);
                 },
                 isRunning: function () {
@@ -46,17 +45,11 @@
                     if (!self.promise) {
                         self.promise = $interval(function () {
                             if (!self.resolving && self.queue.length !== 0) {
-                                console.log('Resolving new item!');
                                 self.resolving = self.queue.shift();
 
                                 self.resolving.resolve($injector, function () {
-                                    console.log('Item resolved!');
                                     self.resolving = null;
                                 });
-                            } else if (self.resolving) {
-                                console.log('Already resolving an item!');
-                            } else {
-                                console.log('No items to resolve!');
                             }
                         }, 1000);
                     }
