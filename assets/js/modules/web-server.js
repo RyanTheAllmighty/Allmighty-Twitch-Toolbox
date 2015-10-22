@@ -48,6 +48,10 @@
             this.expressApp.set('views', 'assets/static/views/');
             this.expressApp.set('view engine', 'jade');
 
+            this.expressApp.get('/alerts', function (req, res) {
+                res.render('alerts', {data: {port: self.options.socketIOPort}});
+            });
+
             this.expressApp.get('/nowplaying', function (req, res) {
                 res.render('nowplaying', {data: {port: self.options.socketIOPort}});
             });
