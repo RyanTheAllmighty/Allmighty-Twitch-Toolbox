@@ -61,7 +61,12 @@
             });
 
             this.expressApp.get('/nowplaying', function (req, res) {
-                res.render('nowplaying', {data: {port: self.options.socketIOPort}});
+                res.render('nowplaying', {
+                    data: {
+                        musicChangeNotificationTime: self.options.musicChangeNotificationTime * 1000,
+                        port: self.options.socketIOPort
+                    }
+                });
             });
         };
 

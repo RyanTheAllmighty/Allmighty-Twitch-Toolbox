@@ -50,7 +50,8 @@ let defaultSettings = {
     },
     notifications: {
         donationNotificationTime: 5,
-        followerNotificationTime: 5
+        followerNotificationTime: 5,
+        musicChangeNotificationTime: 5
     },
     directories: {
         binary: '',
