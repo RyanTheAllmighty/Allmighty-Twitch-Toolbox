@@ -19,10 +19,12 @@
 (function () {
     'use strict';
 
+    let QueueableNotification = require('./assets/js/classes/queueableNotification');
+
     angular.module('donations', []);
 
     angular.module('donations').provider('Donations', function () {
-        this.$get = ['$q', '$rootScope', 'SocketIOServer', 'Notifications', function ($q, $rootScope, SocketIOServer, Notifications) {
+        this.$get = ['$q', '$rootScope', 'SocketIOServer', 'NotificationQueue', function ($q, $rootScope, SocketIOServer, NotificationQueue) {
             console.log('Donations::$get()');
             return {
                 getDonations: function (limit, callback) {
@@ -88,24 +90,26 @@
                             return callback(err);
                         }
 
-                        // Send a desktop notification
-                        Notifications.notify('New Donation!', donation.username + ' just donated $' + donation.amount + '!', {
-                            url: $rootScope.App.settings.sounds.newDonation,
-                            volume: $rootScope.App.settings.sounds.newDonationVolume
-                        });
+                        let noti = new QueueableNotification()
+                            .title('New Donation!')
+                            .message(donation.username + ' just donated $' + donation.amount + '!')
+                            .timeout(5000)
+                            .socketIO('new-donation', donation)
+                            .socketIO('donations')
+                            .scope('new-donation', donation)
+                            .scope('donations')
+                            .onAction(function (next) {
+                                let toPlay = new Howl({
+                                    urls: [$rootScope.App.settings.sounds.newDonation],
+                                    volume: $rootScope.App.settings.sounds.newDonationVolume
+                                });
 
-                        // Send a broadcast to listening scopes
-                        $rootScope.$broadcast('new-donation', donation);
-                        $rootScope.$broadcast('donations');
+                                toPlay.play();
+                                next();
+                            })
+                            .onDone(callback);
 
-                        // Send a broadcast to listening socket clients
-                        SocketIOServer.emit('new-donation', donation, function (err) {
-                            if (err) {
-                                return callback(err);
-                            }
-
-                            SocketIOServer.emit('donations', callback);
-                        });
+                        NotificationQueue.add(noti);
                     }
 
                     if (!donation.test) {

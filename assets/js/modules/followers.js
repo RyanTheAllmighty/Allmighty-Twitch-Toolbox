@@ -21,10 +21,12 @@
 
     let _ = require('lodash');
 
+    let QueueableNotification = require('./assets/js/classes/queueableNotification');
+
     angular.module('followers', []);
 
     angular.module('followers').provider('Followers', function () {
-        this.$get = ['$q', '$rootScope', 'SocketIOServer', 'Notifications', function ($q, $rootScope, SocketIOServer, Notifications) {
+        this.$get = ['$q', '$rootScope', 'SocketIOServer', 'NotificationQueue', function ($q, $rootScope, SocketIOServer, NotificationQueue) {
             console.log('Followers::$get()');
             return {
                 getFollowers: function (limit, callback) {
@@ -82,24 +84,35 @@
                             return callback(err);
                         }
 
-                        // Send a desktop notification
-                        Notifications.notify('New Follower!', follower.display_name + ' has just followed!', {
-                            url: $rootScope.App.settings.sounds.newFollower,
-                            volume: $rootScope.App.settings.sounds.newFollowerVolume
-                        });
+                        let noti = new QueueableNotification()
+                            .title('New Follower!')
+                            .message(follower.display_name + ' has just followed!')
+                            .timeout(5000)
+                            .socketIO('new-follower', follower)
+                            .socketIO('followers')
+                            .scope('new-follower', follower)
+                            .scope('followers')
+                            .onAction(function (next) {
+                                let toPlay = new Howl({
+                                    urls: [$rootScope.App.settings.sounds.newFollower],
+                                    volume: $rootScope.App.settings.sounds.newFollowerVolume
+                                });
 
-                        // Send a broadcast to listening scopes
-                        $rootScope.$broadcast('new-follower', follower);
-                        $rootScope.$broadcast('followers');
+                                toPlay.play();
+                                next();
+                            })
+                            .onAction(function (next) {
+                                let toPlay = new Howl({
+                                    urls: [$rootScope.App.settings.sounds.newDonation],
+                                    volume: $rootScope.App.settings.sounds.newDonationVolume
+                                });
 
-                        // Send a broadcast to listening socket clients
-                        SocketIOServer.emit('new-follower', follower, function (err) {
-                            if (err) {
-                                return callback(err);
-                            }
+                                toPlay.play();
+                                next();
+                            })
+                            .onDone(callback);
 
-                            SocketIOServer.emit('followers', callback);
-                        });
+                        NotificationQueue.add(noti);
                     }
 
                     if (!follower.test) {

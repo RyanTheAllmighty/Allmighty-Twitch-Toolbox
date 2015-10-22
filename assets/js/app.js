@@ -66,7 +66,7 @@
         'datatables.bootstrap',
         'followers',
         'donations',
-        'notifications',
+        'notification-queue',
         'luegg.directives',
         'LocalStorageModule',
         'web-server'
@@ -74,7 +74,7 @@
 
     // Load everything before we proceed
     loadingService.load(function () {
-        app.config(function ($routeProvider, localStorageServiceProvider, WebServerProvider, NotificationsProvider, NotificationProvider, TwitchProvider, StreamTipProvider, SocketIOProvider, SocketIOServerProvider, FollowerCheckerProvider, DonationCheckerProvider, MusicCheckerProvider) {
+        app.config(function ($routeProvider, localStorageServiceProvider, WebServerProvider, NotificationProvider, TwitchProvider, StreamTipProvider, SocketIOProvider, SocketIOServerProvider, FollowerCheckerProvider, DonationCheckerProvider, MusicCheckerProvider) {
             // Setup the routes
             $routeProvider.when('/', {
                 templateUrl: './assets/html/home.html',
@@ -101,13 +101,15 @@
 
             localStorageServiceProvider.setPrefix('AllmightyTwitchToolbox');
 
+            nwNotify.setTemplatePath('notification.html');
+            nwNotify.setConfig({
+                appIcon: 'assets/image/icon.png',
+                displayTime: global.App.settings.notifications.notificationTime * 1000
+            });
+
             WebServerProvider.setOptions({
                 port: global.App.settings.network.webPort,
                 socketIOPort: global.App.settings.network.socketIOPort
-            });
-
-            NotificationsProvider.setOptions({
-                displayTime: global.App.settings.notifications.notificationTime
             });
 
             // Setup the NotificationProvider
@@ -185,7 +187,7 @@
             }
         }]);
 
-        app.run(['FollowerChecker', 'DonationChecker', 'MusicChecker', 'WebServer', function (FollowerChecker, DonationChecker, MusicChecker, WebServer) {
+        app.run(['FollowerChecker', 'DonationChecker', 'MusicChecker', 'WebServer', 'NotificationQueue', function (FollowerChecker, DonationChecker, MusicChecker, WebServer, NotificationQueue) {
             // Start checking for new followers
             FollowerChecker.startChecking();
 
@@ -197,6 +199,9 @@
 
             // Start the web server
             WebServer.startServer();
+
+            // Start the notification queue
+            NotificationQueue.startQueue();
 
             // Show the window
             gui.Window.get().show();
