@@ -26,7 +26,9 @@
     angular.module('web-server').provider('WebServer', function () {
         this.options = {
             port: 5000,
-            socketIOPort: 4000
+            socketIOPort: 4000,
+            donationNotificationTime: 5,
+            followerNotificationTime: 5
         };
 
         this.expressApp = null;
@@ -49,7 +51,13 @@
             this.expressApp.set('view engine', 'jade');
 
             this.expressApp.get('/alerts', function (req, res) {
-                res.render('alerts', {data: {port: self.options.socketIOPort}});
+                res.render('alerts', {
+                    data: {
+                        donationNotificationTime: self.options.donationNotificationTime * 1000,
+                        followerNotificationTime: self.options.followerNotificationTime * 1000,
+                        port: self.options.socketIOPort
+                    }
+                });
             });
 
             this.expressApp.get('/nowplaying', function (req, res) {

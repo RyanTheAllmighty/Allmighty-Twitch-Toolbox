@@ -108,7 +108,9 @@
 
             WebServerProvider.setOptions({
                 port: global.App.settings.network.webPort,
-                socketIOPort: global.App.settings.network.socketIOPort
+                socketIOPort: global.App.settings.network.socketIOPort,
+                donationNotificationTime: global.App.settings.notifications.donationNotificationTime,
+                followerNotificationTime: global.App.settings.notifications.followerNotificationTime
             });
 
             // Setup the NotificationProvider

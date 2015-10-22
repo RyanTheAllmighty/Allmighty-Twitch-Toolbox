@@ -35,19 +35,19 @@
     socket.on('new-follower', function (data) {
         vue.username = data.display_name;
         vue.message = 'has followed the channel!';
-        showAlert();
+        showAlert(window.customData.followerNotificationTime);
     });
 
     // Received new donation data
     socket.on('new-donation', function (data) {
         vue.username = data.username;
         vue.message = 'just donated $' + data.amount + '!';
-        showAlert();
+        showAlert(window.customData.donationNotificationTime);
     });
 
-    function showAlert() {
+    function showAlert(time) {
         var $alert = $('.alert');
 
-        $alert.transition({x: '170px'}).transition({opacity: 0, delay: 5000}, 500, 'linear').transition({x: '-165px'}).transition({opacity: 100});
+        $alert.transition({x: '170px'}).transition({opacity: 0, delay: time}, 500, 'linear').transition({x: '-165px'}).transition({opacity: 100});
     }
 })();
