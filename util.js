@@ -53,6 +53,7 @@ function packageApp() {
             '!node_modules/jshint/**',
             '!node_modules/mocha/**',
             '!node_modules/sinon/**',
+            '!node_modules/ffmetadata/test/**',
             '!.git/**',
             '!.idea/**',
             '!test/**',
@@ -62,7 +63,8 @@ function packageApp() {
             '!README.md',
             '!STYLE.md',
             '!util.js',
-            '!Gruntfile.js'
+            '!Gruntfile.js',
+            '!app.nw'
         ];
 
         archive.bulk([
