@@ -49,7 +49,7 @@
                         limit = 100;
                     }
 
-                    $rootScope.App.db.donations.find({}).sort({date: 1}).limit(limit).exec(callback);
+                    $rootScope.App.db.donations.find({}).sort({date: -1}).limit(limit).exec(callback);
                 },
                 getDonationsPromise: function (limit) {
                     let self = this;

@@ -51,7 +51,7 @@
                         limit = 100;
                     }
 
-                    $rootScope.App.db.followers.find({}).sort({date: 1}).limit(limit).exec(callback);
+                    $rootScope.App.db.followers.find({}).sort({date: -1}).limit(limit).exec(callback);
                 },
                 getFollowersPromise: function (limit) {
                     let self = this;
