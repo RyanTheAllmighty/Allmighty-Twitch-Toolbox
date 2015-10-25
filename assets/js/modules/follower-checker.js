@@ -56,7 +56,7 @@
 
                     // Save this timeout promise so we can cancel it if we get another one later
                     self.promise = $interval(function () {
-                        Twitch.getChannelFollows($rootScope.App.settings.twitch.username, {limit: 2}, function (err, followers) {
+                        Twitch.getChannelFollows($rootScope.App.settings.twitch.username, {limit: 10}, function (err, followers) {
                             if (err) {
                                 return console.error(err);
                             }

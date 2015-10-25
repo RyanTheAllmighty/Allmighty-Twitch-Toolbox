@@ -56,7 +56,7 @@
 
                     // Save this timeout promise so we can cancel it if we get another one later
                     self.promise = $interval(function () {
-                        StreamTip.getTips({limit: 10}, function (err, tips) {
+                        StreamTip.getTips({limit: 100}, function (err, tips) {
                             if (err) {
                                 return console.error(err);
                             }

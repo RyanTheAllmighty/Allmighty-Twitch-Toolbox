@@ -131,7 +131,8 @@ module.exports = class QueueableNotification {
 
             if (self.data.onDone) {
                 async.each(self.data.onDone, function (func, next) {
-                    func(next);
+                    func();
+                    next();
                 }, allDone);
             } else {
                 allDone();
