@@ -53,7 +53,8 @@
             if (!callback) {
                 callback = options;
                 options = {
-                    limit: 25
+                    limit: 25,
+                    offset: 0
                 };
             }
 
@@ -63,15 +64,23 @@
                 queryString += 'limit=' + options.limit;
             }
 
+            if (options.offset) {
+                queryString += '&offset=' + options.offset;
+            }
+
             request.get({
                 url: 'https://streamtip.com/api/tips' + queryString,
                 json: true,
                 headers: {
-                    'Authorization': self._options.clientID + ' ' + self._options.accessToken
+                    'Authorization': self._options.clientId + ' ' + self._options.accessToken
                 }
             }, function (err, res, body) {
                 if (err) {
                     return callback(err);
+                }
+
+                if (body.status && body.status !== 200) {
+                    return callback(new Error(body.status + ' ' + body.message));
                 }
 
                 callback(null, body);

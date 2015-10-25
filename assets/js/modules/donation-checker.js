@@ -33,6 +33,8 @@
          */
         this.promise = null;
 
+        this.doingInitialCheck = false;
+
         this.setOptions = function (options) {
             if (!angular.isObject(options)) {
                 throw new Error('Options should be an object!');
@@ -49,33 +51,99 @@
                     self.options.interval = interval;
                     self.startChecking();
                 },
+                doInitialCheck: function (callback) {
+                    self.doingInitialCheck = true;
+
+                    let moreToDo = true;
+                    let offset = 0;
+
+                    async.doWhilst(
+                        function (cb) {
+                            StreamTip.getTips({limit: 100, offset}, function (err, tips) {
+                                if (err) {
+                                    return console.error(err);
+                                }
+
+                                if (tips._count === 0) {
+                                    moreToDo = false;
+                                    return cb();
+                                }
+
+                                async.each(tips.tips, function (tip, next) {
+                                    Donations.processDonation({
+                                        date: new Date(tip.date),
+                                        id: tip._id,
+                                        username: tip.username,
+                                        amount: parseFloat(tip.amount),
+                                        note: tip.note
+                                    }, {noNotification: true, errorOnNonNew: true}, function (err) {
+                                        if (err && err.message === 'Non new donation') {
+                                            moreToDo = false;
+                                        } else if (err) {
+                                            next(err);
+                                        }
+
+                                        next();
+                                    });
+                                }, function (err) {
+                                    if (err) {
+                                        return cb(err);
+                                    }
+
+                                    offset += 100;
+
+                                    cb();
+                                });
+                            });
+                        },
+                        function () {
+                            return moreToDo;
+                        },
+                        function (err) {
+                            if (err) {
+                                console.error(err);
+                            }
+
+                            console.log('Initial check of donations done!');
+
+                            self.doingInitialCheck = false;
+                            callback();
+                        }
+                    );
+                },
                 startChecking: function () {
+                    if (self.doingInitialCheck) {
+                        return;
+                    }
+
                     if (self.promise) {
                         $interval.cancel(self.promise);
                     }
 
-                    // Save this timeout promise so we can cancel it if we get another one later
-                    self.promise = $interval(function () {
-                        StreamTip.getTips({limit: 100}, function (err, tips) {
-                            if (err) {
-                                return console.error(err);
-                            }
-
-                            async.each(tips.tips, function (tip, next) {
-                                Donations.processDonation({
-                                    date: new Date(tip.date),
-                                    id: tip._id,
-                                    username: tip.username,
-                                    amount: parseFloat(tip.amount),
-                                    note: tip.note
-                                }, next);
-                            }, function (err) {
+                    this.doInitialCheck(function () {
+                        // Save this timeout promise so we can cancel it if we get another one later
+                        self.promise = $interval(function () {
+                            StreamTip.getTips({limit: 10}, function (err, tips) {
                                 if (err) {
                                     return console.error(err);
                                 }
+
+                                async.each(tips.tips, function (tip, next) {
+                                    Donations.processDonation({
+                                        date: new Date(tip.date),
+                                        id: tip._id,
+                                        username: tip.username,
+                                        amount: parseFloat(tip.amount),
+                                        note: tip.note
+                                    }, {noNotification: true}, next);
+                                }, function (err) {
+                                    if (err) {
+                                        return console.error(err);
+                                    }
+                                });
                             });
-                        });
-                    }, self.options.interval * 1000);
+                        }, self.options.interval * 1000);
+                    });
                 }
             };
         }];

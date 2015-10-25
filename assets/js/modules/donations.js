@@ -78,8 +78,13 @@
                         }));
                     });
                 },
-                processDonation: function (donation, callback) {
+                processDonation: function (donation, options, callback) {
                     let self = this;
+
+                    if (options && !callback) {
+                        callback = options;
+                        options = {};
+                    }
 
                     if (!donation.date) {
                         donation.date = new Date();
@@ -92,11 +97,18 @@
 
                         if (docs.length === 0) {
                             // New donation
-                            self.newDonation(donation, callback);
+                            self.newDonation(donation, options, callback);
+                        } else {
+                            callback(options.errorOnNonNew ? new Error('Non new donation') : null);
                         }
                     });
                 },
-                newDonation: function (donation, callback) {
+                newDonation: function (donation, options, callback) {
+                    if (options && !callback) {
+                        callback = options;
+                        options = {};
+                    }
+
                     if (!donation.date) {
                         donation.date = new Date();
                     }
@@ -104,6 +116,10 @@
                     function notify(err) {
                         if (err) {
                             return callback(err);
+                        }
+
+                        if (options.noNotification) {
+                            return callback();
                         }
 
                         let noti = new QueueableNotification()

@@ -69,8 +69,13 @@
                 getFollowerCount: function (callback) {
                     $rootScope.App.db.followers.count({}).exec(callback);
                 },
-                processFollower: function (follower, callback) {
+                processFollower: function (follower, options, callback) {
                     let self = this;
+
+                    if (options && !callback) {
+                        callback = options;
+                        options = {};
+                    }
 
                     if (!follower.date) {
                         follower.date = new Date();
@@ -83,14 +88,24 @@
 
                         if (docs.length === 0) {
                             // New follower
-                            self.newFollower(follower, callback);
-                        } else if (!_.isEqual(follower, _.omit(docs[0], '_id'))) {
+                            self.newFollower(follower, options, callback);
+                        } else if (!self.areEqual(follower, _.omit(docs[0], '_id'))) {
                             // The follower has different information in our DB than what Twitch says (refollow, username change) so update that
                             self.updateFollower(follower, callback);
+                        } else {
+                            callback(options.errorOnNonNew ? new Error('Non new follower') : null);
                         }
                     });
                 },
-                newFollower: function (follower, callback) {
+                areEqual: function (follower1, follower2) {
+                    return _.isEqual(follower1, follower2);
+                },
+                newFollower: function (follower, options, callback) {
+                    if (options && !callback) {
+                        callback = options;
+                        options = {};
+                    }
+
                     if (!follower.date) {
                         follower.date = new Date();
                     }
@@ -98,6 +113,10 @@
                     function notify(err) {
                         if (err) {
                             return callback(err);
+                        }
+
+                        if (options.noNotification) {
+                            return callback();
                         }
 
                         let noti = new QueueableNotification()
