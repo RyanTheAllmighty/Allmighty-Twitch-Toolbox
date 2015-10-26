@@ -19,14 +19,7 @@
 (function () {
     'use strict';
 
-    angular.module('AllmightyTwitchToolbox').controller('HelpController', ['$scope', '$timeout', 'Twitch', function ($scope, $timeout, Twitch) {
-        $scope.test = Twitch.accessToken;
-
-        Twitch.getBlocks('RyanTheAllmighty', Twitch.accessToken, function (err, data) {
-            $timeout(function () {
-                $scope.test = err || data;
-                $scope.$apply();
-            });
-        });
+    angular.module('AllmightyTwitchToolbox').controller('HelpController', ['$scope', function ($scope) {
+        $scope.webPort = global.App.settings.network.webPort;
     }]);
 })();

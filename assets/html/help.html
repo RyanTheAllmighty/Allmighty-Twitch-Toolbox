@@ -1,5 +1,47 @@
 <div class="row">
     <div class="col-xs-12">
-        <pre ng-bind="test | json"></pre>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Getting Started</h3>
+            </div>
+
+            <div class="panel-body">
+                <p>To get started you'll need a few plugins installed in OBS (OBS MultiPlatform not supported). Please download and install them into your OBS:</p>
+
+                <ul>
+                    <li><a href="https://obsproject.com/forum/resources/clr-browser-source-plugin.22/" target="_blank">CLR Browser Source</a></li>
+                    <li><a href="http://www.obsremote.com/" target="_blank">OBS Remote</a></li>
+                </ul>
+
+                <p>Once installed and OBS has been restarted you can then go to the 'Settings' tab in this application and setup your settings.</p>
+
+                <p>In order to get a Twitch API key please <a href="https://github.com/justintv/Twitch-API/blob/master/authentication.md" target="_blank">read this</a> on how to generate one.</p>
+
+                <p>Once everything is setup, a restart of the application is needed so it can start to pull in all the information it needs to get started.</p>
+
+                <p>Once the initial setup is done, a notification will appear telling you that everything is loaded and ready to go.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">OBS Scenes</h3>
+            </div>
+
+            <div class="panel-body">
+                <p>To get started with setting up the necessary scenes in OBS, take a look at the below list of the url's of the scenes and their width and height.</p>
+
+                <p>If you want to have these playing across multiple scenes and not reloading everytime you switch scene, then you should set them up as global sources.</p>
+
+                <ul>
+                    <li>Now Playing Scene (250x250): <a href="http://localhost:{{webPort}}/nowplaying/" target="_blank">http://localhost:{{webPort}}/nowplaying/</a></li>
+                    <li>Alerts Scene (800x100): <a href="http://localhost:{{webPort}}/alerts/" target="_blank">http://localhost:{{webPort}}/alerts/</a></li>
+                </ul>
+            </div>
+        </div>
     </div>
 </div>
