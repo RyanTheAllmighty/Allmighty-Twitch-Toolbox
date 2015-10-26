@@ -77,6 +77,9 @@
                                         song: mData.soundcloud
                                     };
 
+                                    fs.writeFile(self.options.songInfoTxtPath, songInfo.title + ' by ' + songInfo.artist);
+                                    fs.writeFile(self.options.songInfoJsonPath, JSON.stringify(songInfo));
+
                                     SocketIOServer.emit('song', songInfo);
                                 });
                             });

@@ -171,8 +171,10 @@
             });
 
             MusicCheckerProvider.setOptions({
-                nowPlayingPath: path.join(global.App.settings.directories.data, 'NowPlaying.txt'),
-                ffmpegPath: path.join(global.App.settings.directories.binary, 'ffmpeg.exe')
+                nowPlayingPath: path.join(global.App.settings.directories.data, 'NowPlayingPath.txt'),
+                ffmpegPath: path.join(global.App.settings.directories.binary, 'ffmpeg.exe'),
+                songInfoTxtPath: path.join(global.App.settings.directories.data, 'SongInfo.txt'),
+                songInfoJsonPath: path.join(global.App.settings.directories.data, 'SongInfo.json')
             });
         });
 
