@@ -101,6 +101,12 @@
                     return _.isEqual(follower1, follower2);
                 },
                 newFollower: function (follower, options, callback) {
+                    if (!options && !callback) {
+                        callback = function () {
+                        };
+                        options = {};
+                    }
+
                     if (options && !callback) {
                         callback = options;
                         options = {};

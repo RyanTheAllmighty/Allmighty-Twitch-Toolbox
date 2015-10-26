@@ -104,6 +104,12 @@
                     });
                 },
                 newDonation: function (donation, options, callback) {
+                    if (!options && !callback) {
+                        callback = function () {
+                        };
+                        options = {};
+                    }
+
                     if (options && !callback) {
                         callback = options;
                         options = {};

@@ -54,8 +54,6 @@
             } else {
                 let username = $scope.follower.username;
 
-                $scope.clearFollower();
-
                 Followers.newFollower({username, display_name: username, id: 1, date: new Date(), test: true});
                 Notification.success({message: 'New follower triggered!', delay: 3000});
             }
