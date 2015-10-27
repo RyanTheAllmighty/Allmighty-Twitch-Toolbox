@@ -110,6 +110,12 @@
                             });
                         });
                         break;
+                    case 'volume':
+                        request('http://127.0.0.1:' + self.options.foobarHttpControlPort + '/ajquery/?cmd=VolumeDB&param1=' + req.query.level || 0 + '&param3=NoResponse', function (error, response, body) {
+                            res.writeHead(response.statusCode);
+                            res.end(body);
+                        });
+                        break;
                     default:
                         res.writeHead(500);
                         res.end('Unknown Action!');
