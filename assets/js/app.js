@@ -36,7 +36,8 @@
             donations: new Datastore({filename: path.join(gui.App.dataPath, 'ApplicationStorage', 'db', 'donations.db'), autoload: true}),
             followers: new Datastore({filename: path.join(gui.App.dataPath, 'ApplicationStorage', 'db', 'followers.db'), autoload: true}),
             settings: new Datastore({filename: path.join(gui.App.dataPath, 'ApplicationStorage', 'db', 'settings.db'), autoload: true}),
-            timers: new Datastore({filename: path.join(gui.App.dataPath, 'ApplicationStorage', 'db', 'timers.db'), autoload: true})
+            timers: new Datastore({filename: path.join(gui.App.dataPath, 'ApplicationStorage', 'db', 'timers.db'), autoload: true}),
+            viewers: new Datastore({filename: path.join(gui.App.dataPath, 'ApplicationStorage', 'db', 'viewers.db'), autoload: true})
         },
         settings: {}
     };
@@ -72,16 +73,22 @@
         'LocalStorageModule',
         'web-server',
         'timers',
-        'angularMoment'
+        'angularMoment',
+        'viewers',
+        'viewer-checker',
+        'nvd3'
     ]);
 
     // Load everything before we proceed
     loadingService.load(function () {
-        app.config(function ($routeProvider, localStorageServiceProvider, WebServerProvider, NotificationProvider, TwitchProvider, StreamTipProvider, SocketIOProvider, SocketIOServerProvider, FollowersProvider, FollowerCheckerProvider, DonationsProvider, DonationCheckerProvider, MusicCheckerProvider) {
+        app.config(function ($routeProvider, localStorageServiceProvider, WebServerProvider, NotificationProvider, TwitchProvider, StreamTipProvider, SocketIOProvider, SocketIOServerProvider, ViewerCheckerProvider, FollowersProvider, FollowerCheckerProvider, DonationsProvider, DonationCheckerProvider, MusicCheckerProvider) {
             // Setup the routes
             $routeProvider.when('/', {
                 templateUrl: './assets/html/home.html',
                 controller: 'HomeController'
+            }).when('/viewers', {
+                templateUrl: './assets/html/viewers.html',
+                controller: 'ViewersController'
             }).when('/followers', {
                 templateUrl: './assets/html/followers.html',
                 controller: 'FollowersController'
@@ -157,6 +164,11 @@
                 socketPort: global.App.settings.network.socketIOPort
             });
 
+            // Setup the viewer checker
+            ViewerCheckerProvider.setOptions({
+                interval: global.App.settings.checks.viewers
+            });
+
             // Setup the follower provider
             FollowersProvider.setOptions({
                 notificationTime: global.App.settings.notifications.followerNotificationTime
@@ -208,12 +220,15 @@
             }
         }]);
 
-        app.run(['FollowerChecker', 'DonationChecker', 'MusicChecker', 'WebServer', 'NotificationQueue', function (FollowerChecker, DonationChecker, MusicChecker, WebServer, NotificationQueue) {
+        app.run(['FollowerChecker', 'DonationChecker', 'ViewerChecker', 'MusicChecker', 'WebServer', 'NotificationQueue', function (FollowerChecker, DonationChecker, ViewerChecker, MusicChecker, WebServer, NotificationQueue) {
             // Start checking for new followers
             FollowerChecker.startChecking();
 
             // Start checking for new donations
             DonationChecker.startChecking();
+
+            // Start checking for viewer numbers
+            ViewerChecker.startChecking();
 
             // Start checking for song changes
             MusicChecker.startChecking();

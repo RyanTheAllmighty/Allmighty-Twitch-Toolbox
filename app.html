@@ -10,6 +10,7 @@
         <link rel="stylesheet" type="text/css" href="assets/css/libs/dataTables.bootstrap-1.10.9.min.css"/>
         <link rel="stylesheet" type="text/css" href="assets/css/libs/angular-datatables-bootstrap.unreleased.min.css"/>
         <link rel="stylesheet" type="text/css" href="assets/css/libs/bootstrap-datetimepicker-4.17.37.min.css"/>
+        <link rel="stylesheet" type="text/css" href="assets/css/libs/nv.d3-1.8.1.min.css"/>
         <link rel="stylesheet" type="text/css" href="assets/css/app.css"/>
     </head>
 
@@ -24,6 +25,9 @@
                     <ul class="nav navbar-nav">
                         <li ng-class="{active: $location.path() === '/'}">
                             <a href="#/">Home</a>
+                        </li>
+                        <li ng-class="{active: $location.path() === '/viewers'}">
+                            <a href="#/viewers">Viewers</a>
                         </li>
                         <li ng-class="{active: $location.path() === '/followers'}">
                             <a href="#/followers">Followers</a>
@@ -76,6 +80,10 @@
         <!-- Moment.js Library -->
         <script type="text/javascript" src="assets/js/libs/moment-2.10.6.min.js"></script>
 
+        <!-- D3 (and related) Libraries -->
+        <script type="text/javascript" src="assets/js/libs/d3-3.5.6.min.js"></script>
+        <script type="text/javascript" src="assets/js/libs/nv.d3-1.8.1.min.js"></script>
+
         <!-- Bootstrap Date Time Picker -->
         <script type="text/javascript" src="assets/js/libs/bootstrap-datetimepicker-4.17.37.min.js"></script>
 
@@ -90,6 +98,7 @@
         <script type="text/javascript" src="assets/js/libs/angular-scrollglue-2.0.6.min.js"></script>
         <script type="text/javascript" src="assets/js/libs/angular-local-storage-0.2.3.min.js"></script>
         <script type="text/javascript" src="assets/js/libs/angular-moment-1.0.0-beta.2.min.js"></script>
+        <script type="text/javascript" src="assets/js/libs/angular-nvd3-1.0.2.min.js"></script>
 
         <!-- Our follower related modules -->
         <script type="text/javascript" src="assets/js/modules/followers.js"></script>
@@ -100,6 +109,10 @@
         <script type="text/javascript" src="assets/js/modules/donations.js"></script>
         <script type="text/javascript" src="assets/js/modules/donation-checker.js"></script>
         <script type="text/javascript" src="assets/js/modules/streamtip.js"></script>
+
+        <!-- Our viewer related modules -->
+        <script type="text/javascript" src="assets/js/modules/viewers.js"></script>
+        <script type="text/javascript" src="assets/js/modules/viewer-checker.js"></script>
 
         <!-- Our music related modules -->
         <script type="text/javascript" src="assets/js/modules/music-checker.js"></script>
@@ -126,6 +139,7 @@
         <!-- Controllers -->
         <script type="text/javascript" src="assets/js/controllers/NavController.js"></script>
         <script type="text/javascript" src="assets/js/controllers/HomeController.js"></script>
+        <script type="text/javascript" src="assets/js/controllers/ViewersController.js"></script>
         <script type="text/javascript" src="assets/js/controllers/FollowersController.js"></script>
         <script type="text/javascript" src="assets/js/controllers/DonationsController.js"></script>
         <script type="text/javascript" src="assets/js/controllers/SettingsController.js"></script>
