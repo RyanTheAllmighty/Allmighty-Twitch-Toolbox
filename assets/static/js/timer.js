@@ -50,7 +50,7 @@
 
         // Received a timer set event
         socket.on('timer-set', function (data) {
-            if (data.timerID === window.customData.timerID) {
+            if (data.id === window.customData.timerID) {
                 clock.stop();
                 clock.setTime(moment(data.date).diff(moment(), 'seconds'));
                 clock.start();

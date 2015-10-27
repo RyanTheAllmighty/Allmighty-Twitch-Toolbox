@@ -22,7 +22,7 @@
     angular.module('timers', []);
 
     angular.module('timers').provider('Timers', function () {
-        this.$get = ['$q', '$rootScope', function ($q, $rootScope) {
+        this.$get = ['$q', '$rootScope', 'SocketIOServer', function ($q, $rootScope, SocketIOServer) {
             return {
                 getTimers: function (callback) {
                     $rootScope.App.db.timers.find({}).sort({date: -1}).exec(callback);
@@ -47,7 +47,16 @@
                     $rootScope.App.db.timers.remove({_id: id}, {}, callback);
                 },
                 setTimer: function (id, date, callback) {
-                    $rootScope.App.db.timers.update({_id: id}, {date: date.toDate()}, {upsert: false}, callback);
+                    $rootScope.App.db.timers.update({_id: id}, {date: date.toDate()}, {upsert: false}, function (err) {
+                        if (err) {
+                            return callback(err);
+                        }
+
+                        SocketIOServer.emit('timer-set', {
+                            id,
+                            date: date.toDate()
+                        }, callback);
+                    });
                 }
             };
         }];
