@@ -19,6 +19,7 @@
                             <td ng-bind="timer._id"></td>
                             <td ng-bind="timer.date"></td>
                             <td>
+                                <a ng-click="copyTimerURL(timer._id)" class="btn btn-sm btn-default">Copy Link</a>
                                 <a ng-click="deleteTimer(timer._id)" class="btn btn-sm btn-danger">Delete</a>
                                 <button type="button" class="btn btn-sm btn-default" data-timer-id="{{timer._id}}" data-timer-date="{{timer.date.getTime()}}" data-toggle="modal"
                                         data-target="#setTimerModal">Set

@@ -19,7 +19,9 @@
 (function () {
     'use strict';
 
-    angular.module('AllmightyTwitchToolbox').controller('TimersController', ['$scope', '$timeout', 'Timers', function ($scope, $timeout, Timers) {
+    let gui = require('nw.gui');
+
+    angular.module('AllmightyTwitchToolbox').controller('TimersController', ['$scope', '$timeout', 'Timers', 'Notification', function ($scope, $timeout, Timers, Notification) {
         $scope.timers = [];
         $scope.settingTimer = {};
 
@@ -56,6 +58,12 @@
 
                 updateTimers();
             });
+        };
+
+        $scope.copyTimerURL = function (id) {
+            gui.Clipboard.get().set('http://localhost:' + $scope.App.settings.network.webPort + '/timer/' + id, 'text');
+
+            Notification.success({message: 'Link copied to clipboard!', delay: 3000});
         };
 
         $scope.deleteTimer = function (id) {
