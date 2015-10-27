@@ -57,6 +57,14 @@
             }
         });
 
+        // Received a timer deleted event
+        socket.on('timer-deleted', function (data) {
+            if (data.id === window.customData.timerID) {
+                clock.stop();
+                clock.setTime(0);
+            }
+        });
+
         clock.setTime(getSecondsLeft());
         clock.start();
     });

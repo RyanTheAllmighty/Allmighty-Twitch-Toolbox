@@ -41,10 +41,27 @@
                     });
                 },
                 addTimer: function (date, callback) {
-                    $rootScope.App.db.timers.insert({date: date.toDate()}, callback);
+                    $rootScope.App.db.timers.insert({date: date.toDate()}, function (err, newDoc) {
+                        if (err) {
+                            return callback(err);
+                        }
+
+                        SocketIOServer.emit('timer-added', {
+                            id: newDoc._id,
+                            date: date.toDate()
+                        }, callback);
+                    });
                 },
                 deleteTimer: function (id, callback) {
-                    $rootScope.App.db.timers.remove({_id: id}, {}, callback);
+                    $rootScope.App.db.timers.remove({_id: id}, {}, function (err) {
+                        if (err) {
+                            return callback(err);
+                        }
+
+                        SocketIOServer.emit('timer-deleted', {
+                            id
+                        }, callback);
+                    });
                 },
                 setTimer: function (id, date, callback) {
                     $rootScope.App.db.timers.update({_id: id}, {date: date.toDate()}, {upsert: false}, function (err) {
