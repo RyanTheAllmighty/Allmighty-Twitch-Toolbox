@@ -132,7 +132,7 @@
 
                         let noti = new QueueableNotification()
                             .title('New Donation!')
-                            .message(donation.username + ' just donated $' + donation.amount + '!')
+                            .message(donation.username + ' just donated ' + accounting.formatMoney(donation.amount) + '!')
                             .timeout(options.notificationTime * 1000)
                             .socketIO('new-donation', donation)
                             .socketIO('donations')

@@ -41,7 +41,7 @@
     // Received new donation data
     socket.on('new-donation', function (data) {
         vue.username = data.username;
-        vue.message = 'just donated $' + data.amount + '!';
+        vue.message = 'just donated ' + accounting.formatMoney(data.amount) + '!';
         showAlert(window.customData.donationNotificationTime);
     });
 
