@@ -1,0 +1,9 @@
+body {
+    background-color: transparent;
+    color: white;
+    overflow: hidden;
+}
+
+.flip-clock-label {
+    display: none !important;
+}

@@ -19,6 +19,7 @@
 (function () {
     'use strict';
 
+    let moment = require('moment');
     let express = require('express');
     let request = require('request');
 
@@ -51,6 +52,14 @@
             this.expressApp.set('views', 'assets/static/views/');
             this.expressApp.set('view engine', 'jade');
 
+            this.expressApp.get('/api/timer/:id', function (req, res) {
+                res.setHeader('Content-Type', 'application/json');
+                res.send(JSON.stringify({
+                    timerID: parseInt(req.params.id),
+                    date: moment().add(1, 'minutes')
+                }));
+            });
+
             this.expressApp.get('/alerts', function (req, res) {
                 res.render('alerts', {
                     data: {
@@ -66,6 +75,16 @@
                     data: {
                         musicChangeNotificationTime: self.options.musicChangeNotificationTime * 1000,
                         port: self.options.socketIOPort
+                    }
+                });
+            });
+
+            this.expressApp.get('/timer/:id', function (req, res) {
+                res.render('timer', {
+                    data: {
+                        timerID: req.params.id,
+                        port: self.options.socketIOPort,
+                        webPort: self.options.port
                     }
                 });
             });
