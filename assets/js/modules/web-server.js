@@ -43,107 +43,7 @@
             this.options = angular.extend({}, this.options, options);
         };
 
-        this.setup = function () {
-            let self = this;
-
-            this.expressApp = express();
-            this.expressApp.use(express.static('assets/static/'));
-
-            this.expressApp.set('views', 'assets/static/views/');
-            this.expressApp.set('view engine', 'jade');
-
-            this.expressApp.get('/api/timer/:id', function (req, res) {
-                res.setHeader('Content-Type', 'application/json');
-                res.send(JSON.stringify({
-                    timerID: parseInt(req.params.id),
-                    date: moment().add(1, 'minutes')
-                }));
-            });
-
-            this.expressApp.get('/alerts', function (req, res) {
-                res.render('alerts', {
-                    data: {
-                        donationNotificationTime: self.options.donationNotificationTime * 1000,
-                        followerNotificationTime: self.options.followerNotificationTime * 1000,
-                        port: self.options.socketIOPort
-                    }
-                });
-            });
-
-            this.expressApp.get('/nowplaying', function (req, res) {
-                res.render('nowplaying', {
-                    data: {
-                        musicChangeNotificationTime: self.options.musicChangeNotificationTime * 1000,
-                        port: self.options.socketIOPort
-                    }
-                });
-            });
-
-            this.expressApp.get('/timer/:id', function (req, res) {
-                res.render('timer', {
-                    data: {
-                        timerID: req.params.id,
-                        port: self.options.socketIOPort,
-                        webPort: self.options.port
-                    }
-                });
-            });
-
-            this.expressApp.get('/foobar/:action', function (req, res) {
-                switch (req.params.action) {
-                    case 'stop':
-                        request('http://127.0.0.1:' + self.options.foobarHttpControlPort + '/ajquery/?cmd=Stop&param3=NoResponse', function (error, response, body) {
-                            res.writeHead(response.statusCode);
-                            res.end(body);
-                        });
-                        break;
-                    case 'play':
-                        request('http://127.0.0.1:' + self.options.foobarHttpControlPort + '/ajquery/?cmd=Start&param3=NoResponse', function (error, response, body) {
-                            res.writeHead(response.statusCode);
-                            res.end(body);
-                        });
-                        break;
-                    case 'pause':
-                        request('http://127.0.0.1:' + self.options.foobarHttpControlPort + '/ajquery/?cmd=PlayOrPause&param3=NoResponse', function (error, response, body) {
-                            res.writeHead(response.statusCode);
-                            res.end(body);
-                        });
-                        break;
-                    case 'previous':
-                        request('http://127.0.0.1:' + self.options.foobarHttpControlPort + '/ajquery/?cmd=StartPrevious&param3=NoResponse', function (error, response, body) {
-                            res.writeHead(response.statusCode);
-                            res.end(body);
-                        });
-                        break;
-                    case 'next':
-                        request('http://127.0.0.1:' + self.options.foobarHttpControlPort + '/ajquery/?cmd=StartNext&param3=NoResponse', function (error, response, body) {
-                            res.writeHead(response.statusCode);
-                            res.end(body);
-                        });
-                        break;
-                    case 'nextpause':
-                        request('http://127.0.0.1:' + self.options.foobarHttpControlPort + '/ajquery/?cmd=StartNext&param3=NoResponse', function () {
-                            request('http://127.0.0.1:' + self.options.foobarHttpControlPort + '/ajquery/?cmd=PlayOrPause&param3=NoResponse', function (error, response, body) {
-                                res.writeHead(response.statusCode);
-                                res.end(body);
-                            });
-                        });
-                        break;
-                    case 'volume':
-                        request('http://127.0.0.1:' + self.options.foobarHttpControlPort + '/ajquery/?cmd=VolumeDB&param1=' + req.query.level || 0 + '&param3=NoResponse', function (error, response, body) {
-                            res.writeHead(response.statusCode);
-                            res.end(body);
-                        });
-                        break;
-                    default:
-                        res.writeHead(500);
-                        res.end('Unknown Action!');
-                        break;
-                }
-            });
-        };
-
-        this.$get = function () {
+        this.$get = ['Timers', function (Timers) {
             let self = this;
 
             return {
@@ -153,12 +53,113 @@
                 },
                 startServer: function () {
                     if (!self.expressApp) {
-                        self.setup();
+                        self.expressApp = express();
+                        self.expressApp.use(express.static('assets/static/'));
+
+                        self.expressApp.set('views', 'assets/static/views/');
+                        self.expressApp.set('view engine', 'jade');
+
+                        self.expressApp.get('/api/timer/:id', function (req, res) {
+                            Timers.getTimer(req.params.id, function (err, timer) {
+                                if (err) {
+                                    res.writeHead(500);
+                                    res.end(err.message);
+                                } else {
+                                    res.setHeader('Content-Type', 'application/json');
+                                    res.send(JSON.stringify({
+                                        timerID: timer._id,
+                                        date: timer.date
+                                    }));
+                                }
+                            });
+                        });
+
+                        self.expressApp.get('/alerts', function (req, res) {
+                            res.render('alerts', {
+                                data: {
+                                    donationNotificationTime: self.options.donationNotificationTime * 1000,
+                                    followerNotificationTime: self.options.followerNotificationTime * 1000,
+                                    port: self.options.socketIOPort
+                                }
+                            });
+                        });
+
+                        self.expressApp.get('/nowplaying', function (req, res) {
+                            res.render('nowplaying', {
+                                data: {
+                                    musicChangeNotificationTime: self.options.musicChangeNotificationTime * 1000,
+                                    port: self.options.socketIOPort
+                                }
+                            });
+                        });
+
+                        self.expressApp.get('/timer/:id', function (req, res) {
+                            res.render('timer', {
+                                data: {
+                                    timerID: req.params.id,
+                                    port: self.options.socketIOPort,
+                                    webPort: self.options.port
+                                }
+                            });
+                        });
+
+                        self.expressApp.get('/foobar/:action', function (req, res) {
+                            switch (req.params.action) {
+                                case 'stop':
+                                    request('http://127.0.0.1:' + self.options.foobarHttpControlPort + '/ajquery/?cmd=Stop&param3=NoResponse', function (error, response, body) {
+                                        res.writeHead(response.statusCode);
+                                        res.end(body);
+                                    });
+                                    break;
+                                case 'play':
+                                    request('http://127.0.0.1:' + self.options.foobarHttpControlPort + '/ajquery/?cmd=Start&param3=NoResponse', function (error, response, body) {
+                                        res.writeHead(response.statusCode);
+                                        res.end(body);
+                                    });
+                                    break;
+                                case 'pause':
+                                    request('http://127.0.0.1:' + self.options.foobarHttpControlPort + '/ajquery/?cmd=PlayOrPause&param3=NoResponse', function (error, response, body) {
+                                        res.writeHead(response.statusCode);
+                                        res.end(body);
+                                    });
+                                    break;
+                                case 'previous':
+                                    request('http://127.0.0.1:' + self.options.foobarHttpControlPort + '/ajquery/?cmd=StartPrevious&param3=NoResponse', function (error, response, body) {
+                                        res.writeHead(response.statusCode);
+                                        res.end(body);
+                                    });
+                                    break;
+                                case 'next':
+                                    request('http://127.0.0.1:' + self.options.foobarHttpControlPort + '/ajquery/?cmd=StartNext&param3=NoResponse', function (error, response, body) {
+                                        res.writeHead(response.statusCode);
+                                        res.end(body);
+                                    });
+                                    break;
+                                case 'nextpause':
+                                    request('http://127.0.0.1:' + self.options.foobarHttpControlPort + '/ajquery/?cmd=StartNext&param3=NoResponse', function () {
+                                        request('http://127.0.0.1:' + self.options.foobarHttpControlPort + '/ajquery/?cmd=PlayOrPause&param3=NoResponse', function (error, response, body) {
+                                            res.writeHead(response.statusCode);
+                                            res.end(body);
+                                        });
+                                    });
+                                    break;
+                                case 'volume':
+                                    request('http://127.0.0.1:' + self.options.foobarHttpControlPort + '/ajquery/?cmd=VolumeDB&param1=' + req.query.level || 0 + '&param3=NoResponse', function (error, response, body) {
+                                        res.writeHead(response.statusCode);
+                                        res.end(body);
+                                    });
+                                    break;
+                                default:
+                                    res.writeHead(500);
+                                    res.end('Unknown Action!');
+                                    break;
+                            }
+                        });
                     }
 
                     self.expressApp.listen(self.options.port);
                 }
             };
-        };
+        }];
     });
 })();

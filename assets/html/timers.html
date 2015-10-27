@@ -1,0 +1,106 @@
+<div class="row">
+    <div class="col-xs-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Timers</h3>
+            </div>
+
+            <div class="panel-body">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Timer ID</th>
+                            <th>Set To</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="timer in timers">
+                            <td ng-bind="timer._id"></td>
+                            <td ng-bind="timer.date"></td>
+                            <td>
+                                <a ng-click="deleteTimer(timer._id)" class="btn btn-sm btn-danger">Delete</a>
+                                <button type="button" class="btn btn-sm btn-default" data-timer-id="{{timer._id}}" data-timer-date="{{timer.date.getTime()}}" data-toggle="modal"
+                                        data-target="#setTimerModal">Set
+                                </button>
+                                <input type="hidden" id="editingTimerID" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="panel-footer text-center">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createTimerModal">Create Timer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="createTimerModal" tabindex="-1" role="dialog" aria-labelledby="createTimerModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="createTimerModalLabel">Create Timer</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <div class="input-group date" id="createTimerPicker">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+
+                        <input type="text" class="form-control"/>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="addTimer()">Add Timer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="setTimerModal" tabindex="-1" role="dialog" aria-labelledby="setTimerModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="setTimerModalLabel">Set Timer</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <div class="input-group date" id="setTimerPicker">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+
+                        <input type="text" class="form-control"/>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="setTimer()">Set Timer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('#createTimerPicker').datetimepicker();
+        $('#setTimerPicker').datetimepicker();
+
+        $('#createTimerModal').on('show.bs.modal', function (event) {
+            $('#createTimerPicker').data('DateTimePicker').date(new Date());
+        });
+
+        $('#setTimerModal').on('show.bs.modal', function (event) {
+            $('#editingTimerID').val($(event.relatedTarget).data('timer-id'));
+            $('#setTimerPicker').data('DateTimePicker').date(new Date($(event.relatedTarget).data('timer-date')));
+        });
+    });
+</script>

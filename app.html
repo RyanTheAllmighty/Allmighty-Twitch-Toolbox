@@ -9,6 +9,7 @@
         <link rel="stylesheet" type="text/css" href="assets/css/libs/dataTables-1.10.9.min.css"/>
         <link rel="stylesheet" type="text/css" href="assets/css/libs/dataTables.bootstrap-1.10.9.min.css"/>
         <link rel="stylesheet" type="text/css" href="assets/css/libs/angular-datatables-bootstrap.unreleased.min.css"/>
+        <link rel="stylesheet" type="text/css" href="assets/css/libs/bootstrap-datetimepicker-4.17.37.min.css"/>
         <link rel="stylesheet" type="text/css" href="assets/css/app.css"/>
     </head>
 
@@ -32,6 +33,9 @@
                         </li>
                         <li ng-class="{active: $location.path() === '/settings'}">
                             <a href="#/settings">Settings</a>
+                        </li>
+                        <li ng-class="{active: $location.path() === '/timers'}">
+                            <a href="#/timers">Timers</a>
                         </li>
                         <li ng-class="{active: $location.path() === '/tools'}">
                             <a href="#/tools">Tools</a>
@@ -69,6 +73,12 @@
         <!-- Accounting Library -->
         <script type="text/javascript" src="assets/js/libs/accounting-0.4.1.min.js"></script>
 
+        <!-- Moment.js Library -->
+        <script type="text/javascript" src="assets/js/libs/moment-2.10.6.min.js"></script>
+
+        <!-- Bootstrap Date Time Picker -->
+        <script type="text/javascript" src="assets/js/libs/bootstrap-datetimepicker-4.17.37.min.js"></script>
+
         <!-- Angular & Plugins -->
         <script type="text/javascript" src="assets/js/libs/angular-1.4.7.min.js"></script>
         <script type="text/javascript" src="assets/js/libs/angular-route-1.4.7.min.js"></script>
@@ -79,6 +89,7 @@
         <script type="text/javascript" src="assets/js/libs/angular-datatables-bootstrap-unreleased.min.js"></script>
         <script type="text/javascript" src="assets/js/libs/angular-scrollglue-2.0.6.min.js"></script>
         <script type="text/javascript" src="assets/js/libs/angular-local-storage-0.2.3.min.js"></script>
+        <script type="text/javascript" src="assets/js/libs/angular-moment-1.0.0-beta.2.min.js"></script>
 
         <!-- Our follower related modules -->
         <script type="text/javascript" src="assets/js/modules/followers.js"></script>
@@ -92,6 +103,9 @@
 
         <!-- Our music related modules -->
         <script type="text/javascript" src="assets/js/modules/music-checker.js"></script>
+
+        <!-- Our timers related modules -->
+        <script type="text/javascript" src="assets/js/modules/timers.js"></script>
 
         <!-- Our notification related modules -->
         <script type="text/javascript" src="assets/js/modules/notification-queue.js"></script>
@@ -115,6 +129,7 @@
         <script type="text/javascript" src="assets/js/controllers/FollowersController.js"></script>
         <script type="text/javascript" src="assets/js/controllers/DonationsController.js"></script>
         <script type="text/javascript" src="assets/js/controllers/SettingsController.js"></script>
+        <script type="text/javascript" src="assets/js/controllers/TimersController.js"></script>
         <script type="text/javascript" src="assets/js/controllers/ToolsController.js"></script>
         <script type="text/javascript" src="assets/js/controllers/TestController.js"></script>
         <script type="text/javascript" src="assets/js/controllers/HelpController.js"></script>

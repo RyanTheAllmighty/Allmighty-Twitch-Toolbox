@@ -27,7 +27,7 @@
     let loadingService = require('./assets/js/services/loadingService');
 
     /**
-     * @type {{basePath: (String), db: {donations: (Datastore), followers: (Datastore), settings: (Datastore)}, settings: (Object)}}
+     * @type {{basePath: (String), db: {donations: (Datastore), followers: (Datastore), settings: (Datastore), timers: (Datastore)}, settings: (Object)}}
      */
     global.App = {
         // Setup the base path
@@ -35,7 +35,8 @@
         db: {
             donations: new Datastore({filename: path.join(gui.App.dataPath, 'ApplicationStorage', 'db', 'donations.db'), autoload: true}),
             followers: new Datastore({filename: path.join(gui.App.dataPath, 'ApplicationStorage', 'db', 'followers.db'), autoload: true}),
-            settings: new Datastore({filename: path.join(gui.App.dataPath, 'ApplicationStorage', 'db', 'settings.db'), autoload: true})
+            settings: new Datastore({filename: path.join(gui.App.dataPath, 'ApplicationStorage', 'db', 'settings.db'), autoload: true}),
+            timers: new Datastore({filename: path.join(gui.App.dataPath, 'ApplicationStorage', 'db', 'timers.db'), autoload: true})
         },
         settings: {}
     };
@@ -69,7 +70,9 @@
         'notification-queue',
         'luegg.directives',
         'LocalStorageModule',
-        'web-server'
+        'web-server',
+        'timers',
+        'angularMoment'
     ]);
 
     // Load everything before we proceed
@@ -88,6 +91,9 @@
             }).when('/settings', {
                 templateUrl: './assets/html/settings.html',
                 controller: 'SettingsController'
+            }).when('/timers', {
+                templateUrl: './assets/html/timers.html',
+                controller: 'TimersController'
             }).when('/tools', {
                 templateUrl: './assets/html/tools.html',
                 controller: 'ToolsController'
