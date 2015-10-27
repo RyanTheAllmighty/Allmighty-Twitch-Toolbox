@@ -19,11 +19,9 @@
 (function () {
     'use strict';
 
-    let async = require('async');
+    angular.module('stream-checker', []);
 
-    angular.module('viewer-checker', []);
-
-    angular.module('viewer-checker').provider('ViewerChecker', function () {
+    angular.module('stream-checker').provider('StreamChecker', function () {
         this.options = {
             interval: 10
         };
@@ -41,7 +39,12 @@
             this.options = angular.extend({}, this.options, options);
         };
 
-        this.$get = ['$rootScope', '$interval', 'Viewers', 'Twitch', function ($rootScope, $interval, Viewers, Twitch) {
+        /**
+         * This is our promise that is kept when we start the interval so that we can cancel it if we need to.
+         */
+        this.promise = null;
+
+        this.$get = ['$rootScope', '$interval', 'Stream', 'Twitch', 'Viewers', function ($rootScope, $interval, Stream, Twitch, Viewers) {
             let self = this;
 
             return {
@@ -61,10 +64,13 @@
                             }
 
                             if (info.stream) {
+                                Stream.nowOnline();
                                 Viewers.addViewerCount(info.stream.viewers || 0);
+                            } else {
+                                Stream.nowOffline();
                             }
                         });
-                    }, self.options.interval * 1000);
+                    }, 30000);
                 }
             };
         }];

@@ -36,7 +36,7 @@ let defaultSettings = {
     checks: {
         donations: 10,
         followers: 10,
-        viewers: 10
+        stream: 10
     },
     network: {
         foobarHttpControlPort: 8888,

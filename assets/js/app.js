@@ -36,6 +36,7 @@
             donations: new Datastore({filename: path.join(gui.App.dataPath, 'ApplicationStorage', 'db', 'donations.db'), autoload: true}),
             followers: new Datastore({filename: path.join(gui.App.dataPath, 'ApplicationStorage', 'db', 'followers.db'), autoload: true}),
             settings: new Datastore({filename: path.join(gui.App.dataPath, 'ApplicationStorage', 'db', 'settings.db'), autoload: true}),
+            stream: new Datastore({filename: path.join(gui.App.dataPath, 'ApplicationStorage', 'db', 'stream.db'), autoload: true}),
             timers: new Datastore({filename: path.join(gui.App.dataPath, 'ApplicationStorage', 'db', 'timers.db'), autoload: true}),
             viewers: new Datastore({filename: path.join(gui.App.dataPath, 'ApplicationStorage', 'db', 'viewers.db'), autoload: true})
         },
@@ -75,13 +76,14 @@
         'timers',
         'angularMoment',
         'viewers',
-        'viewer-checker',
-        'nvd3'
+        'nvd3',
+        'stream',
+        'stream-checker'
     ]);
 
     // Load everything before we proceed
     loadingService.load(function () {
-        app.config(function ($routeProvider, localStorageServiceProvider, WebServerProvider, NotificationProvider, TwitchProvider, StreamTipProvider, SocketIOProvider, SocketIOServerProvider, ViewerCheckerProvider, FollowersProvider, FollowerCheckerProvider, DonationsProvider, DonationCheckerProvider, MusicCheckerProvider) {
+        app.config(function ($routeProvider, localStorageServiceProvider, WebServerProvider, NotificationProvider, TwitchProvider, StreamTipProvider, SocketIOProvider, SocketIOServerProvider, StreamCheckerProvider, FollowersProvider, FollowerCheckerProvider, DonationsProvider, DonationCheckerProvider, MusicCheckerProvider) {
             // Setup the routes
             $routeProvider.when('/dashboard', {
                 templateUrl: './assets/html/dashboard.html',
@@ -164,9 +166,9 @@
                 socketPort: global.App.settings.network.socketIOPort
             });
 
-            // Setup the viewer checker
-            ViewerCheckerProvider.setOptions({
-                interval: global.App.settings.checks.viewers
+            // Setup the stream checker
+            StreamCheckerProvider.setOptions({
+                interval: global.App.settings.checks.stream
             });
 
             // Setup the follower provider
@@ -220,15 +222,15 @@
             }
         }]);
 
-        app.run(['FollowerChecker', 'DonationChecker', 'ViewerChecker', 'MusicChecker', 'WebServer', 'NotificationQueue', function (FollowerChecker, DonationChecker, ViewerChecker, MusicChecker, WebServer, NotificationQueue) {
+        app.run(['FollowerChecker', 'DonationChecker', 'StreamChecker', 'MusicChecker', 'WebServer', 'NotificationQueue', function (FollowerChecker, DonationChecker, StreamChecker, MusicChecker, WebServer, NotificationQueue) {
             // Start checking for new followers
             FollowerChecker.startChecking();
 
             // Start checking for new donations
             DonationChecker.startChecking();
 
-            // Start checking for viewer numbers
-            ViewerChecker.startChecking();
+            // Start checking for stream stuffs
+            StreamChecker.startChecking();
 
             // Start checking for song changes
             MusicChecker.startChecking();
