@@ -97,9 +97,6 @@
             }).when('/donations', {
                 templateUrl: './assets/html/donations.html',
                 controller: 'DonationsController'
-            }).when('/settings', {
-                templateUrl: './assets/html/settings.html',
-                controller: 'SettingsController'
             }).when('/timers', {
                 templateUrl: './assets/html/timers.html',
                 controller: 'TimersController'
@@ -109,6 +106,9 @@
             }).when('/test', {
                 templateUrl: './assets/html/test.html',
                 controller: 'TestController'
+            }).when('/settings', {
+                templateUrl: './assets/html/settings.html',
+                controller: 'SettingsController'
             }).when('/help', {
                 templateUrl: './assets/html/help.html',
                 controller: 'HelpController'
