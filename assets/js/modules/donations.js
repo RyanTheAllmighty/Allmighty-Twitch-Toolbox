@@ -44,7 +44,9 @@
                     options = opts;
                 },
                 getDonations: function (limit, callback) {
-                    if (limit && !callback) {
+                    if (!limit) {
+                        limit = -1;
+                    } else if (!callback) {
                         callback = limit;
                         limit = 100;
                     }

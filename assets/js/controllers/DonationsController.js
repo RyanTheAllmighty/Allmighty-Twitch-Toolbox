@@ -21,13 +21,13 @@
 
     angular.module('AllmightyTwitchToolbox').controller('DonationsController', ['$scope', 'Donations', 'DTOptionsBuilder', 'DTColumnBuilder', function ($scope, Donations, DTOptionsBuilder, DTColumnBuilder) {
         let getDonations = function () {
-            return Donations.getDonationsPromise(100);
+            return Donations.getDonationsPromise();
         };
 
         // The instance of the dataTable
         $scope.dtInstance = {};
 
-        $scope.dtOptions = DTOptionsBuilder.fromFnPromise(getDonations).withPaginationType('full_numbers').withOption('order', [[3, 'desc']]).withBootstrap();
+        $scope.dtOptions = DTOptionsBuilder.fromFnPromise(getDonations).withPaginationType('full').withOption('order', [[3, 'desc']]).withBootstrap();
 
         $scope.dtColumns = [
             DTColumnBuilder.newColumn('username').withTitle('Username'),
