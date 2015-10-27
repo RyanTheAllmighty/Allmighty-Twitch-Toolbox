@@ -66,10 +66,7 @@
                                     res.end(err.message);
                                 } else {
                                     res.setHeader('Content-Type', 'application/json');
-                                    res.send(JSON.stringify({
-                                        timerID: timer._id,
-                                        date: timer.date
-                                    }));
+                                    res.send(JSON.stringify(timer));
                                 }
                             });
                         });
@@ -94,11 +91,18 @@
                         });
 
                         self.expressApp.get('/timer/:id', function (req, res) {
-                            res.render('timer', {
-                                data: {
-                                    timerID: req.params.id,
-                                    port: self.options.socketIOPort,
-                                    webPort: self.options.port
+                            Timers.getTimer(req.params.id, function (err, timer) {
+                                if (err) {
+                                    res.writeHead(500);
+                                    res.end(err.message);
+                                } else {
+                                    res.render('timer', {
+                                        data: {
+                                            timer: timer,
+                                            port: self.options.socketIOPort,
+                                            webPort: self.options.port
+                                        }
+                                    });
                                 }
                             });
                         });

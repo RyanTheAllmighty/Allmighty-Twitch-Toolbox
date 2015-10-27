@@ -9,22 +9,22 @@
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr>
-                            <th>Timer ID</th>
+                            <th>Name</th>
                             <th>Set To</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr ng-repeat="timer in timers">
-                            <td ng-bind="timer._id"></td>
+                            <td ng-bind="timer.name"></td>
                             <td ng-bind="timer.date"></td>
                             <td>
                                 <a ng-click="copyTimerURL(timer._id)" class="btn btn-sm btn-default">Copy Link</a>
                                 <a ng-click="deleteTimer(timer._id)" class="btn btn-sm btn-danger">Delete</a>
-                                <button type="button" class="btn btn-sm btn-default" data-timer-id="{{timer._id}}" data-timer-date="{{timer.date.getTime()}}" data-toggle="modal"
-                                        data-target="#setTimerModal">Set
+                                <button type="button" class="btn btn-sm btn-default" data-timer-id="{{timer._id}}" data-timer-name="{{timer.name}}" data-timer-date="{{timer.date.getTime()}}"
+                                        data-toggle="modal" data-target="#setTimerModal">Set
                                 </button>
-                                <input type="hidden" id="editingTimerID" />
+                                <input type="hidden" id="editingTimerID"/>
                             </td>
                         </tr>
                     </tbody>
@@ -46,6 +46,14 @@
                 <h4 class="modal-title" id="createTimerModalLabel">Create Timer</h4>
             </div>
             <div class="modal-body">
+                <div class="form-group">
+                    <label for="createTimerName" class="col-lg-2 control-label">Timer Name</label>
+
+                    <div class="col-lg-10">
+                        <input type="text" class="form-control" id="createTimerName"/>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <div class="input-group date" id="createTimerPicker">
                         <span class="input-group-addon">
@@ -72,6 +80,14 @@
                 <h4 class="modal-title" id="setTimerModalLabel">Set Timer</h4>
             </div>
             <div class="modal-body">
+                <div class="form-group">
+                    <label for="updateTimerName" class="col-lg-2 control-label">Timer Name</label>
+
+                    <div class="col-lg-10">
+                        <input type="text" class="form-control" id="updateTimerName"/>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <div class="input-group date" id="setTimerPicker">
                         <span class="input-group-addon">
@@ -100,6 +116,7 @@
         });
 
         $('#setTimerModal').on('show.bs.modal', function (event) {
+            $('#updateTimerName').val($(event.relatedTarget).data('timer-name'));
             $('#editingTimerID').val($(event.relatedTarget).data('timer-id'));
             $('#setTimerPicker').data('DateTimePicker').date(new Date($(event.relatedTarget).data('timer-date')));
         });

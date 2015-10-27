@@ -23,13 +23,13 @@
 
     angular.module('AllmightyTwitchToolbox').controller('TimersController', ['$scope', '$timeout', 'Timers', 'Notification', function ($scope, $timeout, Timers, Notification) {
         $scope.timers = [];
-        $scope.settingTimer = {};
 
         function updateTimers() {
             $timeout(function () {
                 Timers.getTimers(function (err, timers) {
                     if (err) {
-                        console.log(err);
+                        console.error(err);
+                        return Notification.error({message: err.message, delay: 3000});
                     }
 
                     $scope.timers = timers;
@@ -41,20 +41,26 @@
         updateTimers();
 
         $scope.addTimer = function () {
-            Timers.addTimer($('#createTimerPicker').data('DateTimePicker').date(), function (err) {
+            Timers.addTimer($('#createTimerName').val(), $('#createTimerPicker').data('DateTimePicker').date(), function (err) {
                 if (err) {
-                    console.log(err);
+                    console.error(err);
+                    return Notification.error({message: err.message, delay: 3000});
                 }
+
+                Notification.success({message: 'Timer Created!', delay: 3000});
 
                 updateTimers();
             });
         };
 
         $scope.setTimer = function () {
-            Timers.setTimer($('#editingTimerID').val(), $('#setTimerPicker').data('DateTimePicker').date(), function (err) {
+            Timers.setTimer($('#editingTimerID').val(), $('#updateTimerName').val(), $('#setTimerPicker').data('DateTimePicker').date(), function (err) {
                 if (err) {
-                    console.log(err);
+                    console.error(err);
+                    return Notification.error({message: err.message, delay: 3000});
                 }
+
+                Notification.success({message: 'Timer Set!', delay: 3000});
 
                 updateTimers();
             });
@@ -69,8 +75,11 @@
         $scope.deleteTimer = function (id) {
             Timers.deleteTimer(id, function (err) {
                 if (err) {
-                    console.log(err);
+                    console.error(err);
+                    return Notification.error({message: err.message, delay: 3000});
                 }
+
+                Notification.success({message: 'Timer Deleted!', delay: 3000});
 
                 updateTimers();
             });

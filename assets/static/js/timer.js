@@ -25,7 +25,7 @@
         var secondsLeft = 0;
 
         $.ajax({
-            url: 'http://127.0.0.1:' + window.customData.webPort + '/api/timer/' + window.customData.timerID,
+            url: 'http://127.0.0.1:' + window.customData.webPort + '/api/timer/' + (window.customData.timer.name ? window.customData.timer.name : window.customData.timer._id),
             type: 'GET',
             async: false,
             success: function (result) {
@@ -50,7 +50,7 @@
 
         // Received a timer set event
         socket.on('timer-set', function (data) {
-            if (data.id === window.customData.timerID) {
+            if (data._id === window.customData.timer._id || data.name === window.customData.timer.name) {
                 clock.stop();
                 clock.setTime(moment(data.date).diff(moment(), 'seconds'));
                 clock.start();
@@ -59,7 +59,7 @@
 
         // Received a timer deleted event
         socket.on('timer-deleted', function (data) {
-            if (data.id === window.customData.timerID) {
+            if (data._id === window.customData.timer._id || data.name === window.customData.timer.name) {
                 clock.stop();
                 clock.setTime(0);
             }

@@ -28,28 +28,35 @@
                     $rootScope.App.db.timers.find({}).sort({date: -1}).exec(callback);
                 },
                 getTimer: function (id, callback) {
-                    $rootScope.App.db.timers.find({_id: id}).limit(1).exec(function (err, docs) {
+                    $rootScope.App.db.timers.find({$or: [{_id: id}, {name: id}]}).limit(1).exec(function (err, docs) {
                         if (err) {
                             return callback(err);
                         }
 
                         if (docs.length === 0) {
-                            return callback(new Error('No timer found with that ID!'));
+                            return callback(new Error('No timer found with that ID/Name!'));
                         }
 
                         callback(null, docs[0]);
                     });
                 },
-                addTimer: function (date, callback) {
-                    $rootScope.App.db.timers.insert({date: date.toDate()}, function (err, newDoc) {
+                addTimer: function (name, date, callback) {
+                    $rootScope.App.db.timers.find({name: name}).limit(1).exec(function (err, docs) {
                         if (err) {
                             return callback(err);
                         }
 
-                        SocketIOServer.emit('timer-added', {
-                            id: newDoc._id,
-                            date: date.toDate()
-                        }, callback);
+                        if (docs.length !== 0) {
+                            return callback(new Error('A timer already exists with that name!'));
+                        }
+
+                        $rootScope.App.db.timers.insert({name, date: date.toDate()}, function (err, newDoc) {
+                            if (err) {
+                                return callback(err);
+                            }
+
+                            SocketIOServer.emit('timer-added', newDoc, callback);
+                        });
                     });
                 },
                 deleteTimer: function (id, callback) {
@@ -63,16 +70,31 @@
                         }, callback);
                     });
                 },
-                setTimer: function (id, date, callback) {
-                    $rootScope.App.db.timers.update({_id: id}, {date: date.toDate()}, {upsert: false}, function (err) {
+                setTimer: function (id, name, date, callback) {
+                    let self = this;
+
+                    $rootScope.App.db.timers.find({$and: [{name: name}, {$not: {_id: id}}]}).limit(1).exec(function (err, docs) {
                         if (err) {
                             return callback(err);
                         }
 
-                        SocketIOServer.emit('timer-set', {
-                            id,
-                            date: date.toDate()
-                        }, callback);
+                        if (docs.length !== 0) {
+                            return callback(new Error('A timer already exists with that name!'));
+                        }
+
+                        $rootScope.App.db.timers.update({_id: id}, {name, date: date.toDate()}, {upsert: false}, function (err, numUpdated, numInserted, docs) {
+                            if (err) {
+                                return callback(err);
+                            }
+
+                            self.getTimer(id, function (err, timer) {
+                                if (err) {
+                                    return callback(err);
+                                }
+
+                                SocketIOServer.emit('timer-set', timer, callback);
+                            });
+                        });
                     });
                 }
             };
