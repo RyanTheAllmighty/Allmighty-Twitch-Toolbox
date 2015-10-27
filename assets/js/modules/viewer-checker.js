@@ -60,8 +60,6 @@
                                 return console.error(err);
                             }
 
-                            console.log(JSON.stringify(info));
-
                             if (info.stream) {
                                 Viewers.addViewerCount(info.stream.viewers || 0);
                             }
