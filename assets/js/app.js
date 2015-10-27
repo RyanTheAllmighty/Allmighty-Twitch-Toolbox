@@ -111,7 +111,8 @@
                 socketIOPort: global.App.settings.network.socketIOPort,
                 donationNotificationTime: global.App.settings.notifications.donationNotificationTime,
                 followerNotificationTime: global.App.settings.notifications.followerNotificationTime,
-                musicChangeNotificationTime: global.App.settings.notifications.musicChangeNotificationTime
+                musicChangeNotificationTime: global.App.settings.notifications.musicChangeNotificationTime,
+                foobarHttpControlPort: global.App.settings.network.foobarHttpControlPort
             });
 
             // Setup the NotificationProvider

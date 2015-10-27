@@ -186,6 +186,14 @@
             <div uib-collapse="_collapsedPanels.settings.network">
                 <div class="panel-body">
                     <div class="form-group">
+                        <label for="foobarHttpControlPort" class="col-lg-2 control-label">foobar2000 HTTP Control Port</label>
+
+                        <div class="col-lg-10">
+                            <input ng-model="settings.network.foobarHttpControlPort" type="number" class="form-control" id="foobarHttpControlPort" min="1" max="65535"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
                         <label for="socketIOPort" class="col-lg-2 control-label">Socket.IO Port</label>
 
                         <div class="col-lg-10">

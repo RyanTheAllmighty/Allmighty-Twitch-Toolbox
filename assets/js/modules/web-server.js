@@ -20,6 +20,7 @@
     'use strict';
 
     let express = require('express');
+    let request = require('request');
 
     angular.module('web-server', []);
 
@@ -67,6 +68,53 @@
                         port: self.options.socketIOPort
                     }
                 });
+            });
+
+            this.expressApp.get('/foobar/:action', function (req, res) {
+                switch (req.params.action) {
+                    case 'stop':
+                        request('http://127.0.0.1:' + self.options.foobarHttpControlPort + '/ajquery/?cmd=Stop&param3=NoResponse', function (error, response, body) {
+                            res.writeHead(response.statusCode);
+                            res.end(body);
+                        });
+                        break;
+                    case 'play':
+                        request('http://127.0.0.1:' + self.options.foobarHttpControlPort + '/ajquery/?cmd=Start&param3=NoResponse', function (error, response, body) {
+                            res.writeHead(response.statusCode);
+                            res.end(body);
+                        });
+                        break;
+                    case 'pause':
+                        request('http://127.0.0.1:' + self.options.foobarHttpControlPort + '/ajquery/?cmd=PlayOrPause&param3=NoResponse', function (error, response, body) {
+                            res.writeHead(response.statusCode);
+                            res.end(body);
+                        });
+                        break;
+                    case 'previous':
+                        request('http://127.0.0.1:' + self.options.foobarHttpControlPort + '/ajquery/?cmd=StartPrevious&param3=NoResponse', function (error, response, body) {
+                            res.writeHead(response.statusCode);
+                            res.end(body);
+                        });
+                        break;
+                    case 'next':
+                        request('http://127.0.0.1:' + self.options.foobarHttpControlPort + '/ajquery/?cmd=StartNext&param3=NoResponse', function (error, response, body) {
+                            res.writeHead(response.statusCode);
+                            res.end(body);
+                        });
+                        break;
+                    case 'nextpause':
+                        request('http://127.0.0.1:' + self.options.foobarHttpControlPort + '/ajquery/?cmd=StartNext&param3=NoResponse', function () {
+                            request('http://127.0.0.1:' + self.options.foobarHttpControlPort + '/ajquery/?cmd=PlayOrPause&param3=NoResponse', function (error, response, body) {
+                                res.writeHead(response.statusCode);
+                                res.end(body);
+                            });
+                        });
+                        break;
+                    default:
+                        res.writeHead(500);
+                        res.end('Unknown Action!');
+                        break;
+                }
             });
         };
 

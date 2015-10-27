@@ -39,6 +39,7 @@ let defaultSettings = {
         viewers: 10
     },
     network: {
+        foobarHttpControlPort: 8888,
         socketIOPort: 4000,
         webPort: 5000
     },
