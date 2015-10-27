@@ -67,9 +67,16 @@
         };
 
         $scope.copyTimerURL = function (id) {
-            gui.Clipboard.get().set('http://localhost:' + $scope.App.settings.network.webPort + '/timer/' + id, 'text');
+            Timers.getTimer(id, function (err, timer) {
+                if (err) {
+                    console.error(err);
+                    return Notification.error({message: err.message, delay: 3000});
+                }
 
-            Notification.success({message: 'Link copied to clipboard!', delay: 3000});
+                gui.Clipboard.get().set('http://localhost:' + $scope.App.settings.network.webPort + '/timer/' + (timer.name ? timer.name : timer._id), 'text');
+
+                Notification.success({message: 'Link copied to clipboard!', delay: 3000});
+            });
         };
 
         $scope.deleteTimer = function (id) {

@@ -82,7 +82,7 @@
                             return callback(new Error('A timer already exists with that name!'));
                         }
 
-                        $rootScope.App.db.timers.update({_id: id}, {name, date: date.toDate()}, {upsert: false}, function (err, numUpdated, numInserted, docs) {
+                        $rootScope.App.db.timers.update({_id: id}, {name, date: date.toDate()}, {upsert: false}, function (err) {
                             if (err) {
                                 return callback(err);
                             }
