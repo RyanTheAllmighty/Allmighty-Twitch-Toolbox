@@ -19,7 +19,7 @@
 (function () {
     'use strict';
 
-    angular.module('AllmightyTwitchToolbox').controller('HomeController', ['$scope', function ($scope) {
-        $scope.test = 'Home';
+    angular.module('AllmightyTwitchToolbox').controller('DashboardController', ['$scope', function ($scope) {
+        $scope.test = 'Dashboard';
     }]);
 })();

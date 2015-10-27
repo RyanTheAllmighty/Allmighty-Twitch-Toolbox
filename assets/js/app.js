@@ -83,9 +83,9 @@
     loadingService.load(function () {
         app.config(function ($routeProvider, localStorageServiceProvider, WebServerProvider, NotificationProvider, TwitchProvider, StreamTipProvider, SocketIOProvider, SocketIOServerProvider, ViewerCheckerProvider, FollowersProvider, FollowerCheckerProvider, DonationsProvider, DonationCheckerProvider, MusicCheckerProvider) {
             // Setup the routes
-            $routeProvider.when('/', {
-                templateUrl: './assets/html/home.html',
-                controller: 'HomeController'
+            $routeProvider.when('/dashboard', {
+                templateUrl: './assets/html/dashboard.html',
+                controller: 'DashboardController'
             }).when('/viewers', {
                 templateUrl: './assets/html/viewers.html',
                 controller: 'ViewersController'
@@ -110,7 +110,7 @@
             }).when('/help', {
                 templateUrl: './assets/html/help.html',
                 controller: 'HelpController'
-            }).otherwise({redirectTo: '/'});
+            }).otherwise({redirectTo: '/dashboard'});
 
             localStorageServiceProvider.setPrefix('AllmightyTwitchToolbox');
 

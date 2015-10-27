@@ -18,13 +18,13 @@
         <nav class="navbar navbar-default navbar-fixed-top" ng-controller="NavController">
             <div class="container-fluid">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="#/">Allmighty Twitch Toolbox</a>
+                    <a class="navbar-brand" href="#/dashboard">Allmighty Twitch Toolbox</a>
                 </div>
 
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
-                        <li ng-class="{active: $location.path() === '/'}">
-                            <a href="#/">Home</a>
+                        <li ng-class="{active: $location.path() === '/dashboard'}">
+                            <a href="#/dashboard">Dashboard</a>
                         </li>
                         <li ng-class="{active: $location.path() === '/viewers'}">
                             <a href="#/viewers">Viewers</a>
@@ -138,7 +138,7 @@
 
         <!-- Controllers -->
         <script type="text/javascript" src="assets/js/controllers/NavController.js"></script>
-        <script type="text/javascript" src="assets/js/controllers/HomeController.js"></script>
+        <script type="text/javascript" src="assets/js/controllers/DashboardController.js"></script>
         <script type="text/javascript" src="assets/js/controllers/ViewersController.js"></script>
         <script type="text/javascript" src="assets/js/controllers/FollowersController.js"></script>
         <script type="text/javascript" src="assets/js/controllers/DonationsController.js"></script>
