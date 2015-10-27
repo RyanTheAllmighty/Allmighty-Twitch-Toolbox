@@ -31,7 +31,7 @@
     var socket = io('http://127.0.0.1:' + window.customData.port);
 
     // Received song data
-    socket.on('song', function (data) {
+    socket.on('song-changed', function (data) {
         vue.nowPlaying = data;
         if (!vue.nowPlaying.title) {
             vue.nowPlaying.title = 'Unknown';
@@ -41,7 +41,7 @@
     });
 
     // Asked to reshow the current song's data
-    socket.on('reshow', function () {
+    socket.on('song-reshow', function () {
         showSongInfo();
     });
 

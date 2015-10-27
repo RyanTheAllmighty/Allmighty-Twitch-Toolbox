@@ -2,6 +2,27 @@
     <div class="col-xs-12">
         <div class="panel panel-primary">
             <div class="panel-heading">
+                <h3 class="panel-title">Reshow Playing Song</h3>
+                <collapsible model="_collapsedPanels.tools.reshowSong"/>
+            </div>
+
+            <div uib-collapse="_collapsedPanels.tools.reshowSong">
+                <div class="panel-body">
+                    <p>Click the button below to trigger the currently playing song to reshow!</p>
+                </div>
+
+                <div class="panel-footer text-center">
+                    <button type="submit" class="btn btn-primary" ng-click="reshowSong()">Reshow Song</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
                 <h3 class="panel-title">Music Information Parsing</h3>
                 <collapsible model="_collapsedPanels.tools.musicInformationParsing"/>
             </div>
