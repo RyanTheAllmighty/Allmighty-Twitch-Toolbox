@@ -35,7 +35,7 @@
                 return accounting.formatMoney(data);
             }),
             DTColumnBuilder.newColumn('note').withTitle('Note'),
-            DTColumnBuilder.newColumn('date').withTitle('Date Donated').withOption('bSearchable', false)
+            DTColumnBuilder.newColumn('date').withTitle('Date Donated').withOption('bSearchable', false).withOption('type', 'date')
         ];
 
         function changeData() {

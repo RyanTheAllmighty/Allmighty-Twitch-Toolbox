@@ -31,7 +31,7 @@
 
         $scope.dtColumns = [
             DTColumnBuilder.newColumn('display_name').withTitle('Username'),
-            DTColumnBuilder.newColumn('date').withTitle('Date Followed').withOption('bSearchable', false)
+            DTColumnBuilder.newColumn('date').withTitle('Date Followed').withOption('bSearchable', false).withOption('type', 'date')
         ];
 
         function changeData() {
