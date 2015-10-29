@@ -127,7 +127,7 @@
             }).when('/help', {
                 templateUrl: './assets/html/help.html',
                 controller: 'HelpController'
-            }).otherwise({redirectTo: '/dashboard'});
+            });
 
             localStorageServiceProvider.setPrefix('AllmightyTwitchToolbox');
 
@@ -237,7 +237,7 @@
             }
         }]);
 
-        app.run(['FollowerChecker', 'DonationChecker', 'StreamChecker', 'MusicChecker', 'WebServer', 'NotificationQueue', function (FollowerChecker, DonationChecker, StreamChecker, MusicChecker, WebServer, NotificationQueue) {
+        app.run(['$location', 'FollowerChecker', 'DonationChecker', 'StreamChecker', 'MusicChecker', 'WebServer', 'NotificationQueue', function ($location, FollowerChecker, DonationChecker, StreamChecker, MusicChecker, WebServer, NotificationQueue) {
             async.parallel([
                 function (next) {
                     // Start checking for new followers
@@ -266,6 +266,8 @@
 
                 // Close the splash screen
                 splashScreenWin.close();
+
+                $location.url('/dashboard');
 
                 // Show the window
                 gui.Window.get().show();

@@ -34,7 +34,7 @@
                         views: channelInfo.views,
                         game: channelInfo.game,
                         status: channelInfo.status,
-                        online: streamInfo.stream
+                        online: streamInfo.stream !== null
                     };
 
                     this.getLastStatus(function (err, status) {
@@ -44,12 +44,12 @@
                                     return callback(err);
                                 }
 
-                                if (statusData.followers !== status.followers) {
+                                if (status && statusData.followers !== status.followers) {
                                     $rootScope.$broadcast('followers-count-changed', statusData.followers);
                                     SocketIOServer.emit('followers-count-changed', statusData.followers);
                                 }
 
-                                if (statusData.views !== status.views) {
+                                if (status && statusData.views !== status.views) {
                                     $rootScope.$broadcast('views-count-changed', statusData.views);
                                     SocketIOServer.emit('views-count-changed', statusData.views);
                                 }

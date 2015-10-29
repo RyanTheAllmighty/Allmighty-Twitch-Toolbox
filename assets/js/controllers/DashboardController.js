@@ -87,23 +87,6 @@
         function updateStats() {
             async.parallel([
                 function (next) {
-                    Stream.isOnline(function (online) {
-                        $scope.streamOnline = online;
-                        if (online) {
-                            Viewers.getViewers(function (err, viewers) {
-                                if (err) {
-                                    return next(err);
-                                }
-
-                                $scope.viewerCount = viewers;
-                                next();
-                            });
-                        } else {
-                            next();
-                        }
-                    });
-                },
-                function (next) {
                     Donations.getDonationTotal(function (err, total) {
                         if (err) {
                             return next(err);
@@ -120,12 +103,26 @@
                             return next(err);
                         }
 
+                        $scope.streamOnline = status.online;
+
                         $scope.followersCount = status.followers;
                         $scope.followersStart = status.followers;
 
                         $scope.viewsCount = status.views;
                         $scope.viewsStart = status.views;
-                        next();
+
+                        if (status.online) {
+                            Viewers.getViewers(function (err, viewers) {
+                                if (err) {
+                                    return next(err);
+                                }
+
+                                $scope.viewerCount = viewers;
+                                next();
+                            });
+                        } else {
+                            next();
+                        }
                     });
                 }
             ], function (err) {
