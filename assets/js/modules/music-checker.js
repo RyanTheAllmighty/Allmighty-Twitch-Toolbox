@@ -40,7 +40,7 @@
             let self = this;
 
             return {
-                startChecking: function () {
+                startChecking: function (callback) {
                     fs.watchFile(self.options.nowPlayingPath, {persistent: true, interval: 100}, function () {
                         fs.readFile(self.options.nowPlayingPath, 'utf8', function (err, songPath) {
                             if (err) {
@@ -86,6 +86,8 @@
                             });
                         });
                     });
+
+                    callback();
                 }
             };
         }];

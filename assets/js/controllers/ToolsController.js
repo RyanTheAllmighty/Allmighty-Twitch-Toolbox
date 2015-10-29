@@ -39,7 +39,6 @@
         };
 
         $scope.$on('song-changed', function (event, info) {
-            console.log(info);
             $scope.nowPlaying.isPlaying = true;
             $scope.nowPlaying.artist = info.artist;
             $scope.nowPlaying.title = info.title;

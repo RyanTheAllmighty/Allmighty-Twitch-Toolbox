@@ -256,6 +256,10 @@
                     WebServer.startServer(next);
                 },
                 function (next) {
+                    // Start checking for song changes
+                    MusicChecker.startChecking(next);
+                },
+                function (next) {
                     // Start the notification queue
                     NotificationQueue.startQueue(next);
                 }
