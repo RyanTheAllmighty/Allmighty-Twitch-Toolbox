@@ -34,6 +34,9 @@
         $scope.viewsCount = 0;
         $scope.viewsStart = 0;
 
+        $scope.game = '';
+        $scope.status = '';
+
         // Followers count changed
         $scope.$on('followers-count-changed', function (event, number) {
             $timeout(function () {
@@ -110,6 +113,9 @@
 
                         $scope.viewsCount = status.views;
                         $scope.viewsStart = status.views;
+
+                        $scope.game = status.game;
+                        $scope.status = status.status;
 
                         if (status.online) {
                             Viewers.getViewers(function (err, viewers) {
