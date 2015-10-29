@@ -91,45 +91,17 @@
     <div class="col-xs-6">
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <h3 class="panel-title">Directories</h3>
-                <collapsible model="_collapsedPanels.settings.directories"/>
+                <h3 class="panel-title">Giant Bomb Settings</h3>
+                <collapsible model="_collapsedPanels.settings.giantbomb"/>
             </div>
 
-            <div uib-collapse="_collapsedPanels.settings.directories">
+            <div uib-collapse="_collapsedPanels.settings.giantbomb">
                 <div class="panel-body">
                     <div class="form-group">
-                        <label for="binaryDirectory" class="col-lg-2 control-label">Binary Directory</label>
+                        <label for="giatnBombApiKey" class="col-lg-2 control-label">API Key</label>
 
-                        <div class="col-lg-2">
-                            <input type="file" class="form-control" id="binaryDirectory" nwdirectory/>
-                        </div>
-
-                        <div class="col-lg-8">
-                            <p ng-bind="settings.directories.binary"></p>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="dataDirectory" class="col-lg-2 control-label">Data Directory</label>
-
-                        <div class="col-lg-2">
-                            <input type="file" class="form-control" id="dataDirectory" nwdirectory/>
-                        </div>
-
-                        <div class="col-lg-8">
-                            <p ng-bind="settings.directories.data"></p>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="musicDirectory" class="col-lg-2 control-label">Music Directory</label>
-
-                        <div class="col-lg-2">
-                            <input type="file" class="form-control" id="musicDirectory" nwdirectory/>
-                        </div>
-
-                        <div class="col-lg-8">
-                            <p ng-bind="settings.directories.music"></p>
+                        <div class="col-lg-10">
+                            <input ng-model="settings.giantbomb.apiKey" type="password" class="form-control" id="giatnBombApiKey"/>
                         </div>
                     </div>
                 </div>
@@ -298,6 +270,57 @@
 
                         <div class="col-lg-10">
                             <input ng-model="settings.notifications.musicChangeNotificationTime" type="number" class="form-control" id="musicChangeNotificationTime" min="1" max="60"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-6">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Directories</h3>
+                <collapsible model="_collapsedPanels.settings.directories"/>
+            </div>
+
+            <div uib-collapse="_collapsedPanels.settings.directories">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="binaryDirectory" class="col-lg-2 control-label">Binary Directory</label>
+
+                        <div class="col-lg-2">
+                            <input type="file" class="form-control" id="binaryDirectory" nwdirectory/>
+                        </div>
+
+                        <div class="col-lg-8">
+                            <p ng-bind="settings.directories.binary"></p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dataDirectory" class="col-lg-2 control-label">Data Directory</label>
+
+                        <div class="col-lg-2">
+                            <input type="file" class="form-control" id="dataDirectory" nwdirectory/>
+                        </div>
+
+                        <div class="col-lg-8">
+                            <p ng-bind="settings.directories.data"></p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="musicDirectory" class="col-lg-2 control-label">Music Directory</label>
+
+                        <div class="col-lg-2">
+                            <input type="file" class="form-control" id="musicDirectory" nwdirectory/>
+                        </div>
+
+                        <div class="col-lg-8">
+                            <p ng-bind="settings.directories.music"></p>
                         </div>
                     </div>
                 </div>

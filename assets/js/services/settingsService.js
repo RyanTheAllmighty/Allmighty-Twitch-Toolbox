@@ -33,6 +33,9 @@ let defaultSettings = {
     soundcloud: {
         clientID: ''
     },
+    giantbomb: {
+        apiKey: ''
+    },
     checks: {
         donations: 10,
         followers: 10,
