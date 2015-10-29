@@ -22,11 +22,12 @@ textarea.logging-text-area {
     margin-top: -18px;
     font-size: 15px;
 }
+
 .hero-widget {
     text-align: center;
 }
 
-.hero-widget  .icon {
+.hero-widget .icon {
     display: block;
     font-size: 24px;
     line-height: 24px;

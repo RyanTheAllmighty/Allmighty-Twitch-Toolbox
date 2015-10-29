@@ -61,7 +61,8 @@
         frame: false,
         toolbar: false,
         show_in_taskbar: false,
-        show: false
+        show: false,
+        resizable: false
     });
 
     splashScreenWin.on('loaded', function () {
@@ -268,7 +269,7 @@
                 if (err) {
                     console.error(err);
                 }
-
+                
                 // Close the splash screen
                 splashScreenWin.close();
 
