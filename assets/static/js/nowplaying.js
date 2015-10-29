@@ -41,7 +41,14 @@
     });
 
     // Asked to reshow the current song's data
-    socket.on('song-reshow', function () {
+    socket.on('song-reshow', function (data) {
+        if (data) {
+            vue.nowPlaying = data;
+            if (!vue.nowPlaying.title) {
+                vue.nowPlaying.title = 'Unknown';
+            }
+        }
+
         showSongInfo();
     });
 

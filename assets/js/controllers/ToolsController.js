@@ -19,6 +19,7 @@
 (function () {
     'use strict';
 
+    let request = require('request');
     let musicInformationParser = require('./assets/js/tools/musicInformationParser');
 
     angular.module('AllmightyTwitchToolbox').controller('ToolsController', ['$scope', '$timeout', 'SocketIOServer', function ($scope, $timeout, SocketIOServer) {
@@ -28,6 +29,38 @@
 
         $scope.running = {
             musicInformationParsing: false
+        };
+
+        $scope.nowPlaying = {
+            isPlaying: false,
+            artist: 'Unknown',
+            title: 'Unknown'
+        };
+
+        updateNowPlaying();
+
+        $scope.previousSong = function () {
+            request.get('http://localhost:' + $scope.App.settings.network.webPort + '/foobar/previous/', function () {
+                $timeout(updateNowPlaying, 300);
+            });
+        };
+
+        $scope.stopSong = function () {
+            request.get('http://localhost:' + $scope.App.settings.network.webPort + '/foobar/stop/', function () {
+                $timeout(updateNowPlaying, 300);
+            });
+        };
+
+        $scope.playPauseSong = function () {
+            request.get('http://localhost:' + $scope.App.settings.network.webPort + '/foobar/pause/', function () {
+                $timeout(updateNowPlaying, 300);
+            });
+        };
+
+        $scope.nextSong = function () {
+            request.get('http://localhost:' + $scope.App.settings.network.webPort + '/foobar/next/', function () {
+                $timeout(updateNowPlaying, 300);
+            });
         };
 
         $scope.runMusicInformationParsing = function (force) {
@@ -70,7 +103,36 @@
         };
 
         $scope.reshowSong = function () {
-            SocketIOServer.emit('song-reshow');
+            if ($scope.nowPlaying.isPlaying) {
+                // If we have info then reshow it with our known info as to prevent issues with no info on the receivers end
+                SocketIOServer.emit('song-reshow', {
+                    title: $scope.nowPlaying.title,
+                    artist: $scope.nowPlaying.artist,
+                    artwork: $scope.nowPlaying.albumArt
+                });
+            } else {
+                SocketIOServer.emit('song-reshow');
+            }
         };
+
+        function updateNowPlaying() {
+            request.get({url: 'http://localhost:' + $scope.App.settings.network.webPort + '/foobar/state/', json: true}, function (err, response, body) {
+                $timeout(function () {
+                    $scope.nowPlaying.isPlaying = body.isPlaying === '1';
+
+                    if (body.isPlaying === '1') {
+                        let item = body.playlist[body.playingItem - (body.playlistItemsPerPage * (body.playlistPage - 1))];
+
+                        if (item) {
+                            $scope.nowPlaying.artist = item.a;
+                            $scope.nowPlaying.title = item.t;
+                            $scope.nowPlaying.albumArt = body.albumArt;
+                        }
+                    }
+
+                    $scope.$apply();
+                });
+            });
+        }
     }]);
 })();

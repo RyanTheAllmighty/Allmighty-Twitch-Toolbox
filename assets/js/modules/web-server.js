@@ -153,6 +153,14 @@
                                         res.end(body);
                                     });
                                     break;
+                                case 'state':
+                                    request.get({url: 'http://127.0.0.1:' + self.options.foobarHttpControlPort + '/ajquery/?param3=js/state.json', json: true}, function (error, response, body) {
+                                        request.get({url: 'http://127.0.0.1:' + self.options.foobarHttpControlPort + body.albumArt, json: true, encoding: null}, function (error2, response2, body2) {
+                                            body.albumArt = body2.toString('base64');
+                                            res.send(JSON.stringify(body));
+                                        });
+                                    });
+                                    break;
                                 default:
                                     res.writeHead(500);
                                     res.end('Unknown Action!');

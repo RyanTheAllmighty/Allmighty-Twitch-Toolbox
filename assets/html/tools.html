@@ -2,6 +2,31 @@
     <div class="col-xs-6">
         <div class="panel panel-primary">
             <div class="panel-heading">
+                <h3 class="panel-title">Music Controls</h3>
+                <collapsible model="_collapsedPanels.tools.musicControls"/>
+            </div>
+
+            <div uib-collapse="_collapsedPanels.tools.musicControls">
+                <div class="panel-body">
+                    <div ng-show="nowPlaying.isPlaying">
+                        <span ng-bind="nowPlaying.artist"></span> - <span ng-bind="nowPlaying.title"></span>
+                    </div>
+                    <div ng-show="!nowPlaying.isPlaying">
+                        <span>No music is currently playing!</span>
+                    </div>
+                </div>
+
+                <div class="panel-footer text-center">
+                    <button type="submit" class="btn btn-primary" ng-click="previousSong()">Previous</button>
+                    <button type="submit" class="btn btn-primary" ng-click="stopSong()">Stop</button>
+                    <button type="submit" class="btn btn-primary" ng-click="playPauseSong()">Play/Pause</button>
+                    <button type="submit" class="btn btn-primary" ng-click="nextSong()">Next</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
                 <h3 class="panel-title">Reshow Playing Song</h3>
                 <collapsible model="_collapsedPanels.tools.reshowSong"/>
             </div>
