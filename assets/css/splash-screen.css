@@ -1,13 +1,14 @@
 body {
     background-color: rgba(0, 0, 0, 0);
-    background-image: url("../image/splash-screen.png");
+    background-image: url("../image/SplashScreen.png");
     background-repeat: no-repeat;
     overflow: hidden;
 }
 
 #progress-bar {
-    top: 173px;
-    position: relative;
-    width: 267px;
+    position: absolute;
+    width: 490px;
     height: 19px;
+    bottom: -16px;
+    left: 5px;
 }

@@ -56,16 +56,14 @@
 
     let splashScreenWin = gui.Window.open('./splash-screen.html', {
         position: 'center',
-        width: 576,
-        height: 192,
+        width: 500,
+        height: 200,
         frame: false,
         toolbar: false,
         show_in_taskbar: false,
         show: false
     });
 
-    // This prevents a white box before the page actually loads. Unfortunately it adds an approximate 1 second delay from starting the app until this shows up
-    // TODO: Figure out a way to not show the white box but not have the delay time (if possible)
     splashScreenWin.on('loaded', function () {
         splashScreenWin.show();
     });
