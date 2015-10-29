@@ -19,7 +19,66 @@
 (function () {
     'use strict';
 
-    angular.module('AllmightyTwitchToolbox').controller('DashboardController', ['$scope', function ($scope) {
-        $scope.test = 'Dashboard';
+    let async = require('async');
+
+    angular.module('AllmightyTwitchToolbox').controller('DashboardController', ['$scope', '$timeout', 'Followers', 'Donations', 'Viewers', 'Stream', function ($scope, $timeout, Followers, Donations, Viewers, Stream) {
+        $scope.streamOnline = false;
+        $scope.viewerCount = 0;
+        $scope.followersCount = 0;
+        $scope.donationTotal = 0;
+
+        updateStats();
+
+        function updateStats() {
+            async.parallel([
+                function (next) {
+                    Stream.isOnline(function (online) {
+                        $scope.streamOnline = online;
+                        next();
+                    });
+                },
+                function (next) {
+                    Viewers.getViewers(function (err, viewers) {
+                        if (err) {
+                            return next(err);
+                        }
+
+
+                        $scope.viewerCount = viewers;
+                        next();
+                    });
+                },
+                function (next) {
+                    Followers.getFollowerCount(function (err, followers) {
+                        if (err) {
+                            return next(err);
+                        }
+
+
+                        $scope.followersCount = followers;
+                        next();
+                    });
+                },
+                function (next) {
+                    Donations.getDonationTotal(function (err, total) {
+                        if (err) {
+                            return next(err);
+                        }
+
+
+                        $scope.donationTotal = total;
+                        next();
+                    });
+                }
+            ], function (err) {
+                if (err) {
+                    console.error(err);
+                }
+
+                $timeout(function () {
+                    $scope.$apply();
+                });
+            });
+        }
     }]);
 })();

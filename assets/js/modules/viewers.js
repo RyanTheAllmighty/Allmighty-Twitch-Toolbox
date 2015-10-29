@@ -30,7 +30,17 @@
                         limit = 100;
                     }
 
-                    $rootScope.App.db.viewers.find({}).sort({date: -1}).limit(limit).exec(callback);
+                    $rootScope.App.db.viewers.find({}).sort({date: -1}).limit(limit).exec(function (err, docs) {
+                        if (err) {
+                            return callback(err);
+                        }
+
+                        if (docs.length === 0) {
+                            return callback(null, 0);
+                        }
+
+                        return callback(null, docs[0].count);
+                    });
                 },
                 addViewerCount: function (count, callback) {
                     $rootScope.App.db.viewers.insert({count, date: new Date()}, function (err, newDoc) {

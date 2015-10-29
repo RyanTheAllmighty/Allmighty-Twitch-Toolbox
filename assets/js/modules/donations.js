@@ -19,6 +19,7 @@
 (function () {
     'use strict';
 
+    let _ = require('lodash');
     let QueueableNotification = require('./assets/js/classes/queueableNotification');
 
     angular.module('donations', []);
@@ -74,10 +75,8 @@
                         if (err) {
                             return callback(err);
                         }
-
-                        callback(null, _.reduce(docs, function (total, doc) {
-                            return total + doc.amount;
-                        }));
+                        
+                        callback(null, _.sum(docs, 'amount'));
                     });
                 },
                 processDonation: function (donation, options, callback) {
