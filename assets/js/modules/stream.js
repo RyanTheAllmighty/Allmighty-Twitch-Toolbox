@@ -19,37 +19,79 @@
 (function () {
     'use strict';
 
+    let _ = require('lodash');
+
     angular.module('stream', []);
 
     angular.module('stream').provider('Stream', function () {
-        this.$get = ['$rootScope', 'SocketIOServer', function ($rootScope, SocketIOServer) {
+        this.$get = ['$rootScope', 'SocketIOServer', 'Followers', 'Donations', function ($rootScope, SocketIOServer, Followers, Donations) {
             return {
                 nowOnline: function (callback) {
                     this.isOnline(function (online) {
                         if (!online) {
-                            $rootScope.App.db.stream.insert({online: true, date: new Date()}, function (err) {
+                            Followers.getFollowerCount(function (err, followers) {
                                 if (err) {
-                                    return callback(err);
+                                    return console.error(err);
                                 }
 
-                                $rootScope.$broadcast('stream-online');
-                                SocketIOServer.emit('stream-online', callback);
+                                Donations.getDonationTotal(function (err, donations) {
+                                    if (err) {
+                                        return console.error(err);
+                                    }
+
+                                    let statusData = {online: true, followers, donations, date: new Date()};
+
+                                    $rootScope.App.db.stream.insert(statusData, function (err) {
+                                        if (err) {
+                                            return callback(err);
+                                        }
+
+                                        $rootScope.$broadcast('stream-online', statusData);
+                                        SocketIOServer.emit('stream-online', statusData);
+
+                                        callback(null, statusData);
+                                    });
+                                });
                             });
                         }
                     });
                 },
                 nowOffline: function (callback) {
                     this.isOnline(function (online) {
-                        if (online) {
-                            $rootScope.App.db.stream.insert({online: false, date: new Date()}, function (err) {
-                                if (err) {
-                                    return callback(err);
-                                }
+                        $rootScope.App.db.stream.count({}).exec(function (err, count) {
+                            if (err) {
+                                console.error(err);
+                                return callback(false);
+                            }
 
-                                $rootScope.$broadcast('stream-offline');
-                                SocketIOServer.emit('stream-offline', callback);
-                            });
-                        }
+
+                            if (online || count === 0) {
+                                Followers.getFollowerCount(function (err, followers) {
+                                    if (err) {
+                                        return console.error(err);
+                                    }
+
+                                    Donations.getDonationTotal(function (err, donations) {
+                                        if (err) {
+                                            return console.error(err);
+                                        }
+
+                                        let statusData = {online: false, followers, donations, date: new Date()};
+
+                                        $rootScope.App.db.stream.insert(statusData, function (err) {
+                                            if (err) {
+                                                return callback(err);
+                                            }
+
+                                            $rootScope.$broadcast('stream-offline', statusData);
+                                            SocketIOServer.emit('stream-offline', statusData);
+
+                                            callback(null, statusData);
+                                        });
+                                    });
+                                });
+                            }
+                        });
                     });
                 },
                 isOnline: function (callback) {
@@ -64,6 +106,27 @@
                         }
 
                         callback(docs[0].online);
+                    });
+                },
+                getLastStatus: function (callback) {
+                    let self = this;
+
+                    $rootScope.App.db.stream.find({}).sort({date: -1}).limit(1).exec(function (err, docs) {
+                        if (err) {
+                            return callback(err);
+                        }
+
+                        if (docs.length === 0) {
+                            return self.nowOffline(function (err, data) {
+                                if (err) {
+                                    return callback(err);
+                                }
+
+                                callback(null, data);
+                            });
+                        }
+
+                        callback(null, _.pick(docs[0], ['followers', 'donations', 'date', 'online']));
                     });
                 }
             };

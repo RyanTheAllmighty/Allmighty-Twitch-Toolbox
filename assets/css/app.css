@@ -22,22 +22,22 @@ textarea.logging-text-area {
     margin-top: -18px;
     font-size: 15px;
 }
-
 .hero-widget {
     text-align: center;
-    padding-top: 20px;
-    padding-bottom: 20px;
 }
 
-.hero-widget .icon {
+.hero-widget  .icon {
     display: block;
-    font-size: 48px;
-    line-height: 48px;
+    font-size: 24px;
+    line-height: 24px;
     margin-bottom: 10px;
     text-align: center;
+    float: left;
+    top: 9px;
+    position: absolute;
 }
 
-.hero-widget var {
+.hero-widget > .text var {
     display: block;
     height: 32px;
     font-size: 32px;
@@ -45,10 +45,21 @@ textarea.logging-text-area {
     font-style: normal;
 }
 
-.hero-widget label {
+.hero-widget > .text label {
     font-size: 17px;
 }
 
-.hero-widget .options {
-    margin-top: 10px;
+.hero-widget > .change {
+    font-size: 17px;
+    position: absolute;
+    top: 2px;
+    right: 22px;
+}
+
+.hero-widget > .change-bad {
+    color: red;
+}
+
+.hero-widget > .change-good {
+    color: green;
 }

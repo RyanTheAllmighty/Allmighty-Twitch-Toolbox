@@ -24,8 +24,12 @@
     angular.module('AllmightyTwitchToolbox').controller('DashboardController', ['$scope', '$timeout', 'Followers', 'Donations', 'Viewers', 'Stream', function ($scope, $timeout, Followers, Donations, Viewers, Stream) {
         $scope.streamOnline = false;
         $scope.viewerCount = 0;
+
         $scope.followersCount = 0;
-        $scope.donationTotal = 0;
+        $scope.followersStart = 0;
+
+        $scope.donationsTotal = 0;
+        $scope.donationsStart = 0;
 
         // Followers list updated
         $scope.$on('followers', function () {
@@ -49,24 +53,28 @@
                 }
 
                 $timeout(function () {
-                    $scope.donationTotal = total;
+                    $scope.donationsTotal = total;
                     $scope.$apply();
                 });
             });
         });
 
         // Stream is now online
-        $scope.$on('stream-online', function () {
+        $scope.$on('stream-online', function (event, data) {
             $timeout(function () {
                 $scope.streamOnline = true;
+                $scope.followersStart = data.followers;
+                $scope.donationsStart = data.donations;
                 $scope.$apply();
             });
         });
 
         // Stream is now offline
-        $scope.$on('stream-offline', function () {
+        $scope.$on('stream-offline', function (event, data) {
             $timeout(function () {
                 $scope.streamOnline = false;
+                $scope.followersStart = data.followers;
+                $scope.donationsStart = data.donations;
                 $scope.$apply();
             });
         });
@@ -110,7 +118,18 @@
                         }
 
 
-                        $scope.donationTotal = total;
+                        $scope.donationsTotal = total;
+                        next();
+                    });
+                },
+                function (next) {
+                    Stream.getLastStatus(function (err, status) {
+                        if (err) {
+                            return next(err);
+                        }
+
+                        $scope.followersStart = status.followers;
+                        $scope.donationsStart = status.donations;
                         next();
                     });
                 }

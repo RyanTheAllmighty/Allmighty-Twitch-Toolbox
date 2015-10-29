@@ -1,37 +1,13 @@
 <div class="row">
     <div ng-class="{'col-xs-4': streamOnline, 'col-xs-6': !streamOnline}" ng-show="streamOnline">
-        <div class="hero-widget well well-sm">
-            <div class="icon">
-                <i class="glyphicon glyphicon-user"></i>
-            </div>
-            <div class="text">
-                <var ng-bind="viewerCount | number"></var>
-                <label class="text-muted">viewers</label>
-            </div>
-        </div>
+        <hero-widget label="viewers" value="viewerCount" filter="number" icon="user"/>
     </div>
 
     <div ng-class="{'col-xs-4': streamOnline, 'col-xs-6': !streamOnline}">
-        <div class="hero-widget well well-sm">
-            <div class="icon">
-                <i class="glyphicon glyphicon-user"></i>
-            </div>
-            <div class="text">
-                <var ng-bind="followersCount | number"></var>
-                <label class="text-muted">followers</label>
-            </div>
-        </div>
+        <hero-widget label="followers" value="followersCount" change="followersCount - followersStart" filter="number" icon="user"/>
     </div>
 
     <div ng-class="{'col-xs-4': streamOnline, 'col-xs-6': !streamOnline}">
-        <div class="hero-widget well well-sm">
-            <div class="icon">
-                <i class="glyphicon glyphicon-usd"></i>
-            </div>
-            <div class="text">
-                <var ng-bind="donationTotal | currency"></var>
-                <label class="text-muted">donations</label>
-            </div>
-        </div>
+        <hero-widget label="donations" value="donationsTotal" change="donationsTotal - donationsStart" filter="currency" icon="usd"/>
     </div>
 </div>
