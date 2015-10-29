@@ -36,7 +36,7 @@
             this.options = angular.extend({}, this.options, options);
         };
 
-        this.$get = ['SocketIOServer', function (SocketIOServer) {
+        this.$get = ['$rootScope', 'SocketIOServer', function ($rootScope, SocketIOServer) {
             let self = this;
 
             return {
@@ -80,6 +80,7 @@
                                     fs.writeFile(self.options.songInfoTxtPath, songInfo.title + ' by ' + songInfo.artist);
                                     fs.writeFile(self.options.songInfoJsonPath, JSON.stringify(songInfo));
 
+                                    $rootScope.$broadcast('song-changed', songInfo);
                                     SocketIOServer.emit('song-changed', songInfo);
                                 });
                             });

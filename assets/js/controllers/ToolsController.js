@@ -34,8 +34,17 @@
         $scope.nowPlaying = {
             isPlaying: false,
             artist: 'Unknown',
-            title: 'Unknown'
+            title: 'Unknown',
+            artwork: null
         };
+
+        $scope.$on('song-changed', function (event, info) {
+            console.log(info);
+            $scope.nowPlaying.isPlaying = true;
+            $scope.nowPlaying.artist = info.artist;
+            $scope.nowPlaying.title = info.title;
+            $scope.nowPlaying.artwork = info.artwork;
+        });
 
         updateNowPlaying();
 
@@ -108,7 +117,7 @@
                 SocketIOServer.emit('song-reshow', {
                     title: $scope.nowPlaying.title,
                     artist: $scope.nowPlaying.artist,
-                    artwork: $scope.nowPlaying.albumArt
+                    artwork: $scope.nowPlaying.artwork
                 });
             } else {
                 SocketIOServer.emit('song-reshow');
@@ -126,7 +135,7 @@
                         if (item) {
                             $scope.nowPlaying.artist = item.a;
                             $scope.nowPlaying.title = item.t;
-                            $scope.nowPlaying.albumArt = body.albumArt;
+                            $scope.nowPlaying.artwork = body.albumArt;
                         }
                     }
 
