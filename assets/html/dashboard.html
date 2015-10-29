@@ -25,22 +25,68 @@
 
             <div class="panel-body">
                 <div class="list-group">
-                    <a href="" class="list-group-item">
+                    <a href="" class="list-group-item" data-toggle="modal" data-target="#setGameModal">
                         <h4 class="list-group-item-heading">Game</h4>
 
                         <p class="list-group-item-text" ng-bind="game"></p>
                     </a>
-                    <a href="" class="list-group-item">
+                    <a href="" class="list-group-item" data-toggle="modal" data-target="#setTitleModal">
                         <h4 class="list-group-item-heading">Title</h4>
 
-                        <p class="list-group-item-text" ng-bind="status"></p>
+                        <p class="list-group-item-text" ng-bind="title"></p>
                     </a>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
 
-            <div class="panel-footer text-center">
-                <button type="button" class="btn btn-primary" ng-click="setGame()">Set Game</button>
-                <button type="button" class="btn btn-primary" ng-click="setTitle()">Set Title</button>
+<div class="modal fade" id="setGameModal" tabindex="-1" role="dialog" aria-labelledby="setGameModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="setGameModalLabel">Set Game</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="glyphicon" ng-class="{'glyphicon-ok': !loadingGames, 'glyphicon-refresh': loadingGames}"></i>
+                    </span>
+
+                    <input type="text" ng-model="gameSelected" placeholder="Start typing a game name" uib-typeahead="game for game in searchGames($viewValue)" typeahead-min-length="3"
+                           typeahead-loading="loadingGames" typeahead-editable="false" typeahead-wait-ms="500" typeahead-no-results="noResults" class="form-control">
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="button" data-dismiss="modal" ng-click="setGame()">Save</button>
+                <button class="btn btn-warning" type="button" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="setTitleModal" tabindex="-1" role="dialog" aria-labelledby="setTitleModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="setTitleModalLabel">Set Game</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="form-group">
+                    <div class="col-lg-10">
+                        <input ng-model="titleSelected" type="text" class="form-control"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="button" data-dismiss="modal" ng-click="setTitle()">Save</button>
+                <button class="btn btn-warning" type="button" data-dismiss="modal">Cancel</button>
             </div>
         </div>
     </div>

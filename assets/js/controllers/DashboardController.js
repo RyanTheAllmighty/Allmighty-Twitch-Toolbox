@@ -21,7 +21,7 @@
 
     let async = require('async');
 
-    angular.module('AllmightyTwitchToolbox').controller('DashboardController', ['$scope', '$timeout', 'Followers', 'Donations', 'Viewers', 'Stream', function ($scope, $timeout, Followers, Donations, Viewers, Stream) {
+    angular.module('AllmightyTwitchToolbox').controller('DashboardController', ['$scope', '$timeout', 'Followers', 'Donations', 'Viewers', 'Stream', 'GiantBomb', 'Notification', function ($scope, $timeout, Followers, Donations, Viewers, Stream, GiantBomb, Notification) {
         $scope.streamOnline = false;
         $scope.viewerCount = 0;
 
@@ -35,7 +35,7 @@
         $scope.viewsStart = 0;
 
         $scope.game = '';
-        $scope.status = '';
+        $scope.title = '';
 
         // Followers count changed
         $scope.$on('followers-count-changed', function (event, number) {
@@ -49,6 +49,22 @@
         $scope.$on('views-count-changed', function (event, number) {
             $timeout(function () {
                 $scope.viewsCount = number;
+                $scope.$apply();
+            });
+        });
+
+        // Game updated
+        $scope.$on('game-updated', function (event, game) {
+            $timeout(function () {
+                $scope.game = game;
+                $scope.$apply();
+            });
+        });
+
+        // Title updated
+        $scope.$on('title-updated', function (event, title) {
+            $timeout(function () {
+                $scope.title = title;
                 $scope.$apply();
             });
         });
@@ -85,6 +101,40 @@
             });
         });
 
+        $scope.searchGames = function (val) {
+            return GiantBomb.searchGames(val, {namesOnly: true, limit: 5}).then(function (games) {
+                return games;
+            }, function (err) {
+                console.error(err);
+            });
+        };
+
+        $scope.setGame = function () {
+            if ($scope.gameSelected) {
+                Stream.setGame($scope.gameSelected, function (err) {
+                    if (err) {
+                        console.error(err);
+                        return Notification.error({message: err.message, delay: 3000});
+                    }
+
+                    Notification.success({message: 'Game Updated!', delay: 3000});
+                });
+            }
+        };
+
+        $scope.setTitle = function () {
+            if ($scope.titleSelected) {
+                Stream.setTitle($scope.titleSelected, function (err) {
+                    if (err) {
+                        console.error(err);
+                        return Notification.error({message: err.message, delay: 3000});
+                    }
+
+                    Notification.success({message: 'Title Updated!', delay: 3000});
+                });
+            }
+        };
+
         updateStats();
 
         function updateStats() {
@@ -115,7 +165,10 @@
                         $scope.viewsStart = status.views;
 
                         $scope.game = status.game;
-                        $scope.status = status.status;
+                        $scope.title = status.title;
+
+                        $scope.gameSelected = status.game;
+                        $scope.titleSelected = status.title;
 
                         if (status.online) {
                             Viewers.getViewers(function (err, viewers) {

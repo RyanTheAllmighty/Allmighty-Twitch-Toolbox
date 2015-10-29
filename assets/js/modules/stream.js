@@ -24,7 +24,7 @@
     angular.module('stream', []);
 
     angular.module('stream').provider('Stream', function () {
-        this.$get = ['$rootScope', 'SocketIOServer', 'Followers', 'Donations', function ($rootScope, SocketIOServer, Followers, Donations) {
+        this.$get = ['$rootScope', 'SocketIOServer', 'Twitch', function ($rootScope, SocketIOServer, Twitch) {
             return {
                 processInfo: function (channelInfo, streamInfo, callback) {
                     let self = this;
@@ -33,7 +33,7 @@
                         followers: channelInfo.followers,
                         views: channelInfo.views,
                         game: channelInfo.game,
-                        status: channelInfo.status,
+                        title: channelInfo.status,
                         online: streamInfo.stream !== null
                     };
 
@@ -52,6 +52,16 @@
                                 if (status && statusData.views !== status.views) {
                                     $rootScope.$broadcast('views-count-changed', statusData.views);
                                     SocketIOServer.emit('views-count-changed', statusData.views);
+                                }
+
+                                if (status && statusData.game !== status.game) {
+                                    $rootScope.$broadcast('game-updated', statusData.game);
+                                    SocketIOServer.emit('game-updated', statusData.game);
+                                }
+
+                                if (status && statusData.title !== status.title) {
+                                    $rootScope.$broadcast('title-updated', statusData.title);
+                                    SocketIOServer.emit('title-updated', statusData.title);
                                 }
 
                                 if (statusData.online) {
@@ -105,6 +115,12 @@
 
                         callback(null, _.omit(docs[0], ['_id']));
                     });
+                },
+                setGame: function (game, callback) {
+                    Twitch.updateChannel(global.App.settings.twitch.username, Twitch.accessToken, {channel: {game}}, callback);
+                },
+                setTitle: function (title, callback) {
+                    Twitch.updateChannel(global.App.settings.twitch.username, Twitch.accessToken, {channel: {status: title}}, callback);
                 }
             };
         }];
