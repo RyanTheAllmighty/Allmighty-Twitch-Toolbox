@@ -94,12 +94,13 @@
         'viewers',
         'nvd3',
         'stream',
-        'stream-checker'
+        'stream-checker',
+        'giantbomb'
     ]);
 
     // Load everything before we proceed
     loadingService.load(function () {
-        app.config(function ($routeProvider, localStorageServiceProvider, WebServerProvider, NotificationProvider, TwitchProvider, StreamTipProvider, SocketIOProvider, SocketIOServerProvider, StreamCheckerProvider, FollowersProvider, FollowerCheckerProvider, DonationsProvider, DonationCheckerProvider, MusicCheckerProvider) {
+        app.config(function ($routeProvider, localStorageServiceProvider, WebServerProvider, NotificationProvider, TwitchProvider, GiantBombProvider, StreamTipProvider, SocketIOProvider, SocketIOServerProvider, StreamCheckerProvider, FollowersProvider, FollowerCheckerProvider, DonationsProvider, DonationCheckerProvider, MusicCheckerProvider) {
             // Setup the routes
             $routeProvider.when('/dashboard', {
                 templateUrl: './assets/html/dashboard.html',
@@ -161,6 +162,11 @@
             TwitchProvider.setOptions({
                 accessToken: global.App.settings.twitch.apiToken,
                 clientID: global.App.settings.twitch.apiClientID
+            });
+
+            // Setup the GiantBombProvider
+            GiantBombProvider.setOptions({
+                apiKey: global.App.settings.giantbomb.apiKey
             });
 
             // Setup the StreamTipProvider
@@ -269,7 +275,7 @@
                 if (err) {
                     console.error(err);
                 }
-                
+
                 // Close the splash screen
                 splashScreenWin.close();
 
