@@ -173,9 +173,6 @@
                 socketPort: global.App.settings.network.socketIOPort
             });
 
-            // Start the SocketIO Server
-            SocketIOServerProvider.startServer();
-
             // Setup the SocketIOProvider
             SocketIOProvider.setOptions({
                 socketPort: global.App.settings.network.socketIOPort
@@ -237,8 +234,12 @@
             }
         }]);
 
-        app.run(['$location', 'FollowerChecker', 'DonationChecker', 'StreamChecker', 'MusicChecker', 'WebServer', 'NotificationQueue', function ($location, FollowerChecker, DonationChecker, StreamChecker, MusicChecker, WebServer, NotificationQueue) {
+        app.run(['$location', 'SocketIOServer', 'FollowerChecker', 'DonationChecker', 'StreamChecker', 'MusicChecker', 'WebServer', 'NotificationQueue', function ($location, SocketIOServer, FollowerChecker, DonationChecker, StreamChecker, MusicChecker, WebServer, NotificationQueue) {
             async.parallel([
+                function (next) {
+                    // Start the socket IO server
+                    SocketIOServer.startServer(next);
+                },
                 function (next) {
                     // Start checking for new followers
                     FollowerChecker.startChecking(next);

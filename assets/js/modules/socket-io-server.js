@@ -42,34 +42,9 @@
             this.options = angular.extend({}, this.options, options);
         };
 
-        this.startServer = function () {
-            if (listening) {
-                return console.error(new Error('SocketIO server has already been started!'));
-            }
-
-            var serverApp = require('http').createServer();
-            var io = require('socket.io')(serverApp);
-
-            listening = true;
-
-            // Listen on our socket.io server
-            serverApp.listen(this.options.socketPort);
-
-            io.on('connection', function (socket) {
-                // Add this socket to the list of active sockets
-                sockets.push(socket);
-
-                // This makes sure we don't try to send messages on the socket to disconnected clients
-                socket.on('disconnect', function () {
-                    var index = sockets.indexOf(socket);
-                    if (index > -1) {
-                        sockets.splice(index, 1);
-                    }
-                });
-            });
-        };
-
         this.$get = function () {
+            let thisModule = this;
+
             return {
                 emit: function (name, message, callback) {
                     if (!callback) {
@@ -90,6 +65,34 @@
                         socket.emit(name, message);
                         next();
                     }, callback);
+                },
+                startServer: function (callback) {
+                    if (listening) {
+                        return callback(new Error('SocketIO server has already been started!'));
+                    }
+
+                    var serverApp = require('http').createServer();
+                    var io = require('socket.io')(serverApp);
+
+                    listening = true;
+
+                    // Listen on our socket.io server
+                    serverApp.listen(thisModule.options.socketPort);
+
+                    io.on('connection', function (socket) {
+                        // Add this socket to the list of active sockets
+                        sockets.push(socket);
+
+                        // This makes sure we don't try to send messages on the socket to disconnected clients
+                        socket.on('disconnect', function () {
+                            var index = sockets.indexOf(socket);
+                            if (index > -1) {
+                                sockets.splice(index, 1);
+                            }
+                        });
+                    });
+
+                    callback();
                 }
             };
         };
