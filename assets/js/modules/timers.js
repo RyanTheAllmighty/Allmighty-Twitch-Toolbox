@@ -19,6 +19,8 @@
 (function () {
     'use strict';
 
+    let moment = require('moment');
+
     angular.module('timers', []);
 
     angular.module('timers').provider('Timers', function () {
@@ -83,6 +85,60 @@
                         }
 
                         $rootScope.App.db.timers.update({_id: id}, {name, date: date.toDate()}, {upsert: false}, function (err) {
+                            if (err) {
+                                return callback(err);
+                            }
+
+                            self.getTimer(id, function (err, timer) {
+                                if (err) {
+                                    return callback(err);
+                                }
+
+                                SocketIOServer.emit('timer-set', timer, callback);
+                            });
+                        });
+                    });
+                },
+                addToTimer: function (id, seconds, callback) {
+                    let self = this;
+
+                    $rootScope.App.db.timers.find({_id: id}).limit(1).exec(function (err, docs) {
+                        if (err) {
+                            return callback(err);
+                        }
+
+                        if (docs.length === 0) {
+                            return callback(new Error('No timer exists with that ID!'));
+                        }
+
+                        $rootScope.App.db.timers.update({_id: id}, {$set: {date: moment(docs[0].date).add(seconds, 'seconds').toDate()}}, {upsert: false}, function (err) {
+                            if (err) {
+                                return callback(err);
+                            }
+
+                            self.getTimer(id, function (err, timer) {
+                                if (err) {
+                                    return callback(err);
+                                }
+
+                                SocketIOServer.emit('timer-set', timer, callback);
+                            });
+                        });
+                    });
+                },
+                removeFromTimer: function (id, seconds, callback) {
+                    let self = this;
+
+                    $rootScope.App.db.timers.find({_id: id}).limit(1).exec(function (err, docs) {
+                        if (err) {
+                            return callback(err);
+                        }
+
+                        if (docs.length === 0) {
+                            return callback(new Error('No timer exists with that ID!'));
+                        }
+
+                        $rootScope.App.db.timers.update({_id: id}, {$set: {date: moment(docs[0].date).subtract(seconds, 'seconds').toDate()}}, {upsert: false}, function (err) {
                             if (err) {
                                 return callback(err);
                             }

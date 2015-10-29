@@ -20,10 +20,47 @@
                             <td ng-bind="timer.date"></td>
                             <td>
                                 <a ng-click="copyTimerURL(timer._id)" class="btn btn-sm btn-default">Copy Link</a>
+
                                 <a ng-click="deleteTimer(timer._id)" class="btn btn-sm btn-danger">Delete</a>
+
                                 <button type="button" class="btn btn-sm btn-default" data-timer-id="{{timer._id}}" data-timer-name="{{timer.name}}" data-timer-date="{{timer.date.getTime()}}"
                                         data-toggle="modal" data-target="#setTimerModal">Set
                                 </button>
+
+                                <div class="btn-group">
+                                    <a href="" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                        Add <span class="caret"></span>
+                                    </a>
+
+                                    <ul class="dropdown-menu">
+                                        <li><a href="" ng-click="addToTimer(timer, 30)">30 Seconds</a></li>
+                                        <li><a href="" ng-click="addToTimer(timer, 60)">1 Minute</a></li>
+                                        <li><a href="" ng-click="addToTimer(timer, 300)">5 Minutes</a></li>
+                                        <li><a href="" ng-click="addToTimer(timer, 600)">10 Minutes</a></li>
+                                        <li><a href="" ng-click="addToTimer(timer, 1800)">30 Minutes</a></li>
+                                        <li><a href="" ng-click="addToTimer(timer, 3600)">1 Hour</a></li>
+                                        <li><a href="" ng-click="addToTimer(timer, 43200)">12 Hours</a></li>
+                                        <li><a href="" ng-click="addToTimer(timer, 86400)">24 Hours</a></li>
+                                    </ul>
+                                </div>
+
+                                <div class="btn-group">
+                                    <a href="" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                        Remove <span class="caret"></span>
+                                    </a>
+
+                                    <ul class="dropdown-menu">
+                                        <li><a href="" ng-click="removeFromTimer(timer, 30)">30 Seconds</a></li>
+                                        <li><a href="" ng-click="removeFromTimer(timer, 60)">1 Minute</a></li>
+                                        <li><a href="" ng-click="removeFromTimer(timer, 300)">5 Minutes</a></li>
+                                        <li><a href="" ng-click="removeFromTimer(timer, 600)">10 Minutes</a></li>
+                                        <li><a href="" ng-click="removeFromTimer(timer, 1800)">30 Minutes</a></li>
+                                        <li><a href="" ng-click="removeFromTimer(timer, 3600)">1 Hour</a></li>
+                                        <li><a href="" ng-click="removeFromTimer(timer, 43200)">12 Hours</a></li>
+                                        <li><a href="" ng-click="removeFromTimer(timer, 86400)">24 Hours</a></li>
+                                    </ul>
+                                </div>
+
                                 <input type="hidden" id="editingTimerID"/>
                             </td>
                         </tr>

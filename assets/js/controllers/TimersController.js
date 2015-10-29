@@ -66,6 +66,32 @@
             });
         };
 
+        $scope.addToTimer = function (timer, seconds) {
+            Timers.addToTimer(timer._id, seconds, function (err) {
+                if (err) {
+                    console.error(err);
+                    return Notification.error({message: err.message, delay: 3000});
+                }
+
+                Notification.success({message: 'Added time to timer!', delay: 3000});
+
+                updateTimers();
+            });
+        };
+
+        $scope.removeFromTimer = function (timer, seconds) {
+            Timers.removeFromTimer(timer._id, seconds, function (err) {
+                if (err) {
+                    console.error(err);
+                    return Notification.error({message: err.message, delay: 3000});
+                }
+
+                Notification.success({message: 'Removed time from timer!', delay: 3000});
+
+                updateTimers();
+            });
+        };
+
         $scope.copyTimerURL = function (id) {
             Timers.getTimer(id, function (err, timer) {
                 if (err) {
