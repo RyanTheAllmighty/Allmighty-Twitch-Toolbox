@@ -91,7 +91,6 @@
                                     callback();
                                 }
                             });
-
                         });
                     });
                 },
@@ -113,7 +112,7 @@
                                     console.error(err);
                                 }
                             });
-                        }, thisModule.options.interval);
+                        }, thisModule.options.interval * 1000);
 
                         callback();
                     });
