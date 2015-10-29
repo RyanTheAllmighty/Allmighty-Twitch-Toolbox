@@ -27,6 +27,50 @@
         $scope.followersCount = 0;
         $scope.donationTotal = 0;
 
+        // Followers list updated
+        $scope.$on('followers', function () {
+            Followers.getFollowerCount(function (err, followers) {
+                if (err) {
+                    return console.error(err);
+                }
+
+                $timeout(function () {
+                    $scope.followersCount = followers;
+                    $scope.$apply();
+                });
+            });
+        });
+
+        // Donations list updated
+        $scope.$on('donations', function () {
+            Donations.getDonationTotal(function (err, total) {
+                if (err) {
+                    return console.error(err);
+                }
+
+                $timeout(function () {
+                    $scope.donationTotal = total;
+                    $scope.$apply();
+                });
+            });
+        });
+
+        // Stream is now online
+        $scope.$on('stream-online', function () {
+            $timeout(function () {
+                $scope.streamOnline = true;
+                $scope.$apply();
+            });
+        });
+
+        // Stream is now offline
+        $scope.$on('stream-offline', function () {
+            $timeout(function () {
+                $scope.streamOnline = false;
+                $scope.$apply();
+            });
+        });
+
         updateStats();
 
         function updateStats() {
