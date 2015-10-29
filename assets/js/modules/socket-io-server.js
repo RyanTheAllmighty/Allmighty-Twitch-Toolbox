@@ -80,6 +80,9 @@
                     serverApp.listen(thisModule.options.socketPort);
 
                     io.on('connection', function (socket) {
+                        // This signals to all connected sockets to reload their state (if available) useful
+                        socket.emit('reload-state');
+
                         // Add this socket to the list of active sockets
                         sockets.push(socket);
 

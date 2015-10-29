@@ -65,6 +65,13 @@
             }
         });
 
+        // Received a reload state event
+        socket.on('reload-state', function () {
+            clock.stop();
+            clock.setTime(getSecondsLeft());
+            clock.start();
+        });
+
         clock.setTime(getSecondsLeft());
         clock.start();
     });
