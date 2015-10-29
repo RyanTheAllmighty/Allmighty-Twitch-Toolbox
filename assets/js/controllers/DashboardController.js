@@ -31,17 +31,22 @@
         $scope.donationsTotal = 0;
         $scope.donationsStart = 0;
 
-        // Followers list updated
-        $scope.$on('followers', function () {
-            Followers.getFollowerCount(function (err, followers) {
-                if (err) {
-                    return console.error(err);
-                }
+        $scope.viewsCount = 0;
+        $scope.viewsStart = 0;
 
-                $timeout(function () {
-                    $scope.followersCount = followers;
-                    $scope.$apply();
-                });
+        // Followers count changed
+        $scope.$on('followers-count-changed', function (event, number) {
+            $timeout(function () {
+                $scope.followersCount = number;
+                $scope.$apply();
+            });
+        });
+
+        // Views count changed
+        $scope.$on('views-count-changed', function (event, number) {
+            $timeout(function () {
+                $scope.viewsCount = number;
+                $scope.$apply();
             });
         });
 
@@ -64,7 +69,6 @@
             $timeout(function () {
                 $scope.streamOnline = true;
                 $scope.followersStart = data.followers;
-                $scope.donationsStart = data.donations;
                 $scope.$apply();
             });
         });
@@ -74,7 +78,6 @@
             $timeout(function () {
                 $scope.streamOnline = false;
                 $scope.followersStart = data.followers;
-                $scope.donationsStart = data.donations;
                 $scope.$apply();
             });
         });
@@ -86,29 +89,18 @@
                 function (next) {
                     Stream.isOnline(function (online) {
                         $scope.streamOnline = online;
-                        next();
-                    });
-                },
-                function (next) {
-                    Viewers.getViewers(function (err, viewers) {
-                        if (err) {
-                            return next(err);
+                        if (online) {
+                            Viewers.getViewers(function (err, viewers) {
+                                if (err) {
+                                    return next(err);
+                                }
+
+                                $scope.viewerCount = viewers;
+                                next();
+                            });
+                        } else {
+                            next();
                         }
-
-
-                        $scope.viewerCount = viewers;
-                        next();
-                    });
-                },
-                function (next) {
-                    Followers.getFollowerCount(function (err, followers) {
-                        if (err) {
-                            return next(err);
-                        }
-
-
-                        $scope.followersCount = followers;
-                        next();
                     });
                 },
                 function (next) {
@@ -128,8 +120,11 @@
                             return next(err);
                         }
 
+                        $scope.followersCount = status.followers;
                         $scope.followersStart = status.followers;
-                        $scope.donationsStart = status.donations;
+
+                        $scope.viewsCount = status.views;
+                        $scope.viewsStart = status.views;
                         next();
                     });
                 }

@@ -21,6 +21,7 @@
 
     let path = require('path');
     let gui = require('nw.gui');
+    let async = require('async');
     let Datastore = require('nedb');
     let nwNotify = require('nw-notify');
 
@@ -223,26 +224,35 @@
         }]);
 
         app.run(['FollowerChecker', 'DonationChecker', 'StreamChecker', 'MusicChecker', 'WebServer', 'NotificationQueue', function (FollowerChecker, DonationChecker, StreamChecker, MusicChecker, WebServer, NotificationQueue) {
-            // Start checking for new followers
-            FollowerChecker.startChecking();
+            async.parallel([
+                function (next) {
+                    // Start checking for new followers
+                    FollowerChecker.startChecking(next);
+                },
+                function (next) {
+                    // Start checking for new donations
+                    DonationChecker.startChecking(next);
+                },
+                function (next) {
+                    // Start checking for stream stuffs
+                    StreamChecker.startChecking(next);
+                },
+                function (next) {
+                    // Start the web server
+                    WebServer.startServer(next);
+                },
+                function (next) {
+                    // Start the notification queue
+                    NotificationQueue.startQueue(next);
+                }
+            ], function (err) {
+                if (err) {
+                    console.error(err);
+                }
 
-            // Start checking for new donations
-            DonationChecker.startChecking();
-
-            // Start checking for stream stuffs
-            StreamChecker.startChecking();
-
-            // Start checking for song changes
-            MusicChecker.startChecking();
-
-            // Start the web server
-            WebServer.startServer();
-
-            // Start the notification queue
-            NotificationQueue.startQueue();
-
-            // Show the window
-            gui.Window.get().show();
+                // Show the window
+                gui.Window.get().show();
+            });
         }]);
     });
 })();

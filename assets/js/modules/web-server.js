@@ -51,7 +51,7 @@
                     self.setOptions(options);
                     self.startChecking();
                 },
-                startServer: function () {
+                startServer: function (callback) {
                     if (!self.expressApp) {
                         self.expressApp = express();
                         self.expressApp.use(express.static('assets/static/'));
@@ -170,6 +170,8 @@
                     }
 
                     self.expressApp.listen(self.options.port);
+
+                    callback();
                 }
             };
         }];

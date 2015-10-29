@@ -1,13 +1,17 @@
 <div class="row">
-    <div ng-class="{'col-xs-4': streamOnline, 'col-xs-6': !streamOnline}" ng-show="streamOnline">
+    <div ng-class="{'col-xs-3': streamOnline, 'col-xs-4': !streamOnline}" ng-show="streamOnline">
         <hero-widget label="viewers" value="viewerCount" filter="number" icon="user"/>
     </div>
 
-    <div ng-class="{'col-xs-4': streamOnline, 'col-xs-6': !streamOnline}">
+    <div ng-class="{'col-xs-3': streamOnline, 'col-xs-4': !streamOnline}">
         <hero-widget label="followers" value="followersCount" change="followersCount - followersStart" filter="number" icon="user"/>
     </div>
 
-    <div ng-class="{'col-xs-4': streamOnline, 'col-xs-6': !streamOnline}">
+    <div ng-class="{'col-xs-3': streamOnline, 'col-xs-4': !streamOnline}">
         <hero-widget label="donations" value="donationsTotal" change="donationsTotal - donationsStart" filter="currency" icon="usd"/>
+    </div>
+
+    <div ng-class="{'col-xs-3': streamOnline, 'col-xs-4': !streamOnline}">
+        <hero-widget label="views" value="viewsCount" change="viewsCount - viewsStart" filter="number" icon="film"/>
     </div>
 </div>

@@ -111,9 +111,9 @@
                         }
                     );
                 },
-                startChecking: function () {
+                startChecking: function (callback) {
                     if (self.doingInitialCheck) {
-                        return;
+                        return callback();
                     }
 
                     if (self.promise) {
@@ -143,6 +143,8 @@
                                 });
                             });
                         }, self.options.interval * 1000);
+
+                        callback();
                     });
                 }
             };

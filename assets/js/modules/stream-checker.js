@@ -44,33 +44,79 @@
          */
         this.promise = null;
 
+        this.doingInitialCheck = false;
+
         this.$get = ['$rootScope', '$interval', 'Stream', 'Twitch', 'Viewers', function ($rootScope, $interval, Stream, Twitch, Viewers) {
-            let self = this;
+            let thisModule = this;
 
             return {
                 changeInterval: function (interval) {
-                    self.options.interval = interval;
-                    self.startChecking();
+                    thisModule.options.interval = interval;
+                    thisModule.startChecking();
                 },
-                startChecking: function () {
-                    if (self.promise) {
-                        $interval.cancel(self.promise);
+                doInitialCheck: function (callback) {
+                    thisModule.doingInitialCheck = true;
+
+                    this.check(function (err) {
+                        if (err) {
+                            console.error(err);
+                        }
+
+                        console.log('Initial check of stream done!');
+
+                        thisModule.doingInitialCheck = false;
+
+                        callback();
+                    });
+                },
+                check: function (callback) {
+                    Twitch.getChannel($rootScope.App.settings.twitch.username, function (err, channelInfo) {
+                        if (err) {
+                            return callback(err);
+                        }
+
+                        Twitch.getChannelStream($rootScope.App.settings.twitch.username, function (err, streamInfo) {
+                            if (err) {
+                                return callback(err);
+                            }
+
+                            Stream.processInfo(channelInfo, streamInfo, function (err) {
+                                if (err) {
+                                    return callback(err);
+                                }
+
+                                if (streamInfo.stream) {
+                                    Viewers.addViewerCount(streamInfo.stream.viewers || 0, callback);
+                                } else {
+                                    callback();
+                                }
+                            });
+
+                        });
+                    });
+                },
+                startChecking: function (callback) {
+                    let self = this;
+
+                    if (thisModule.doingInitialCheck) {
+                        return callback();
                     }
 
-                    self.promise = $interval(function () {
-                        Twitch.getChannelStream($rootScope.App.settings.twitch.username, function (err, info) {
-                            if (err) {
-                                return console.error(err);
-                            }
+                    if (thisModule.promise) {
+                        $interval.cancel(thisModule.promise);
+                    }
 
-                            if (info.stream) {
-                                Stream.nowOnline();
-                                Viewers.addViewerCount(info.stream.viewers || 0);
-                            } else {
-                                Stream.nowOffline();
-                            }
-                        });
-                    }, 30000);
+                    this.doInitialCheck(function () {
+                        thisModule.promise = $interval(function () {
+                            self.check(function (err) {
+                                if (err) {
+                                    console.error(err);
+                                }
+                            });
+                        }, thisModule.options.interval);
+
+                        callback();
+                    });
                 }
             };
         }];

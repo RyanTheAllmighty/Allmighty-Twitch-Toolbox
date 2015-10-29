@@ -41,7 +41,7 @@
                 inQueue: function () {
                     return self.queue.length;
                 },
-                startQueue: function () {
+                startQueue: function (callback) {
                     if (!self.promise) {
                         self.promise = $interval(function () {
                             if (!self.resolving && self.queue.length !== 0) {
@@ -53,6 +53,8 @@
                             }
                         }, 1000);
                     }
+
+                    callback();
                 },
                 stopQueue: function () {
                     if (self.promise) {
