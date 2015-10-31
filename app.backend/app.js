@@ -45,6 +45,7 @@
     // Load everything up
     services.load()
         .then(services.showSplashScreen)
+        .then(services.startNotificationQueue)
         .then(services.startSocketIOServer)
         .then(services.setupExpress)
         .then(services.startExpressServer)

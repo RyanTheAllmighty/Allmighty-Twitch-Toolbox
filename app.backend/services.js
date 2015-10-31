@@ -20,7 +20,9 @@
     'use strict';
 
     // NodeJS Modules
+    let _ = require('lodash');
     let path = require('path');
+    let async = require('async');
     let express = require('express');
     let gui = global.window.nwDispatcher.requireNwGui();
 
@@ -28,6 +30,7 @@
     let Donations = require('./classes/donations');
     let Followers = require('./classes/followers');
     let Settings = require('./classes/settings');
+    let NotificationQueue = require('./classes/notificationQueue');
 
     module.exports = {
         donations: null,
@@ -37,6 +40,25 @@
         socketIOApp: null,
         io: null,
         sockets: null,
+        notificationQueue: null,
+        socketIOEmit: function (name, message) {
+            return new Promise(function (resolve, reject) {
+                if (_.isUndefined(message)) {
+                    message = null;
+                }
+
+                async.each(module.exports.sockets, function (socket, next) {
+                    socket.emit(name, message);
+                    next();
+                }, function (err) {
+                    if (err) {
+                        return reject(err);
+                    }
+
+                    return resolve();
+                });
+            });
+        },
         load: function () {
             return new Promise(function (resolve) {
                 module.exports.donations = new Donations({autoload: true});
@@ -76,6 +98,11 @@
 
                 return resolve();
             });
+        },
+        startNotificationQueue: function () {
+            module.exports.notificationQueue = new NotificationQueue();
+
+            return module.exports.notificationQueue.startQueue();
         },
         startSocketIOServer: function () {
             return new Promise(function (resolve, reject) {
