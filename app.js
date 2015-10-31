@@ -18,6 +18,6 @@
 
 'use strict';
 
-process.on('uncaughtException', function (e) {
-    console.error(e);
+process.on('uncaughtException', function (err) {
+    console.error(err);
 });

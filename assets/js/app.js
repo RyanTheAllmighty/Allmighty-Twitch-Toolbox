@@ -23,6 +23,7 @@
     let gui = require('nw.gui');
     let async = require('async');
     let Datastore = require('nedb');
+    let nwNotify = require('nw-notify');
 
     let loadingService = require('./assets/js/services/loadingService');
 
@@ -103,6 +104,11 @@
             }).when('/help', {
                 templateUrl: './assets/html/help.html',
                 controller: 'HelpController'
+            });
+
+            nwNotify.setTemplatePath('notification.html');
+            nwNotify.setConfig({
+                appIcon: 'assets/image/icon.png'
             });
 
             localStorageServiceProvider.setPrefix('AllmightyTwitchToolbox');
@@ -247,6 +253,9 @@
 
                 // Close the splash screen
                 global.splashScreen.close();
+
+                // Go to the dashboard
+                $location.url('/dashboard');
 
                 // Show the window
                 gui.Window.get().show();

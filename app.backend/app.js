@@ -19,82 +19,132 @@
 (function () {
     'use strict';
 
+    // NodeJS Modules
     let path = require('path');
     let gui = require('nw.gui');
-    let Datastore = require('nedb');
     let express = require('express');
     let nwNotify = require('nw-notify');
 
-    let loadingService = require(path.join(process.cwd(), 'assets', 'js', 'services', 'loadingService'));
+    // Add the applications storage dir to the global namespace
+    global.applicationStorageDir = path.join(gui.App.dataPath, 'ApplicationStorage');
 
+    // Our Classes
+    let Settings = require(path.join(process.cwd(), 'app.backend', 'classes', 'settings'));
+
+    // Our instance variables
     let app = express();
+    let settings = new Settings({autoload: true});
 
-    let db = {
-        donations: new Datastore({filename: path.join(gui.App.dataPath, 'ApplicationStorage', 'db', 'donations.db'), autoload: true}),
-        followers: new Datastore({filename: path.join(gui.App.dataPath, 'ApplicationStorage', 'db', 'followers.db'), autoload: true}),
-        settings: new Datastore({filename: path.join(gui.App.dataPath, 'ApplicationStorage', 'db', 'settings.db'), autoload: true}),
-        stream: new Datastore({filename: path.join(gui.App.dataPath, 'ApplicationStorage', 'db', 'stream.db'), autoload: true}),
-        timers: new Datastore({filename: path.join(gui.App.dataPath, 'ApplicationStorage', 'db', 'timers.db'), autoload: true}),
-        viewers: new Datastore({filename: path.join(gui.App.dataPath, 'ApplicationStorage', 'db', 'viewers.db'), autoload: true})
+    setupMainWindowListeners();
+    setupSplashScreen();
+    setupExpress();
+    setupRoutes();
+    startExpress();
 
-    };
+    /**
+     * This sets up the main window listeners to close the application safely and open up new windows in the users default browser.
+     */
+    function setupMainWindowListeners() {
+        gui.Window.get().on('closed', function () {
+            gui.App.clearCache();
+            nwNotify.closeAll();
+        });
 
-    nwNotify.setTemplatePath('notification.html');
-    nwNotify.setConfig({
-        appIcon: 'assets/image/icon.png'
-    });
+        gui.Window.get().on('new-win-policy', function (frame, url, policy) {
+            gui.Shell.openExternal(url);
+            policy.ignore();
+        });
+    }
 
-    gui.Window.get().on('closed', function () {
-        gui.App.clearCache();
-        nwNotify.closeAll();
-    });
+    /**
+     * This sets up the splash screen by creating the window, showing it when loaded and deleting it from the global scope when closed.
+     */
+    function setupSplashScreen() {
+        global.splashScreen = gui.Window.open('./splash-screen.html', {
+            position: 'center',
+            width: 500,
+            height: 200,
+            frame: false,
+            toolbar: false,
+            show_in_taskbar: false,
+            show: false,
+            resizable: false
+        });
 
-    gui.Window.get().on('new-win-policy', function (frame, url, policy) {
-        gui.Shell.openExternal(url);
-        policy.ignore();
-    });
+        // Once the splash screen has loaded then we show the window. This prevents the window from showing a blank white window as it loads
+        global.splashScreen.on('loaded', function () {
+            global.splashScreen.show();
+        });
 
-    global.splashScreen = gui.Window.open('./splash-screen.html', {
-        position: 'center',
-        width: 500,
-        height: 200,
-        frame: false,
-        toolbar: false,
-        show_in_taskbar: false,
-        show: false,
-        resizable: false
-    });
+        // When the splash screen is closed, remove it from global
+        global.splashScreen.on('closed', function () {
+            delete global.splashScreen;
+        });
+    }
 
-    // Once the splash screen has loaded then we show the window. This prevents the window from showing a blank white window as it loads
-    global.splashScreen.on('loaded', function () {
-        global.splashScreen.show();
-    });
+    /**
+     * This sets up everything related to express such as it's routes, view engine settings etc.
+     */
+    function setupExpress() {
+        app.use('/assets', express.static(path.join(process.cwd(), 'assets')));
 
-    // When the splash screen is closed, remove it from global
-    global.splashScreen.on('closed', function () {
-        delete global.splashScreen;
-    });
+        app.set('views', process.cwd());
+        app.set('view engine', 'jade');
+    }
 
-    app.set('port', process.env.PORT || 2323);
-    app.use(express.static(process.cwd()));
-    app.set('view engine', 'jade');
+    /**
+     * This sets up the routes for Express.
+     */
+    function setupRoutes() {
+        app.get('/', function (req, res) {
+            res.render('shell');
+        });
 
-    app.get('/', function (req, res) {
-        res.render(path.join(process.cwd(), 'shell'));
-    });
+        app.get('/api/settings', function (req, res) {
+            settings.getAll().then(function (settings) {
+                res.json(settings);
+            }, function (err) {
+                console.error(err);
 
-    app.get('/api/test', function (req, res) {
-        res.setHeader('Content-Type', 'application/json');
-        res.send(JSON.stringify({
-            received: true
-        }));
-    });
+                res.status(500).send({error: err.message});
+            });
+        });
 
-    app.listen(5000, function (err) {
-        if (err) {
+        app.get('/api/settings/:group', function (req, res) {
+            settings.getGroup(req.params.group).then(function (settings) {
+                res.json(settings);
+            }, function (err) {
+                console.error(err);
+
+                res.status(500).send({error: err.message});
+            });
+        });
+
+        app.get('/api/settings/:group/:name', function (req, res) {
+            settings.get(req.params.group, req.params.name).then(function (setting) {
+                res.json(setting);
+            }, function (err) {
+                console.error(err);
+                res.status(500).send({error: err.message});
+            });
+        });
+    }
+
+    /**
+     * This starts the Express server and loads up our Angular app.
+     */
+    function startExpress() {
+        settings.get('network', 'webPort').then(function (port) {
+            app.listen(port.value, function (err) {
+                if (err) {
+                    console.error(err);
+                }
+
+                window.location = 'http://localhost:' + port.value;
+            });
+        }, function (err) {
             console.error(err);
-        }
-
-        window.location = 'http://localhost:5000';
-    });
+            gui.App.quit();
+        });
+    }
 })();
