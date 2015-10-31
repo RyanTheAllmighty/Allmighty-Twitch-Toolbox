@@ -26,6 +26,7 @@
                 label: '@',
                 value: '=',
                 change: '=',
+                showChange: '=',
                 icon: '@',
                 filter: '@'
             },

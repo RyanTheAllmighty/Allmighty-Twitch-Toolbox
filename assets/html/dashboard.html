@@ -4,15 +4,15 @@
     </div>
 
     <div ng-class="{'col-xs-3': streamOnline, 'col-xs-4': !streamOnline}">
-        <hero-widget label="followers" value="followersCount" change="followersCount - followersStart" filter="number" icon="user"/>
+        <hero-widget label="followers" value="followersCount" change="followersCount - followersStart" show-change="streamOnline" filter="number" icon="user"/>
     </div>
 
     <div ng-class="{'col-xs-3': streamOnline, 'col-xs-4': !streamOnline}">
-        <hero-widget label="donations" value="donationsTotal" change="donationsTotal - donationsStart" filter="currency" icon="usd"/>
+        <hero-widget label="donations" value="donationsTotal" change="donationsTotal - donationsStart" show-change="streamOnline" filter="currency" icon="usd"/>
     </div>
 
     <div ng-class="{'col-xs-3': streamOnline, 'col-xs-4': !streamOnline}">
-        <hero-widget label="views" value="viewsCount" change="viewsCount - viewsStart" filter="number" icon="film"/>
+        <hero-widget label="views" value="viewsCount" change="viewsCount - viewsStart" show-change="streamOnline" filter="number" icon="film"/>
     </div>
 </div>
 

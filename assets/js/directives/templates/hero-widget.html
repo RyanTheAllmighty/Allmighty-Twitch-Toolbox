@@ -6,7 +6,7 @@
         <var ng-bind="value | {{filter}}"></var>
         <label class="text-muted">{{ label }}</label>
     </div>
-    <div ng-show="change !== null" class="change change-{{ change !== null ? change >= 0 ? 'good' : 'bad' : 'good'}}">
+    <div ng-show="showChange !== null ? showChange && change !== null : change !== null" class="change change-{{ change !== null ? change >= 0 ? 'good' : 'bad' : 'good'}}">
         <var ng-bind="change | {{filter}}"></var>
     </div>
 </div>
