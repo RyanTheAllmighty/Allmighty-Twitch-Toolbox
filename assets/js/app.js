@@ -23,7 +23,6 @@
     let gui = require('nw.gui');
     let async = require('async');
     let Datastore = require('nedb');
-    let nwNotify = require('nw-notify');
 
     let loadingService = require('./assets/js/services/loadingService');
 
@@ -43,31 +42,6 @@
         },
         settings: {}
     };
-
-    gui.Window.get().on('closed', function () {
-        gui.App.clearCache();
-        nwNotify.closeAll();
-    });
-
-    gui.Window.get().on('new-win-policy', function (frame, url, policy) {
-        gui.Shell.openExternal(url);
-        policy.ignore();
-    });
-
-    let splashScreenWin = gui.Window.open('./splash-screen.html', {
-        position: 'center',
-        width: 500,
-        height: 200,
-        frame: false,
-        toolbar: false,
-        show_in_taskbar: false,
-        show: false,
-        resizable: false
-    });
-
-    splashScreenWin.on('loaded', function () {
-        splashScreenWin.show();
-    });
 
     let app = angular.module('AllmightyTwitchToolbox', [
         'ngRoute',
@@ -132,11 +106,6 @@
             });
 
             localStorageServiceProvider.setPrefix('AllmightyTwitchToolbox');
-
-            nwNotify.setTemplatePath('notification.html');
-            nwNotify.setConfig({
-                appIcon: 'assets/image/icon.png'
-            });
 
             WebServerProvider.setOptions({
                 port: global.App.settings.network.webPort,
@@ -277,9 +246,7 @@
                 }
 
                 // Close the splash screen
-                splashScreenWin.close();
-
-                $location.url('/dashboard');
+                global.splashScreen.close();
 
                 // Show the window
                 gui.Window.get().show();

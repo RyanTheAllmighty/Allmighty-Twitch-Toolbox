@@ -17,6 +17,7 @@
     "homepage": "https://github.com/RyanTheAllmighty/Allmighty-Twitch-Toolbox",
     "main": "app.html",
     "node-main": "app.js",
+    "node-remote": "localhost",
     "window": {
         "show": false,
         "icon": "./assets/image/icon.png",
