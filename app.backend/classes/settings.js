@@ -20,31 +20,21 @@
     'use strict';
 
     let _ = require('lodash');
-    let path = require('path');
-    let Datastore = require('nedb');
+
+    let Datastore = require('./datastore');
 
     let objectSymbol = Symbol();
 
-    class Settings {
+    class Settings extends Datastore {
         constructor(options) {
-            this[objectSymbol] = {
-                datastore: new Datastore({filename: path.join(global.applicationStorageDir, 'db', 'settings.db')})
-            };
-
-            if (options.autoload) {
-                this.load();
-            }
-        }
-
-        load() {
-            this[objectSymbol].datastore.loadDatabase();
+            super('settings', options);
         }
 
         get(group, name) {
             let self = this;
 
             return new Promise(function (resolve, reject) {
-                self[objectSymbol].datastore.findOne({$and: [{group}, {name}]}, function (err, doc) {
+                self.datastore.findOne({$and: [{group}, {name}]}, function (err, doc) {
                     if (err) {
                         return reject(err);
                     }
@@ -62,7 +52,7 @@
             let self = this;
 
             return new Promise(function (resolve, reject) {
-                self[objectSymbol].datastore.find({}, function (err, docs) {
+                self.datastore.find({}, function (err, docs) {
                     if (err) {
                         return reject(err);
                     }
@@ -80,7 +70,7 @@
             let self = this;
 
             return new Promise(function (resolve, reject) {
-                self[objectSymbol].datastore.find({group}, function (err, docs) {
+                self.datastore.find({group}, function (err, docs) {
                     if (err) {
                         return reject(err);
                     }
@@ -102,7 +92,7 @@
             let self = this;
 
             return new Promise(function (resolve, reject) {
-                self[objectSymbol].datastore.update({group, name}, {$set: {value}}, {upsert: true}, function (err, numReplaced, newDoc) {
+                self.datastore.update({group, name}, {$set: {value}}, {upsert: true}, function (err, numReplaced, newDoc) {
                     if (err) {
                         return reject(err);
                     }
