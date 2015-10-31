@@ -101,7 +101,7 @@
         });
     });
 
-    router.head('/followers/:user', function (req, res) {
+    router.head('/followers/user/:user', function (req, res) {
         services.followers.getFollower(req.params.user).then(function () {
             res.status(200).end();
         }, function (err) {
@@ -109,7 +109,7 @@
         });
     });
 
-    router.get('/followers/:user', function (req, res) {
+    router.get('/followers/user/:user', function (req, res) {
         services.followers.getFollower(req.params.user).then(function (follower) {
             res.json(follower);
         }, function (err) {

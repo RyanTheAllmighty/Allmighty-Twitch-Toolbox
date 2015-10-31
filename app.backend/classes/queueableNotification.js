@@ -146,12 +146,12 @@
             if (this.data.socketIO) {
                 _.forEach(this.data.socketIO, function (data, key) {
                     if (data) {
-                        toDo.push(function () {
-                            services.socketIOEmit(key, data);
+                        toDo.push(function (next) {
+                            services.socketIOEmit(key, data).then(next).catch(next);
                         });
                     } else {
-                        toDo.push(function () {
-                            services.socketIOEmit.emit(key);
+                        toDo.push(function (next) {
+                            services.socketIOEmit(key).then(next).catch(next);
                         });
                     }
                 });

@@ -20,8 +20,7 @@
     'use strict';
 
     let _ = require('lodash');
-
-    let QueueableNotification = require('./assets/js/classes/queueableNotification');
+    let path = require('path');
 
     angular.module('followers', []);
 
@@ -133,8 +132,6 @@
                             .timeout(options.notificationTime * 1000)
                             .socketIO('new-follower', follower)
                             .socketIO('followers')
-                            .scope('new-follower', follower)
-                            .scope('followers')
                             .onAction(function (next) {
                                 let toPlay = new Howl({
                                     urls: [$rootScope.App.settings.sounds.newFollower],
@@ -146,7 +143,7 @@
                             })
                             .onDone(callback);
 
-                        NotificationQueue.add(noti);
+                        services.notificationQueue.add(noti);
                     }
 
                     if (!follower.test) {

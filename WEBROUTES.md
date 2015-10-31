@@ -111,18 +111,18 @@ This route gets a count of all the followers. It returns the following:
 25
 ```
 
-### HEAD /api/followers/:user
+### HEAD /api/followers/user/:user
 This route checks if a user has followed the channel. The user can be identified by a username or their ID. 
 
 If a user has followed the channel before then it will return a 200 status code else it will return a 404 status code.
 
-### GET /api/followers/:user
+### GET /api/followers/user/:user
 This route gets the data of a user who has followed the channel. The user can be identified by a username or their ID. It returns the following:
 
 ```js
 {
     "date": "2015-01-17T10:37:59.995Z", // The date the user followed
-    "id": 3214235, // The Twitch ID of the user
+    "id": 3214235, // The Twitch ID of the user who followed
     "username": "someuser", // The username of the user who followed
     "display_name": "SomeUser" // The display name of the user who followed
 }

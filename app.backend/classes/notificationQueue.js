@@ -55,11 +55,13 @@
                 }
 
                 self[objectSymbol].interval = setInterval(function () {
-                    console.log('Hi!');
                     if (!self.resolving && self.queue.length !== 0) {
                         self[objectSymbol].resolving = self.queue.shift();
 
                         self.resolving.resolve().then(function () {
+                            self[objectSymbol].resolving = null;
+                        }).catch(function (err) {
+                            console.error(err);
                             self[objectSymbol].resolving = null;
                         });
                     }

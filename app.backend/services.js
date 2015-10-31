@@ -39,12 +39,16 @@
         expressApp: null,
         socketIOApp: null,
         io: null,
-        sockets: null,
+        sockets: [],
         notificationQueue: null,
         socketIOEmit: function (name, message) {
             return new Promise(function (resolve, reject) {
                 if (_.isUndefined(message)) {
                     message = null;
+                }
+
+                if (module.exports.sockets.length === 0) {
+                    resolve();
                 }
 
                 async.each(module.exports.sockets, function (socket, next) {

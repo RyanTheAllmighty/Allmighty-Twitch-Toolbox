@@ -42,6 +42,10 @@
         policy.ignore();
     });
 
+    nwNotify.setConfig({
+        appIcon: path.join(process.cwd(), 'assets', 'image', 'icon.png')
+    });
+
     // Load everything up
     services.load()
         .then(services.showSplashScreen)

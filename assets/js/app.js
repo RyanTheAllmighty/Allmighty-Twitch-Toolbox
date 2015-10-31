@@ -106,11 +106,6 @@
                 controller: 'HelpController'
             });
 
-            nwNotify.setTemplatePath('notification.html');
-            nwNotify.setConfig({
-                appIcon: 'assets/image/icon.png'
-            });
-
             localStorageServiceProvider.setPrefix('AllmightyTwitchToolbox');
 
             WebServerProvider.setOptions({
