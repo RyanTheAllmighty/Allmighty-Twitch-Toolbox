@@ -19,7 +19,7 @@ The return values from all these routes depends on the type of request and will 
 
 If an error occurs then a special object will be returned containing an error property which will have a short message about what went wrong like below:
 
-```json
+```js
 {
     "error": "Something bad happened!"
 }
@@ -34,7 +34,7 @@ If there was an error a 500 status code will be returned.
 ### GET /api/donations
 This route gets a listing of StreamTip donations. It returns the following:
 
-```json
+```js
 {
     "_total": 345, // The total number of donations in the database
     "_count": 25, // The number of items in the donations array
@@ -63,14 +63,14 @@ You can specify URL query strings to change the behaviour of the call as per bel
 ### GET /api/donations/count
 This route gets a count of all the donations made. It returns the following:
 
-```json
+```js
 25
 ```
 
 ### GET /api/donations/total
 This route gets a total of all the donations made. It returns the following:
 
-```json
+```js
 234.43
 ```
 
@@ -79,7 +79,7 @@ This isn't formatted in anyway or contain any currency symbols.
 ### GET /api/followers
 This route gets a listing of Twitch followers. It returns the following:
 
-```json
+```js
 {
     "_total": 345, // The total number of followers in the database
     "_count": 25, // The number of items in the followers array
@@ -107,7 +107,7 @@ You can specify URL query strings to change the behaviour of the call as per bel
 ### GET /api/followers/count
 This route gets a count of all the followers. It returns the following:
 
-```json
+```js
 25
 ```
 
@@ -119,7 +119,7 @@ If a user has followed the channel before then it will return a 200 status code 
 ### GET /api/followers/:user
 This route gets the data of a user who has followed the channel. The user can be identified by a username or their ID. It returns the following:
 
-```json
+```js
 {
     "date": "2015-01-17T10:37:59.995Z", // The date the user followed
     "id": 3214235, // The Twitch ID of the user
@@ -131,7 +131,7 @@ This route gets the data of a user who has followed the channel. The user can be
 ### GET /api/settings
 This route gets all the settings for the application. It returns an array of values as per below:
 
-```json
+```js
 [
     {
         "group": "GROUP",
@@ -144,7 +144,7 @@ This route gets all the settings for the application. It returns an array of val
 ### GET /api/settings/:group
 This route gets all the settings for the application within the group specified. It returns an array of values as per below:
 
-```json
+```js
 [
     {
         "group": "GROUP",
@@ -159,7 +159,7 @@ If there is no group with the given name then an error will be returned.
 ### GET /api/settings/:group/:name
 This route gets all the settings for the application. It returns an object with the setting as per below:
 
-```json
+```js
 {
     "group": "GROUP",
     "name": "NAME",
