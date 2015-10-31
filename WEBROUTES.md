@@ -25,13 +25,110 @@ If an error occurs then a special object will be returned containing an error pr
 }
 ```
 
-You can also check the status code from the request in order to guage if the request was a success or not.
+You can also check the status code from the request in order to gauge if the request was a success or not.
 
 If everything was a success then a 200 status code will be returned.
 
 If there was an error a 500 status code will be returned.
 
-### /api/settings
+### GET /api/donations
+This route gets a listing of StreamTip donations. It returns the following:
+
+```json
+{
+    "_total": 345, // The total number of donations in the database
+    "_count": 25, // The number of items in the donations array
+    "_offset": 0, // The offset provided
+    "_order": "desc", // The order the donations are sorted in
+    "donations": [
+        {
+            "date": "2015-01-17T10:37:59.995Z", // The date the donation was made
+            "id": "12983987fd37423", // The ID provided by Stream Tip
+            "username": "SomeUser", // The username of the user who donated
+            "amount": 10, // The amount that was donated
+            "note": "This is a donation!" // The note provided (can be null if none was provided)
+        }
+    ]
+}
+```
+
+You can specify URL query strings to change the behaviour of the call as per below:
+
+| Name | Description | Default |
+| --- | --- | -------- |
+| limit | Limits the number of results to return. Maximum is 100. | 25 |
+| offset | The number of results to skip. Used in conjunction with limit to paginate between all results | 0 |
+| order | Changes the order of the results based upon date. Can be 'asc' or 'desc' | desc |
+
+### GET /api/donations/count
+This route gets a count of all the donations made. It returns the following:
+
+```json
+25
+```
+
+### GET /api/donations/total
+This route gets a total of all the donations made. It returns the following:
+
+```json
+234.43
+```
+
+This isn't formatted in anyway or contain any currency symbols.
+
+### GET /api/followers
+This route gets a listing of Twitch followers. It returns the following:
+
+```json
+{
+    "_total": 345, // The total number of followers in the database
+    "_count": 25, // The number of items in the followers array
+    "_offset": 0, // The offset provided
+    "_order": "desc", // The order the followers are sorted in
+    "followers": [
+        {
+            "date": "2015-01-17T10:37:59.995Z", // The date the user followed
+            "id": 3214235, // The Twitch ID of the user
+            "username": "someuser", // The username of the user who followed
+            "display_name": "SomeUser" // The display name of the user who followed
+        }
+    ]
+}
+```
+
+You can specify URL query strings to change the behaviour of the call as per below:
+
+| Name | Description | Default |
+| --- | --- | -------- |
+| limit | Limits the number of results to return. Maximum is 100. | 25 |
+| offset | The number of results to skip. Used in conjunction with limit to paginate between all results | 0 |
+| order | Changes the order of the results based upon date. Can be 'asc' or 'desc' | desc |
+
+### GET /api/followers/count
+This route gets a count of all the followers. It returns the following:
+
+```json
+25
+```
+
+### HEAD /api/followers/:user
+This route checks if a user has followed the channel. The user can be identified by a username or their ID. 
+
+If a user has followed the channel before then it will return a 200 status code else it will return a 404 status code.
+
+### GET /api/followers/:user
+This route gets the data of a user who has followed the channel. The user can be identified by a username or their ID. It returns the following:
+
+```json
+{
+    "date": "2015-01-17T10:37:59.995Z", // The date the user followed
+    "id": 3214235, // The Twitch ID of the user
+    "username": "someuser", // The username of the user who followed
+    "display_name": "SomeUser" // The display name of the user who followed
+}
+```
+
+### GET /api/settings
 This route gets all the settings for the application. It returns an array of values as per below:
 
 ```json
@@ -44,7 +141,7 @@ This route gets all the settings for the application. It returns an array of val
 ]
 ```
 
-### /api/settings/:group
+### GET /api/settings/:group
 This route gets all the settings for the application within the group specified. It returns an array of values as per below:
 
 ```json
@@ -59,7 +156,7 @@ This route gets all the settings for the application within the group specified.
 
 If there is no group with the given name then an error will be returned.
 
-### /api/settings/:group/:name
+### GET /api/settings/:group/:name
 This route gets all the settings for the application. It returns an object with the setting as per below:
 
 ```json

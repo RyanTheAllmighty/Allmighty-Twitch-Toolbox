@@ -23,8 +23,6 @@
 
     let Datastore = require('./datastore');
 
-    let objectSymbol = Symbol();
-
     class Settings extends Datastore {
         constructor(options) {
             super('settings', options);

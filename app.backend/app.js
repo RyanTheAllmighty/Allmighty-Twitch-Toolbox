@@ -29,10 +29,16 @@
     global.applicationStorageDir = path.join(gui.App.dataPath, 'ApplicationStorage');
 
     // Our Classes
-    let Settings = require(path.join(process.cwd(), 'app.backend', 'classes', 'settings'));
+    let Donations = require('./app.backend/classes/donations');
+    let Followers = require('./app.backend/classes/followers');
+    let Settings = require('./app.backend/classes/settings');
+
+    // Our express app
+    let app = express();
 
     // Our instance variables
-    let app = express();
+    let donations = new Donations({autoload: true});
+    let followers = new Followers({autoload: true});
     let settings = new Settings({autoload: true});
 
     setupMainWindowListeners();
@@ -104,8 +110,6 @@
             settings.getAll().then(function (settings) {
                 res.json(settings);
             }, function (err) {
-                console.error(err);
-
                 res.status(500).send({error: err.message});
             });
         });
@@ -114,8 +118,6 @@
             settings.getGroup(req.params.group).then(function (settings) {
                 res.json(settings);
             }, function (err) {
-                console.error(err);
-
                 res.status(500).send({error: err.message});
             });
         });
@@ -124,7 +126,70 @@
             settings.get(req.params.group, req.params.name).then(function (setting) {
                 res.json(setting);
             }, function (err) {
-                console.error(err);
+                res.status(500).send({error: err.message});
+            });
+        });
+
+        app.get('/api/donations', function (req, res) {
+            donations.get({
+                limit: req.query.limit || 100,
+                offset: req.query.offset || 0,
+                order: req.query.order || 'desc'
+            }).then(function (donations) {
+                res.json(donations);
+            }, function (err) {
+                res.status(500).send({error: err.message});
+            });
+        });
+
+        app.get('/api/donations/count', function (req, res) {
+            donations.count().then(function (count) {
+                res.json(count);
+            }, function (err) {
+                res.status(500).send({error: err.message});
+            });
+        });
+
+        app.get('/api/donations/total', function (req, res) {
+            donations.total().then(function (total) {
+                res.json(total);
+            }, function (err) {
+                res.status(500).send({error: err.message});
+            });
+        });
+
+        app.get('/api/followers', function (req, res) {
+            followers.get({
+                limit: req.query.limit || 100,
+                offset: req.query.offset || 0,
+                order: req.query.order || 'desc'
+            }).then(function (followers) {
+                res.json(followers);
+            }, function (err) {
+                res.status(500).send({error: err.message});
+            });
+        });
+
+        app.get('/api/followers/count', function (req, res) {
+            followers.count().then(function (count) {
+                res.json(count);
+            }, function (err) {
+                res.status(500).send({error: err.message});
+            });
+        });
+
+        app.head('/api/followers/:user', function (req, res) {
+            followers.getFollower(req.params.user).then(function () {
+                res.status(200).end();
+            }, function (err) {
+                res.status(err.message === 'That user has never followed the channel before!' ? 404 : 500).end();
+            });
+        });
+
+        app.get('/api/followers/:user', function (req, res) {
+            followers.getFollower(req.params.user).then(function (follower) {
+                res.json(follower);
+            }, function (err) {
                 res.status(500).send({error: err.message});
             });
         });
