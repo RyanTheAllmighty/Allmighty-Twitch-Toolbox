@@ -23,7 +23,6 @@
     let gui = require('nw.gui');
     let async = require('async');
     let Datastore = require('nedb');
-    let nwNotify = require('nw-notify');
 
     let loadingService = require('./assets/js/services/loadingService');
 
@@ -75,7 +74,7 @@
 
     // Load everything before we proceed
     loadingService.load(function () {
-        app.config(function ($routeProvider, localStorageServiceProvider, WebServerProvider, NotificationProvider, TwitchProvider, GiantBombProvider, StreamTipProvider, SocketIOProvider, SocketIOServerProvider, StreamCheckerProvider, FollowersProvider, FollowerCheckerProvider, DonationsProvider, DonationCheckerProvider, MusicCheckerProvider) {
+        app.config(function ($routeProvider, localStorageServiceProvider, WebServerProvider, NotificationProvider, TwitchProvider, GiantBombProvider, StreamTipProvider, SocketIOProvider, SocketIOServerProvider, StreamCheckerProvider, DonationsProvider, DonationCheckerProvider, MusicCheckerProvider) {
             // Setup the routes
             $routeProvider.when('/dashboard', {
                 templateUrl: './assets/html/dashboard.html',
@@ -160,16 +159,6 @@
                 interval: global.App.settings.checks.stream
             });
 
-            // Setup the follower provider
-            FollowersProvider.setOptions({
-                notificationTime: global.App.settings.notifications.followerNotificationTime
-            });
-
-            // Setup the follower checker
-            FollowerCheckerProvider.setOptions({
-                interval: global.App.settings.checks.followers
-            });
-
             // Setup the donation provider
             DonationsProvider.setOptions({
                 notificationTime: global.App.settings.notifications.donationNotificationTime
@@ -211,15 +200,11 @@
             }
         }]);
 
-        app.run(['$location', 'SocketIOServer', 'FollowerChecker', 'DonationChecker', 'StreamChecker', 'MusicChecker', 'WebServer', 'NotificationQueue', function ($location, SocketIOServer, FollowerChecker, DonationChecker, StreamChecker, MusicChecker, WebServer, NotificationQueue) {
+        app.run(['$location', 'SocketIOServer', 'DonationChecker', 'StreamChecker', 'MusicChecker', 'WebServer', 'NotificationQueue', function ($location, SocketIOServer, DonationChecker, StreamChecker, MusicChecker, WebServer, NotificationQueue) {
             async.parallel([
                 function (next) {
                     // Start the socket IO server
                     SocketIOServer.startServer(next);
-                },
-                function (next) {
-                    // Start checking for new followers
-                    FollowerChecker.startChecking(next);
                 },
                 function (next) {
                     // Start checking for new donations

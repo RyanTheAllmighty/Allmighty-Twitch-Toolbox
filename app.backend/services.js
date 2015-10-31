@@ -24,6 +24,7 @@
     let path = require('path');
     let async = require('async');
     let express = require('express');
+    let TwitchAPI = require('twitch-api');
     let gui = global.window.nwDispatcher.requireNwGui();
 
     // Our Classes
@@ -31,6 +32,9 @@
     let Followers = require('./classes/followers');
     let Settings = require('./classes/settings');
     let NotificationQueue = require('./classes/notificationQueue');
+    let FollowerChecker = require('./checkers/followerChecker');
+
+    console.log(process.env.BROWSER);
 
     module.exports = {
         donations: null,
@@ -41,6 +45,11 @@
         io: null,
         sockets: [],
         notificationQueue: null,
+        followerChecker: null,
+        donationChecker: null,
+        musicChecker: null,
+        streamChecker: null,
+        twitchAPI: null,
         socketIOEmit: function (name, message) {
             return new Promise(function (resolve, reject) {
                 if (_.isUndefined(message)) {
@@ -64,7 +73,7 @@
             });
         },
         load: function () {
-            return new Promise(function (resolve) {
+            return new Promise(function (resolve, reject) {
                 module.exports.donations = new Donations({autoload: true});
                 module.exports.followers = new Followers({autoload: true});
                 module.exports.settings = new Settings({autoload: true});
@@ -93,6 +102,7 @@
                 // Once the splash screen has loaded then we show the window. This prevents the window from showing a blank white window as it loads
                 global.splashScreen.on('loaded', function () {
                     global.splashScreen.show();
+                    global.splashScreen.showDevTools();
                 });
 
                 // When the splash screen is closed, remove it from global
@@ -103,10 +113,42 @@
                 return resolve();
             });
         },
+        setupTwitchAPI: function () {
+            return new Promise(function (resolve, reject) {
+                module.exports.settings.getGroup('twitch').then(function (settings) {
+                    module.exports.twitchAPI = new TwitchAPI({
+                        clientId: _.result(_.findWhere(settings, {name: 'apiClientID'}), 'value'),
+                        accessToken: _.result(_.findWhere(settings, {name: 'apiToken'}), 'value')
+                    });
+
+                    return resolve();
+                }).catch(reject);
+            });
+        },
         startNotificationQueue: function () {
             module.exports.notificationQueue = new NotificationQueue();
 
             return module.exports.notificationQueue.startQueue();
+        },
+        startFollowerChecker: function () {
+            module.exports.followerChecker = new FollowerChecker();
+
+            return module.exports.followerChecker.startChecking();
+        },
+        startDonationChecker: function () {
+            return new Promise(function (resolve, reject) {
+                return resolve();
+            });
+        },
+        startMusicChecker: function () {
+            return new Promise(function (resolve, reject) {
+                return resolve();
+            });
+        },
+        startStreamChecker: function () {
+            return new Promise(function (resolve, reject) {
+                return resolve();
+            });
         },
         startSocketIOServer: function () {
             return new Promise(function (resolve, reject) {
@@ -167,8 +209,11 @@
             return new Promise(function (resolve, reject) {
                 module.exports.settings.get('network', 'webPort').then(function (port) {
                     window.location = 'http://localhost:' + port.value;
+
+                    return resolve();
                 }, reject);
             });
         }
     };
+    console.log(module.exports.donations);
 })();

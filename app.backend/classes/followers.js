@@ -20,8 +20,13 @@
     'use strict';
 
     let _ = require('lodash');
+    let path = require('path');
+
+    // Include our services module
+    let services = require(path.join(process.cwd(), 'app.backend', 'services'));
 
     let Datastore = require('./datastore');
+    let QueueableNotification = require(path.join(process.cwd(), 'app.backend', 'classes', 'queueableNotification'));
 
     class Followers extends Datastore {
         constructor(options) {
@@ -96,8 +101,16 @@
         getFollower(user) {
             let self = this;
 
+            let searchObject;
+
+            if (user instanceof Object) {
+                searchObject = {$or: [{id: user.id}, {username: user.username}]};
+            } else {
+                searchObject = isNaN(user) ? {username: user} : {id: parseInt(user)};
+            }
+
             return new Promise(function (resolve, reject) {
-                self.datastore.findOne(isNaN(user) ? {username: user} : {id: parseInt(user)}).limit(1).exec(function (err, follow) {
+                self.datastore.findOne(searchObject).limit(1).exec(function (err, follow) {
                     if (err) {
                         return reject(err);
                     }
@@ -108,6 +121,116 @@
 
                     return resolve(_.omit(follow, '_id'));
                 });
+            });
+        }
+
+        process(follower, options) {
+            let self = this;
+
+            if (!follower.date) {
+                follower.date = new Date();
+            }
+
+            return new Promise(function (resolve, reject) {
+                this.getFollower(follower).then(function (theFollow) {
+                    if (_.isEqual(follower, theFollow)) {
+                        // Not new or different
+                        return reject(options.errorOnNonNew ? new Error('Non new follower') : null);
+                    } else {
+                        // The follower has different information in our DB than what Twitch says (refollow, username change) so update that
+                        self.updateFollower(follower).then(function () {
+                            resolve();
+                        }).catch(reject);
+                    }
+                }).catch(function (err) {
+                    if (err.message === 'That user has never followed the channel before!') {
+                        // New follower
+                        self.newFollower(follower, options).then(function () {
+                            resolve();
+                        }).catch(reject);
+                    } else {
+                        // Error
+                        return reject(err);
+                    }
+                });
+            });
+        }
+
+        newFollower(follower, options) {
+            let self = this;
+
+            if (!options) {
+                options = {};
+            }
+
+            if (!follower.date) {
+                follower.date = new Date();
+            }
+
+            return new Promise(function (resolve, reject) {
+                function notify(err) {
+                    if (err) {
+                        return reject(err);
+                    }
+
+                    if (options.noNotification) {
+                        return resolve();
+                    }
+
+                    services.settings.getAll().then(function (settings) {
+                        let noti = new QueueableNotification()
+                            .title('New Follower!')
+                            .message(follower.display_name + ' has just followed!')
+                            .timeout(_.result(_.findWhere(settings, {group: 'notifications', name: 'followerNotificationTime'}), 'value') * 1000)
+                            .socketIO('new-follower', follower)
+                            .socketIO('followers')
+                            .onAction(function (next) {
+                                let toPlay = new Howl({
+                                    urls: [_.result(_.findWhere(settings, {group: 'sounds', name: 'newFollower'}), 'value')],
+                                    volume: _.result(_.findWhere(settings, {group: 'sounds', name: 'newFollowerVolume'}), 'value')
+                                });
+
+                                toPlay.play();
+                                next();
+                            });
+
+                        services.notificationQueue.add(noti);
+
+                        return resolve();
+                    }).catch(reject);
+                }
+
+                if (!follower.test) {
+                    self.datastore.update({$or: [{username: follower.username}, {id: follower.id}]}, {$set: follower}, {upsert: true}, notify);
+                } else {
+                    notify();
+                }
+            });
+        }
+
+        updateFollower(follower) {
+            let self = this;
+
+            if (!follower.date) {
+                follower.date = new Date();
+            }
+            return new Promise(function (resolve, reject) {
+                function notify(err) {
+                    if (err) {
+                        return reject(err);
+                    }
+
+                    // Send a broadcast to listening socket clients
+                    services.socketIOEmit('followers');
+
+                    return resolve();
+                }
+
+                if (!follower.test) {
+                    self.datastore.update({$or: [{username: follower.username}, {id: follower.id}]}, {$set: follower}, {upsert: true}, notify);
+                } else {
+                    notify();
+                }
             });
         }
     }

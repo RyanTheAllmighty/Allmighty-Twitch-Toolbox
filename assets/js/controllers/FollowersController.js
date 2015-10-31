@@ -21,7 +21,7 @@
 
     angular.module('AllmightyTwitchToolbox').controller('FollowersController', ['$scope', 'Followers', 'DTOptionsBuilder', 'DTColumnBuilder', function ($scope, Followers, DTOptionsBuilder, DTColumnBuilder) {
         let getFollowers = function () {
-            return Followers.getFollowersPromise();
+            return Followers.get({limit: 100, order: 'desc'});
         };
 
         // The instance of the dataTable

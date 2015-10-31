@@ -47,9 +47,14 @@
     });
 
     // Load everything up
+    console.log(services.followers);
     services.load()
         .then(services.showSplashScreen)
+        .then(services.setupTwitchAPI)
         .then(services.startNotificationQueue)
+        .then(services.startDonationChecker)
+        .then(services.startMusicChecker)
+        .then(services.startStreamChecker)
         .then(services.startSocketIOServer)
         .then(services.setupExpress)
         .then(services.startExpressServer)
@@ -58,4 +63,5 @@
             console.error(err.message);
             gui.App.quit();
         });
+    console.log(services.followers);
 })();
