@@ -27,7 +27,7 @@
         // The instance of the dataTable
         $scope.dtInstance = {};
 
-        $scope.dtOptions = DTOptionsBuilder.fromFnPromise(getFollowers).withPaginationType('full').withOption('order', [[1, 'desc']]).withBootstrap();
+        $scope.dtOptions = DTOptionsBuilder.fromFnPromise(getFollowers).withDataProp('followers').withPaginationType('full').withOption('order', [[1, 'desc']]).withBootstrap();
 
         $scope.dtColumns = [
             DTColumnBuilder.newColumn('display_name').withTitle('Username'),

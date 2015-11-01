@@ -69,12 +69,13 @@
         'nvd3',
         'stream',
         'stream-checker',
-        'giantbomb'
+        'giantbomb',
+        'settings'
     ]);
 
     // Load everything before we proceed
     loadingService.load(function () {
-        app.config(function ($routeProvider, localStorageServiceProvider, WebServerProvider, NotificationProvider, TwitchProvider, GiantBombProvider, StreamTipProvider, SocketIOProvider, SocketIOServerProvider, StreamCheckerProvider, DonationsProvider, DonationCheckerProvider, MusicCheckerProvider) {
+        app.config(function ($routeProvider, localStorageServiceProvider, WebServerProvider, NotificationProvider, TwitchProvider, GiantBombProvider, StreamTipProvider, SocketIOProvider, SocketIOServerProvider, StreamCheckerProvider, DonationCheckerProvider, MusicCheckerProvider) {
             // Setup the routes
             $routeProvider.when('/dashboard', {
                 templateUrl: './assets/html/dashboard.html',
@@ -157,11 +158,6 @@
             // Setup the stream checker
             StreamCheckerProvider.setOptions({
                 interval: global.App.settings.checks.stream
-            });
-
-            // Setup the donation provider
-            DonationsProvider.setOptions({
-                notificationTime: global.App.settings.notifications.donationNotificationTime
             });
 
             // Setup the donation checker

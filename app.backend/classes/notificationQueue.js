@@ -61,7 +61,7 @@
                         self.resolving.resolve().then(function () {
                             self[objectSymbol].resolving = null;
                         }).catch(function (err) {
-                            console.error(err);
+                            console.error(err.stack);
                             self[objectSymbol].resolving = null;
                         });
                     }

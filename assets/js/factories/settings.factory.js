@@ -19,9 +19,9 @@
 (function () {
     'use strict';
 
-    angular.module('followers', []);
+    angular.module('settings', []);
 
-    angular.module('followers').factory('Followers', function () {
-        return require(require('path').join(process.cwd(), 'app.backend', 'services')).followers;
+    angular.module('settings').factory('Settings', function () {
+        return global.services.settings;
     });
 })();
