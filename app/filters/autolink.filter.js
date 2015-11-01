@@ -19,19 +19,16 @@
 (function () {
     'use strict';
 
-    angular.module('AllmightyTwitchToolbox').directive('heroWidget', function () {
-        return {
-            restrict: 'E',
-            scope: {
-                label: '@',
-                value: '=',
-                change: '=',
-                showChange: '=',
-                icon: '@',
-                filter: '@'
-            },
-            templateUrl: 'assets/js/directives/templates/hero-widget.html',
-            replace: true
+    let AutoLinker = require('autolinker');
+
+    angular.module('AllmightyTwitchToolbox').filter('autolink', function () {
+        let linker = new AutoLinker({
+            email: false,
+            phone: false
+        });
+
+        return function (input) {
+            return linker.link(input).replace('href=', 'ng-click="openLinkInBrowser()" href=');
         };
     });
 })();

@@ -13,7 +13,7 @@ html(ng-app='AllmightyTwitchToolbox')
         link(rel='stylesheet', type='text/css', href='assets/css/libs/nv.d3-1.8.1.min.css')
         link(rel='stylesheet', type='text/css', href='assets/css/app.css')
     body
-        nav.navbar.navbar-default.navbar-fixed-top(ng-controller='NavController')
+        nav.navbar.navbar-default.navbar-fixed-top(ng-controller='NavigationController')
             .container-fluid
                 .navbar-header
                     a.navbar-brand(href='#/dashboard') Allmighty Twitch Toolbox
@@ -84,11 +84,10 @@ html(ng-app='AllmightyTwitchToolbox')
         script(type='text/javascript', src='assets/js/libs/angular-nvd3-1.0.2.min.js')
 
         // Our setting related modules
-        script(type='text/javascript', src='assets/js/factories/settings.factory.js')
+        script(type='text/javascript', src='app/factories/settings.factory.js')
 
         // Our follower related modules
-        script(type='text/javascript', src='assets/js/factories/followers.factory.js')
-        script(type='text/javascript', src='assets/js/modules/follower-checker.js')
+        script(type='text/javascript', src='app/factories/followers.factory.js')
         script(type='text/javascript', src='assets/js/modules/twitch.js')
 
         // Our donation related modules
@@ -121,23 +120,24 @@ html(ng-app='AllmightyTwitchToolbox')
         script(type='text/javascript', src='assets/js/modules/socket-io-server.js')
 
         // The main application endpoint
-        script(type='text/javascript', src='assets/js/app.js')
+        script(type='text/javascript', src='app/app.js')
 
         // Our directives
-        script(type='text/javascript', src='assets/js/directives/collapsible.js')
-        script(type='text/javascript', src='assets/js/directives/hero-widget.js')
+        script(type='text/javascript', src='app/directives/collapsible.directive.js')
+        script(type='text/javascript', src='app/directives/hero-widget.directive.js')
+
+        // Our filters
+        script(type='text/javascript', src='app/filters/capitalize.filter.js')
+        script(type='text/javascript', src='app/filters/autolink.filter.js')
 
         // Controllers
-        script(type='text/javascript', src='assets/js/controllers/NavController.js')
-        script(type='text/javascript', src='assets/js/controllers/DashboardController.js')
-        script(type='text/javascript', src='assets/js/controllers/ViewersController.js')
-        script(type='text/javascript', src='assets/js/controllers/FollowersController.js')
-        script(type='text/javascript', src='assets/js/controllers/DonationsController.js')
-        script(type='text/javascript', src='assets/js/controllers/TimersController.js')
-        script(type='text/javascript', src='assets/js/controllers/ToolsController.js')
-        script(type='text/javascript', src='assets/js/controllers/TestController.js')
-        script(type='text/javascript', src='assets/js/controllers/SettingsController.js')
-        script(type='text/javascript', src='assets/js/controllers/HelpController.js')
-
-        // The extra JS files used by the app/angular
-        script(type='text/javascript', src='assets/js/extra/filters.js')
+        script(type='text/javascript', src='app/controllers/navigation.controller.js')
+        script(type='text/javascript', src='app/controllers/dashboard.controller.js')
+        script(type='text/javascript', src='app/controllers/viewers.controller.js')
+        script(type='text/javascript', src='app/controllers/followers.controller.js')
+        script(type='text/javascript', src='app/controllers/donations.controller.js')
+        script(type='text/javascript', src='app/controllers/timers.controller.js')
+        script(type='text/javascript', src='app/controllers/tools.controller.js')
+        script(type='text/javascript', src='app/controllers/test.controller.js')
+        script(type='text/javascript', src='app/controllers/settings.controller.js')
+        script(type='text/javascript', src='app/controllers/help.controller.js')

@@ -52,7 +52,6 @@
         'streamtip',
         'socket-io',
         'socket-io-server',
-        'follower-checker',
         'donation-checker',
         'music-checker',
         'datatables',
@@ -78,31 +77,31 @@
         app.config(function ($routeProvider, localStorageServiceProvider, WebServerProvider, NotificationProvider, TwitchProvider, GiantBombProvider, StreamTipProvider, SocketIOProvider, SocketIOServerProvider, StreamCheckerProvider, DonationCheckerProvider, MusicCheckerProvider) {
             // Setup the routes
             $routeProvider.when('/dashboard', {
-                templateUrl: './assets/html/dashboard.html',
+                templateUrl: 'app/views/dashboard.html',
                 controller: 'DashboardController'
             }).when('/viewers', {
-                templateUrl: './assets/html/viewers.html',
+                templateUrl: 'app/views/viewers.html',
                 controller: 'ViewersController'
             }).when('/followers', {
-                templateUrl: './assets/html/followers.html',
+                templateUrl: 'app/views/followers.html',
                 controller: 'FollowersController'
             }).when('/donations', {
-                templateUrl: './assets/html/donations.html',
+                templateUrl: 'app/views/donations.html',
                 controller: 'DonationsController'
             }).when('/timers', {
-                templateUrl: './assets/html/timers.html',
+                templateUrl: 'app/views/timers.html',
                 controller: 'TimersController'
             }).when('/tools', {
-                templateUrl: './assets/html/tools.html',
+                templateUrl: 'app/views/tools.html',
                 controller: 'ToolsController'
             }).when('/test', {
-                templateUrl: './assets/html/test.html',
+                templateUrl: 'app/views/test.html',
                 controller: 'TestController'
             }).when('/settings', {
-                templateUrl: './assets/html/settings.html',
+                templateUrl: 'app/views/settings.html',
                 controller: 'SettingsController'
             }).when('/help', {
-                templateUrl: './assets/html/help.html',
+                templateUrl: 'app/views/help.html',
                 controller: 'HelpController'
             });
 

@@ -180,6 +180,7 @@
         setupExpress: function () {
             return new Promise(function (resolve) {
                 module.exports.expressApp.use('/assets', express.static(path.join(process.cwd(), 'assets')));
+                module.exports.expressApp.use('/app', express.static(path.join(process.cwd(), 'app')));
 
                 module.exports.expressApp.set('views', process.cwd());
                 module.exports.expressApp.set('view engine', 'jade');
