@@ -4,7 +4,7 @@ This file contains all the web routes accessible from this application.
 **NOTE: This is for advanced users only!**
 
 ## URL
-The base URL for all these routes is on http://localhost with the port you've specified in the settings (defaults to 5000).
+The base URL for all these routes is on http://localhost:28800.
 
 ## /
 This is the main application endpoint and will **NOT** work outside of NWjs, so you won't be able to load this route up in anything except NWjs.

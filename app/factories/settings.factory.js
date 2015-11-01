@@ -21,7 +21,52 @@
 
     angular.module('settings', []);
 
-    angular.module('settings').factory('Settings', function () {
-        return global.services.settings;
-    });
+    angular.module('settings').factory('Settings', ['$http', function ($http) {
+        return {
+            getSetting,
+            getAll,
+            getGroup,
+            setAll
+        };
+
+        function getSetting(group, name) {
+            return new Promise(function (resolve, reject) {
+                $http.get('http://127.0.0.1:28800/api/settings/' + group + '/' + name).success(function (data) {
+                    return resolve(data);
+                }).error(function (data, code) {
+                    return reject(data.error || 'An error occurred with status code ' + code);
+                });
+            });
+        }
+
+        function getGroup(group) {
+            return new Promise(function (resolve, reject) {
+                $http.get('http://127.0.0.1:28800/api/settings/' + group).success(function (data) {
+                    return resolve(data);
+                }).error(function (data, code) {
+                    return reject(data.error || 'An error occurred with status code ' + code);
+                });
+            });
+        }
+
+        function getAll() {
+            return new Promise(function (resolve, reject) {
+                $http.get('http://127.0.0.1:28800/api/settings').success(function (data) {
+                    return resolve(data);
+                }).error(function (data, code) {
+                    return reject(data.error || 'An error occurred with status code ' + code);
+                });
+            });
+        }
+
+        function setAll(settings) {
+            return new Promise(function (resolve, reject) {
+                $http.post('http://127.0.0.1:28800/api/settings', settings).success(function () {
+                    return resolve();
+                }).error(function (data, code) {
+                    return reject(data.error || 'An error occurred with status code ' + code);
+                });
+            });
+        }
+    }]);
 })();

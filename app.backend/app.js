@@ -25,7 +25,7 @@
     let nwNotify = require('nw-notify');
 
     // Include our services module
-    global.services = require(path.join(process.cwd(), 'app.backend', 'services'));
+    let services = require(path.join(process.cwd(), 'app.backend', 'services'));
 
     // Add the applications storage dir to the global namespace
     global.applicationStorageDir = path.join(gui.App.dataPath, 'ApplicationStorage');
@@ -47,17 +47,17 @@
     });
 
     // Load everything up
-    global.services.load()
-        .then(global.services.showSplashScreen)
-        .then(global.services.setupTwitchAPI)
-        .then(global.services.startNotificationQueue)
-        .then(global.services.startDonationChecker)
-        .then(global.services.startMusicChecker)
-        .then(global.services.startStreamChecker)
-        .then(global.services.startSocketIOServer)
-        .then(global.services.setupExpress)
-        .then(global.services.startExpressServer)
-        .then(global.services.loadAngularApp)
+    services.load()
+        .then(services.showSplashScreen)
+        .then(services.setupTwitchAPI)
+        .then(services.startNotificationQueue)
+        .then(services.startDonationChecker)
+        .then(services.startMusicChecker)
+        .then(services.startStreamChecker)
+        .then(services.startSocketIOServer)
+        .then(services.setupExpress)
+        .then(services.startExpressServer)
+        .then(services.loadAngularApp)
         .catch(function (err) {
             console.error(err.message);
             gui.App.quit();

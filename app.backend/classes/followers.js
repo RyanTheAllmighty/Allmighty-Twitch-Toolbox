@@ -19,8 +19,12 @@
 (function () {
     'use strict';
 
+    // NodeJS Modules
     let _ = require('lodash');
     let path = require('path');
+
+    // Include our services module
+    let services = require(path.join(process.cwd(), 'app.backend', 'services'));
 
     let Datastore = require('./datastore');
     let QueueableNotification = require(path.join(process.cwd(), 'app.backend', 'classes', 'queueableNotification'));
@@ -174,7 +178,7 @@
                         return resolve();
                     }
 
-                    global.services.settings.getAll().then(function (settings) {
+                    services.settings.getAll().then(function (settings) {
                         let noti = new QueueableNotification()
                             .title('New Follower!')
                             .message(follower.display_name + ' has just followed!')
@@ -186,7 +190,7 @@
                                 name: 'newFollowerVolume'
                             }), 'value'));
 
-                        global.services.notificationQueue.add(noti);
+                        services.notificationQueue.add(noti);
 
                         return resolve();
                     }).catch(reject);
@@ -213,7 +217,7 @@
                     }
 
                     // Send a broadcast to listening socket clients
-                    global.services.socketIOEmit('followers');
+                    services.socketIOEmit('followers');
 
                     return resolve();
                 }

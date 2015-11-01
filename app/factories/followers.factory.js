@@ -19,9 +19,46 @@
 (function () {
     'use strict';
 
+    let _ = require('lodash');
+
     angular.module('followers', []);
 
-    angular.module('followers').factory('Followers', function () {
-        return global.services.followers;
-    });
+    angular.module('followers').factory('Followers', ['$http', function ($http) {
+        return {
+            getFollows,
+            getFollowers
+        };
+
+        function getFollows(options) {
+            return new Promise(function (resolve, reject) {
+                let urlOpts = '?';
+
+                _.forEach(options, function (value, key) {
+                    urlOpts += key + '=' + value + '&';
+                });
+
+                $http.get('http://127.0.0.1:28800/api/followers' + urlOpts).success(function (data) {
+                    return resolve(data);
+                }).error(function (data, code) {
+                    return reject(data.error || 'An error occurred with status code ' + code);
+                });
+            });
+        }
+
+        function getFollowers(options) {
+            return new Promise(function (resolve, reject) {
+                let urlOpts = '?';
+
+                _.forEach(options, function (value, key) {
+                    urlOpts += key + '=' + value + '&';
+                });
+
+                $http.get('http://127.0.0.1:28800/api/followers' + urlOpts).success(function (data) {
+                    return resolve(data.followers);
+                }).error(function (data, code) {
+                    return reject(data.error || 'An error occurred with status code ' + code);
+                });
+            });
+        }
+    }]);
 })();

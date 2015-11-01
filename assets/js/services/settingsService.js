@@ -42,9 +42,7 @@ let defaultSettings = {
         stream: 10
     },
     network: {
-        foobarHttpControlPort: 8888,
-        socketIOPort: 4000,
-        webPort: 5000
+        foobarHttpControlPort: 8888
     },
     sounds: {
         newDonation: '',

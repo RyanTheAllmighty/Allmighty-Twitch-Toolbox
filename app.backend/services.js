@@ -136,45 +136,43 @@
             return module.exports.followerChecker.startChecking();
         },
         startDonationChecker: function () {
-            return new Promise(function (resolve, reject) {
+            return new Promise(function (resolve) {
                 return resolve();
             });
         },
         startMusicChecker: function () {
-            return new Promise(function (resolve, reject) {
+            return new Promise(function (resolve) {
                 return resolve();
             });
         },
         startStreamChecker: function () {
-            return new Promise(function (resolve, reject) {
+            return new Promise(function (resolve) {
                 return resolve();
             });
         },
         startSocketIOServer: function () {
-            return new Promise(function (resolve, reject) {
-                module.exports.settings.get('network', 'socketIOPort').then(function (port) {
-                    // Listen on our socket.io server
-                    module.exports.socketIOApp.listen(port.value);
+            return new Promise(function (resolve) {
+                // Listen on our socket.io server
+                module.exports.socketIOApp.listen(28801);
 
-                    module.exports.io.on('connection', function (socket) {
-                        // This signals to all connected sockets to reload their state (if available) useful
-                        socket.emit('reload-state');
+                module.exports.io.on('connection', function (socket) {
+                    // This signals to all connected sockets to reload their state (if available) useful
+                    socket.emit('reload-state');
 
-                        // Add this socket to the list of active sockets
-                        module.exports.sockets.push(socket);
+                    // Add this socket to the list of active sockets
+                    module.exports.sockets.push(socket);
 
-                        // This makes sure we don't try to send messages on the socket to disconnected clients
-                        socket.on('disconnect', function () {
-                            let index = module.exports.sockets.indexOf(socket);
+                    // This makes sure we don't try to send messages on the socket to disconnected clients
+                    socket.on('disconnect', function () {
+                        let index = module.exports.sockets.indexOf(socket);
 
-                            if (index > -1) {
-                                module.exports.sockets.splice(index, 1);
-                            }
-                        });
+                        if (index > -1) {
+                            module.exports.sockets.splice(index, 1);
+                        }
                     });
+                });
 
-                    return resolve();
-                }, reject);
+                return resolve();
             });
         },
         setupExpress: function () {
@@ -195,26 +193,20 @@
         },
         startExpressServer: function () {
             return new Promise(function (resolve, reject) {
-                module.exports.settings.get('network', 'webPort').then(function (port) {
-                    module.exports.expressApp.listen(port.value, function (err) {
-                        if (err) {
-                            console.error(err);
-                        }
+                module.exports.expressApp.listen(28800, function (err) {
+                    if (err) {
+                        return reject(err);
+                    }
 
-                        window.location = 'http://localhost:' + port.value;
-
-                        return resolve();
-                    });
-                }, reject);
+                    return resolve();
+                });
             });
         },
         loadAngularApp: function () {
-            return new Promise(function (resolve, reject) {
-                module.exports.settings.get('network', 'webPort').then(function (port) {
-                    window.location = 'http://localhost:' + port.value;
+            return new Promise(function (resolve) {
+                window.location = 'http://localhost:' + 28800;
 
-                    return resolve();
-                }, reject);
+                return resolve();
             });
         }
     };

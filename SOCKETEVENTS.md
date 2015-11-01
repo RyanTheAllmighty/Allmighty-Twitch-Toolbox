@@ -4,7 +4,7 @@ This file contains all the socket events that this application can emit.
 **NOTE: This is for advanced users only!**
 
 ## Socket Server
-The socket server for all these events is on http://localhost with the port you've specified in the settings (defaults to 4000).
+The socket server for all these events is on http://localhost:28801.
 
 ## new-follower
 This event is emitted when someone new has followed the stream. It will only trigger if the user hasn't followed in the past before (meaning they aren't on the Followers list).

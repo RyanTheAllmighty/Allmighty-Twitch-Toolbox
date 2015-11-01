@@ -74,38 +74,54 @@
 
     // Load everything before we proceed
     loadingService.load(function () {
-        app.config(function ($locationProvider, $stateProvider, $urlRouterProvider, localStorageServiceProvider, WebServerProvider, NotificationProvider, TwitchProvider, GiantBombProvider, StreamTipProvider, SocketIOProvider, SocketIOServerProvider, StreamCheckerProvider, DonationCheckerProvider, MusicCheckerProvider) {
+        app.config(function ($stateProvider, $urlRouterProvider, localStorageServiceProvider, WebServerProvider, NotificationProvider, TwitchProvider, GiantBombProvider, StreamTipProvider, SocketIOProvider, SocketIOServerProvider, StreamCheckerProvider, DonationCheckerProvider, MusicCheckerProvider) {
             // Setup the routes
             $stateProvider.state('dashboard', {
+                url: '/dashboard',
                 templateUrl: 'app/views/dashboard.html',
-                controller: 'DashboardController as vm'
+                controller: 'DashboardController',
+                controllerAs: 'vm'
             }).state('viewers', {
+                url: '/viewers',
                 templateUrl: 'app/views/viewers.html',
-                controller: 'ViewersController as vm'
+                controller: 'ViewersController',
+                controllerAs: 'vm'
             }).state('followers', {
+                url: '/followers',
                 templateUrl: 'app/views/followers.html',
-                controller: 'FollowersController as vm'
+                controller: 'FollowersController',
+                controllerAs: 'vm'
             }).state('donations', {
+                url: '/donations',
                 templateUrl: 'app/views/donations.html',
-                controller: 'DonationsController as vm'
+                controller: 'DonationsController',
+                controllerAs: 'vm'
             }).state('timers', {
+                url: '/timers',
                 templateUrl: 'app/views/timers.html',
-                controller: 'TimersController as vm'
+                controller: 'TimersController',
+                controllerAs: 'vm'
             }).state('tools', {
+                url: '/tools',
                 templateUrl: 'app/views/tools.html',
-                controller: 'ToolsController as vm'
+                controller: 'ToolsController',
+                controllerAs: 'vm'
             }).state('test', {
+                url: '/test',
                 templateUrl: 'app/views/test.html',
-                controller: 'TestController as vm'
+                controller: 'TestController',
+                controllerAs: 'vm'
             }).state('settings', {
+                url: '/settings',
                 templateUrl: 'app/views/settings.html',
-                controller: 'SettingsController as vm'
+                controller: 'SettingsController',
+                controllerAs: 'vm'
             }).state('help', {
+                url: '/help',
                 templateUrl: 'app/views/help.html',
-                controller: 'HelpController as vm'
+                controller: 'HelpController',
+                controllerAs: 'vm'
             });
-
-            //$locationProvider.html5Mode(true);
 
             localStorageServiceProvider.setPrefix('AllmightyTwitchToolbox');
 
