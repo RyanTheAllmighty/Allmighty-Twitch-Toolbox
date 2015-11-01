@@ -29,11 +29,13 @@
     let gui = global.window.nwDispatcher.requireNwGui();
 
     // Our Classes
+    let Settings = require('./classes/settings');
     let Donations = require('./classes/donations');
     let Followers = require('./classes/followers');
-    let Settings = require('./classes/settings');
-    let NotificationQueue = require('./classes/notificationQueue');
+    let StreamTipAPI = require('./classes/streamTipAPI');
     let FollowerChecker = require('./checkers/followerChecker');
+    let DonationChecker = require('./checkers/donationChecker');
+    let NotificationQueue = require('./classes/notificationQueue');
 
     module.exports = {
         donations: null,
@@ -49,6 +51,7 @@
         musicChecker: null,
         streamChecker: null,
         twitchAPI: null,
+        streamTipAPI: null,
         socketIOEmit: function (name, message) {
             return new Promise(function (resolve, reject) {
                 if (_.isUndefined(message)) {
@@ -79,6 +82,7 @@
 
                 module.exports.notificationQueue = new NotificationQueue();
                 module.exports.followerChecker = new FollowerChecker();
+                module.exports.donationChecker = new DonationChecker();
 
                 module.exports.socketIOApp = require('http').createServer();
                 module.exports.io = require('socket.io')(module.exports.socketIOApp);
@@ -104,6 +108,7 @@
                 // Once the splash screen has loaded then we show the window. This prevents the window from showing a blank white window as it loads
                 global.splashScreen.on('loaded', function () {
                     global.splashScreen.show();
+                    global.splashScreen.showDevTools();
                 });
 
                 // When the splash screen is closed, remove it from global
@@ -126,6 +131,18 @@
                 }).catch(reject);
             });
         },
+        setupStreamTipAPI: function () {
+            return new Promise(function (resolve, reject) {
+                module.exports.settings.getGroup('streamtip').then(function (settings) {
+                    module.exports.streamTipAPI = new StreamTipAPI({
+                        clientId: _.result(_.findWhere(settings, {name: 'clientID'}), 'value'),
+                        accessToken: _.result(_.findWhere(settings, {name: 'accessToken'}), 'value')
+                    });
+
+                    return resolve();
+                }).catch(reject);
+            });
+        },
         startNotificationQueue: function () {
             return module.exports.notificationQueue.startQueue();
         },
@@ -133,9 +150,7 @@
             return module.exports.followerChecker.startChecking();
         },
         startDonationChecker: function () {
-            return new Promise(function (resolve) {
-                return resolve();
-            });
+            return module.exports.donationChecker.startChecking();
         },
         startMusicChecker: function () {
             return new Promise(function (resolve) {

@@ -23,9 +23,6 @@
     let _ = require('lodash');
     let path = require('path');
 
-    // Include our services module
-    let services = require(path.join(process.cwd(), 'app.backend', 'services'));
-
     let Datastore = require('./datastore');
     let QueueableNotification = require(path.join(process.cwd(), 'app.backend', 'classes', 'queueableNotification'));
 
@@ -178,7 +175,7 @@
                         return resolve();
                     }
 
-                    services.settings.getAll().then(function (settings) {
+                    global.services.settings.getAll().then(function (settings) {
                         let noti = new QueueableNotification()
                             .title('New Follower!')
                             .message(follower.display_name + ' has just followed!')
@@ -190,7 +187,7 @@
                                 name: 'newFollowerVolume'
                             }), 'value'));
 
-                        services.notificationQueue.add(noti);
+                        global.services.notificationQueue.add(noti);
 
                         return resolve();
                     }).catch(reject);
@@ -217,7 +214,7 @@
                     }
 
                     // Send a broadcast to listening socket clients
-                    services.socketIOEmit('followers');
+                    global.services.socketIOEmit('followers');
 
                     return resolve();
                 }

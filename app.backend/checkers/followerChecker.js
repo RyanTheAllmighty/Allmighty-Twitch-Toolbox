@@ -21,7 +21,6 @@
 
     // NodeJS Modules
     let _ = require('lodash');
-    let path = require('path');
     let async = require('async');
 
     let objectSymbol = Symbol();
@@ -99,7 +98,6 @@
                         },
                         function (err) {
                             if (err) {
-                                console.error(err);
                                 self[objectSymbol].doingInitialCheck = false;
 
                                 return reject(err);
@@ -157,7 +155,7 @@
 
                         return resolve();
                     }).catch(reject);
-                });
+                }).catch(reject);
             });
         }
 
@@ -166,7 +164,7 @@
 
             return new Promise(function (resolve, reject) {
                 if (!self.interval) {
-                    return reject(new Error('Queue not started!'));
+                    return reject(new Error('Follower Checker not started!'));
                 }
 
                 clearInterval(self.interval);

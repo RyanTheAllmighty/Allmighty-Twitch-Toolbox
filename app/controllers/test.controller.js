@@ -34,8 +34,11 @@
 
                 $scope.clearDonation();
 
-                Donations.newDonation({username, amount, note: 'Test', id: 1, date: new Date(), test: true});
-                Notification.success({message: 'New donation triggered!', delay: 3000});
+                Donations.newDonation({username, amount, note: 'Test', id: 1, date: new Date(), test: true}).then(function () {
+                    Notification.success({message: 'New donation triggered!', delay: 3000});
+                }).catch(function (err) {
+                    Notification.error({message: err.message, delay: 3000});
+                });
             }
         };
 

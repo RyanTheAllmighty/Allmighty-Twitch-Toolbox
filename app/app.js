@@ -52,7 +52,6 @@
         'streamtip',
         'socket-io',
         'socket-io-server',
-        'donation-checker',
         'music-checker',
         'datatables',
         'datatables.bootstrap',
@@ -74,7 +73,7 @@
 
     // Load everything before we proceed
     loadingService.load(function () {
-        app.config(function ($stateProvider, $urlRouterProvider, localStorageServiceProvider, WebServerProvider, NotificationProvider, TwitchProvider, GiantBombProvider, StreamTipProvider, SocketIOProvider, SocketIOServerProvider, StreamCheckerProvider, DonationCheckerProvider, MusicCheckerProvider) {
+        app.config(function ($stateProvider, $urlRouterProvider, localStorageServiceProvider, WebServerProvider, NotificationProvider, TwitchProvider, GiantBombProvider, StreamTipProvider, SocketIOProvider, SocketIOServerProvider, StreamCheckerProvider, MusicCheckerProvider) {
             // Setup the routes
             $stateProvider.state('dashboard', {
                 url: '/dashboard',
@@ -177,11 +176,6 @@
                 interval: global.App.settings.checks.stream
             });
 
-            // Setup the donation checker
-            DonationCheckerProvider.setOptions({
-                interval: global.App.settings.checks.donations
-            });
-
             MusicCheckerProvider.setOptions({
                 nowPlayingPath: path.join(global.App.settings.directories.data, 'NowPlayingPath.txt'),
                 ffmpegPath: path.join(global.App.settings.directories.binary, 'ffmpeg.exe'),
@@ -213,15 +207,11 @@
             }
         }]);
 
-        app.run(['$state', 'SocketIOServer', 'DonationChecker', 'StreamChecker', 'MusicChecker', 'WebServer', 'NotificationQueue', function ($state, SocketIOServer, DonationChecker, StreamChecker, MusicChecker, WebServer, NotificationQueue) {
+        app.run(['$state', 'SocketIOServer', 'StreamChecker', 'MusicChecker', 'WebServer', 'NotificationQueue', function ($state, SocketIOServer, StreamChecker, MusicChecker, WebServer, NotificationQueue) {
             async.parallel([
                 function (next) {
                     // Start the socket IO server
                     SocketIOServer.startServer(next);
-                },
-                function (next) {
-                    // Start checking for new donations
-                    DonationChecker.startChecking(next);
                 },
                 function (next) {
                     // Start checking for stream stuffs
@@ -248,7 +238,7 @@
                 global.splashScreen.close();
 
                 // Go to the dashboard
-                $state.go('dashboard')
+                $state.go('dashboard');
 
                 // Show the window
                 gui.Window.get().show();

@@ -25,9 +25,6 @@
     let async = require('async');
     let nwNotify = require('nw-notify');
 
-    // Include our services module
-    let services = require(path.join(process.cwd(), 'app.backend', 'services'));
-
     class QueueableNotification {
         constructor() {
             this.data = {};
@@ -165,11 +162,11 @@
                 _.forEach(this.data.socketIO, function (data, key) {
                     if (data) {
                         toDo.push(function (next) {
-                            services.socketIOEmit(key, data).then(next).catch(next);
+                            global.services.socketIOEmit(key, data).then(next).catch(next);
                         });
                     } else {
                         toDo.push(function (next) {
-                            services.socketIOEmit(key).then(next).catch(next);
+                            global.services.socketIOEmit(key).then(next).catch(next);
                         });
                     }
                 });

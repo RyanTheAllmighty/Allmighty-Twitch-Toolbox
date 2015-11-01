@@ -71,15 +71,13 @@
 
         // Donations list updated
         $scope.$on('donations', function () {
-            Donations.getDonationTotal(function (err, total) {
-                if (err) {
-                    return console.error(err);
-                }
-
+            Donations.getTotal().then(function (total) {
                 $timeout(function () {
                     $scope.donationsTotal = total;
                     $scope.$apply();
                 });
+            }).catch(function (err) {
+                console.error(err);
             });
         });
 
@@ -140,15 +138,10 @@
         function updateStats() {
             async.parallel([
                 function (next) {
-                    Donations.getDonationTotal(function (err, total) {
-                        if (err) {
-                            return next(err);
-                        }
-
-
+                    Donations.getTotal().then(function (total) {
                         $scope.donationsTotal = total;
                         next();
-                    });
+                    }).catch(next);
                 },
                 function (next) {
                     Stream.getLastStatus(function (err, status) {

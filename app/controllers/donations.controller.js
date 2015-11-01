@@ -21,7 +21,7 @@
 
     angular.module('AllmightyTwitchToolbox').controller('DonationsController', ['$scope', 'Donations', 'DTOptionsBuilder', 'DTColumnBuilder', function ($scope, Donations, DTOptionsBuilder, DTColumnBuilder) {
         let getDonations = function () {
-            return Donations.getDonationsPromise();
+            return Donations.getDonations({limit: 100, order: 'desc'});
         };
 
         // The instance of the dataTable
