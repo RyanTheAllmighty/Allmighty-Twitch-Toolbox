@@ -20,26 +20,26 @@ html(ng-app='AllmightyTwitchToolbox')
                 .collapse.navbar-collapse
                     ul.nav.navbar-nav
                         li(ng-class="{active: $location.path() === '/dashboard'}")
-                            a(href='#/dashboard') Dashboard
+                            a(ui-sref='dashboard') Dashboard
                         li(ng-class="{active: $location.path() === '/viewers'}")
-                            a(href='#/viewers') Viewers
+                            a(ui-sref='viewers') Viewers
                         li(ng-class="{active: $location.path() === '/followers'}")
-                            a(href='#/followers') Followers
+                            a(ui-sref='followers') Followers
                         li(ng-class="{active: $location.path() === '/donations'}")
-                            a(href='#/donations') Donations
+                            a(ui-sref='donations') Donations
                         li(ng-class="{active: $location.path() === '/timers'}")
-                            a(href='#/timers') Timers
+                            a(ui-sref='timers') Timers
                         li(ng-class="{active: $location.path() === '/tools'}")
-                            a(href='#/tools') Tools
+                            a(ui-sref='tools') Tools
                         li(ng-class="{active: $location.path() === '/test'}")
-                            a(href='#/test') Test
+                            a(ui-sref='test') Test
                         li(ng-class="{active: $location.path() === '/settings'}")
-                            a(href='#/settings') Settings
+                            a(ui-sref='settings') Settings
                         li(ng-class="{active: $location.path() === '/help'}")
-                            a(href='#/help') Help
+                            a(ui-sref='help') Help
 
         // The container which holds everything and is loaded through Angular
-        .container(ng-view='')
+        .container(ui-view='')
 
         // jQuery & Plugins
         script(type='text/javascript', src='assets/js/libs/jquery-2.1.4.min.js')
@@ -72,7 +72,7 @@ html(ng-app='AllmightyTwitchToolbox')
 
         // Angular & Plugins
         script(type='text/javascript', src='assets/js/libs/angular-1.4.7.min.js')
-        script(type='text/javascript', src='assets/js/libs/angular-route-1.4.7.min.js')
+        script(type='text/javascript', src='assets/js/libs/angular-ui-router-0.2.15.min.js')
         script(type='text/javascript', src='assets/js/libs/angular-sanitize-1.4.7.min.js')
         script(type='text/javascript', src='assets/js/libs/angular-ui-notification-0.0.14.min.js')
         script(type='text/javascript', src='assets/js/libs/angular-ui-bootstrap-0.14.2.min.js')

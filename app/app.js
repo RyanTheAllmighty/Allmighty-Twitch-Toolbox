@@ -44,10 +44,10 @@
     };
 
     let app = angular.module('AllmightyTwitchToolbox', [
-        'ngRoute',
         'ngSanitize',
         'ui-notification',
         'ui.bootstrap',
+        'ui.router',
         'twitch',
         'streamtip',
         'socket-io',
@@ -74,36 +74,38 @@
 
     // Load everything before we proceed
     loadingService.load(function () {
-        app.config(function ($routeProvider, localStorageServiceProvider, WebServerProvider, NotificationProvider, TwitchProvider, GiantBombProvider, StreamTipProvider, SocketIOProvider, SocketIOServerProvider, StreamCheckerProvider, DonationCheckerProvider, MusicCheckerProvider) {
+        app.config(function ($locationProvider, $stateProvider, $urlRouterProvider, localStorageServiceProvider, WebServerProvider, NotificationProvider, TwitchProvider, GiantBombProvider, StreamTipProvider, SocketIOProvider, SocketIOServerProvider, StreamCheckerProvider, DonationCheckerProvider, MusicCheckerProvider) {
             // Setup the routes
-            $routeProvider.when('/dashboard', {
+            $stateProvider.state('dashboard', {
                 templateUrl: 'app/views/dashboard.html',
-                controller: 'DashboardController'
-            }).when('/viewers', {
+                controller: 'DashboardController as vm'
+            }).state('viewers', {
                 templateUrl: 'app/views/viewers.html',
-                controller: 'ViewersController'
-            }).when('/followers', {
+                controller: 'ViewersController as vm'
+            }).state('followers', {
                 templateUrl: 'app/views/followers.html',
-                controller: 'FollowersController'
-            }).when('/donations', {
+                controller: 'FollowersController as vm'
+            }).state('donations', {
                 templateUrl: 'app/views/donations.html',
-                controller: 'DonationsController'
-            }).when('/timers', {
+                controller: 'DonationsController as vm'
+            }).state('timers', {
                 templateUrl: 'app/views/timers.html',
-                controller: 'TimersController'
-            }).when('/tools', {
+                controller: 'TimersController as vm'
+            }).state('tools', {
                 templateUrl: 'app/views/tools.html',
-                controller: 'ToolsController'
-            }).when('/test', {
+                controller: 'ToolsController as vm'
+            }).state('test', {
                 templateUrl: 'app/views/test.html',
-                controller: 'TestController'
-            }).when('/settings', {
+                controller: 'TestController as vm'
+            }).state('settings', {
                 templateUrl: 'app/views/settings.html',
-                controller: 'SettingsController'
-            }).when('/help', {
+                controller: 'SettingsController as vm'
+            }).state('help', {
                 templateUrl: 'app/views/help.html',
-                controller: 'HelpController'
+                controller: 'HelpController as vm'
             });
+
+            //$locationProvider.html5Mode(true);
 
             localStorageServiceProvider.setPrefix('AllmightyTwitchToolbox');
 
@@ -195,7 +197,7 @@
             }
         }]);
 
-        app.run(['$location', 'SocketIOServer', 'DonationChecker', 'StreamChecker', 'MusicChecker', 'WebServer', 'NotificationQueue', function ($location, SocketIOServer, DonationChecker, StreamChecker, MusicChecker, WebServer, NotificationQueue) {
+        app.run(['$state', 'SocketIOServer', 'DonationChecker', 'StreamChecker', 'MusicChecker', 'WebServer', 'NotificationQueue', function ($state, SocketIOServer, DonationChecker, StreamChecker, MusicChecker, WebServer, NotificationQueue) {
             async.parallel([
                 function (next) {
                     // Start the socket IO server
@@ -230,7 +232,7 @@
                 global.splashScreen.close();
 
                 // Go to the dashboard
-                $location.url('/dashboard');
+                $state.go('dashboard')
 
                 // Show the window
                 gui.Window.get().show();
