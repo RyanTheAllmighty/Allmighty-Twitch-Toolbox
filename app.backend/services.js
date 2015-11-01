@@ -29,10 +29,13 @@
     let gui = global.window.nwDispatcher.requireNwGui();
 
     // Our Classes
+    let Stream = require('./classes/stream');
+    let Viewers = require('./classes/viewers');
     let Settings = require('./classes/settings');
     let Donations = require('./classes/donations');
     let Followers = require('./classes/followers');
     let StreamTipAPI = require('./classes/streamTipAPI');
+    let StreamChecker = require('./checkers/streamChecker');
     let FollowerChecker = require('./checkers/followerChecker');
     let DonationChecker = require('./checkers/donationChecker');
     let NotificationQueue = require('./classes/notificationQueue');
@@ -41,6 +44,8 @@
         donations: null,
         followers: null,
         settings: null,
+        stream: null,
+        viewers: null,
         expressApp: null,
         socketIOApp: null,
         io: null,
@@ -79,10 +84,14 @@
                 module.exports.donations = new Donations({autoload: true});
                 module.exports.followers = new Followers({autoload: true});
                 module.exports.settings = new Settings({autoload: true});
+                module.exports.stream = new Stream({autoload: true});
+                module.exports.viewers = new Viewers({autoload: true});
 
                 module.exports.notificationQueue = new NotificationQueue();
+
                 module.exports.followerChecker = new FollowerChecker();
                 module.exports.donationChecker = new DonationChecker();
+                module.exports.streamChecker = new StreamChecker();
 
                 module.exports.socketIOApp = require('http').createServer();
                 module.exports.io = require('socket.io')(module.exports.socketIOApp);
@@ -147,22 +156,25 @@
             return module.exports.notificationQueue.startQueue();
         },
         startFollowerChecker: function () {
+            console.log(1);
             return module.exports.followerChecker.startChecking();
         },
         startDonationChecker: function () {
+            console.log(2);
             return module.exports.donationChecker.startChecking();
         },
         startMusicChecker: function () {
+            console.log(3);
             return new Promise(function (resolve) {
                 return resolve();
             });
         },
         startStreamChecker: function () {
-            return new Promise(function (resolve) {
-                return resolve();
-            });
+            console.log(4);
+            return module.exports.streamChecker.startChecking();
         },
         startSocketIOServer: function () {
+            console.log(5);
             return new Promise(function (resolve) {
                 // Listen on our socket.io server
                 module.exports.socketIOApp.listen(28801);

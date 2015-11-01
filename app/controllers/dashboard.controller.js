@@ -38,7 +38,7 @@
         $scope.title = '';
 
         // Followers count changed
-        $scope.$on('followers-count-changed', function (event, number) {
+        $scope.$on('follower-count-changed', function (event, number) {
             $timeout(function () {
                 $scope.followersCount = number;
                 $scope.$apply();
@@ -46,7 +46,7 @@
         });
 
         // Views count changed
-        $scope.$on('views-count-changed', function (event, number) {
+        $scope.$on('view-count-changed', function (event, number) {
             $timeout(function () {
                 $scope.viewsCount = number;
                 $scope.$apply();

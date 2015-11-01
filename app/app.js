@@ -48,8 +48,6 @@
         'ui-notification',
         'ui.bootstrap',
         'ui.router',
-        'twitch',
-        'streamtip',
         'socket-io',
         'socket-io-server',
         'music-checker',
@@ -66,14 +64,13 @@
         'viewers',
         'nvd3',
         'stream',
-        'stream-checker',
         'giantbomb',
         'settings'
     ]);
 
     // Load everything before we proceed
     loadingService.load(function () {
-        app.config(function ($stateProvider, $urlRouterProvider, localStorageServiceProvider, WebServerProvider, NotificationProvider, TwitchProvider, GiantBombProvider, StreamTipProvider, SocketIOProvider, SocketIOServerProvider, StreamCheckerProvider, MusicCheckerProvider) {
+        app.config(function ($stateProvider, $urlRouterProvider, localStorageServiceProvider, WebServerProvider, NotificationProvider, GiantBombProvider, SocketIOProvider, SocketIOServerProvider, MusicCheckerProvider) {
             // Setup the routes
             $stateProvider.state('dashboard', {
                 url: '/dashboard',
@@ -144,21 +141,9 @@
                 positionY: 'top'
             });
 
-            // Setup the TwitchProvider
-            TwitchProvider.setOptions({
-                accessToken: global.App.settings.twitch.apiToken,
-                clientID: global.App.settings.twitch.apiClientID
-            });
-
             // Setup the GiantBombProvider
             GiantBombProvider.setOptions({
                 apiKey: global.App.settings.giantbomb.apiKey
-            });
-
-            // Setup the StreamTipProvider
-            StreamTipProvider.setOptions({
-                clientId: global.App.settings.streamtip.clientID,
-                accessToken: global.App.settings.streamtip.accessToken
             });
 
             // Setup the SocketIOServerProvider
@@ -169,11 +154,6 @@
             // Setup the SocketIOProvider
             SocketIOProvider.setOptions({
                 socketPort: global.App.settings.network.socketIOPort
-            });
-
-            // Setup the stream checker
-            StreamCheckerProvider.setOptions({
-                interval: global.App.settings.checks.stream
             });
 
             MusicCheckerProvider.setOptions({
@@ -207,15 +187,11 @@
             }
         }]);
 
-        app.run(['$state', 'SocketIOServer', 'StreamChecker', 'MusicChecker', 'WebServer', 'NotificationQueue', function ($state, SocketIOServer, StreamChecker, MusicChecker, WebServer, NotificationQueue) {
+        app.run(['$state', 'SocketIOServer', 'MusicChecker', 'WebServer', 'NotificationQueue', function ($state, SocketIOServer, MusicChecker, WebServer, NotificationQueue) {
             async.parallel([
                 function (next) {
                     // Start the socket IO server
                     SocketIOServer.startServer(next);
-                },
-                function (next) {
-                    // Start checking for stream stuffs
-                    StreamChecker.startChecking(next);
                 },
                 function (next) {
                     // Start the web server
