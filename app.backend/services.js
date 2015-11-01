@@ -156,25 +156,20 @@
             return module.exports.notificationQueue.startQueue();
         },
         startFollowerChecker: function () {
-            console.log(1);
             return module.exports.followerChecker.startChecking();
         },
         startDonationChecker: function () {
-            console.log(2);
             return module.exports.donationChecker.startChecking();
         },
         startMusicChecker: function () {
-            console.log(3);
             return new Promise(function (resolve) {
                 return resolve();
             });
         },
         startStreamChecker: function () {
-            console.log(4);
             return module.exports.streamChecker.startChecking();
         },
         startSocketIOServer: function () {
-            console.log(5);
             return new Promise(function (resolve) {
                 // Listen on our socket.io server
                 module.exports.socketIOApp.listen(28801);

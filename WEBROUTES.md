@@ -145,7 +145,9 @@ This route gets the status details about the stream. It returns the following:
 This route sets the channels current game. Sent data should be in JSON format via POST as follows:
                                            
 ```js
-"Game Name"
+{
+    game: "Minecraft: Story Mode"
+}
 ```
 
 If successful a success message will be sent back in the response as per below, else an error will be returned:
@@ -160,7 +162,9 @@ If successful a success message will be sent back in the response as per below, 
 This route sets the channels current title. Sent data should be in JSON format via POST as follows:
                                            
 ```js
-"My Title"
+{
+    title: "Watch me play games and stuff!"
+}
 ```
 
 If successful a success message will be sent back in the response as per below, else an error will be returned:

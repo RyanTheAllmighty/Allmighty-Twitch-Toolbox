@@ -136,7 +136,7 @@
     });
 
     router.post('/stream/game', function (req, res) {
-        services.stream.setGame(req.body).then(function () {
+        services.stream.setGame(req.body.game).then(function () {
             res.json({
                 success: true
             });
@@ -146,7 +146,7 @@
     });
 
     router.post('/stream/title', function (req, res) {
-        services.stream.setTitle(req.body).then(function () {
+        services.stream.setTitle(req.body.title).then(function () {
             res.json({
                 success: true
             });
