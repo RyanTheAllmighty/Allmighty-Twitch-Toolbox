@@ -141,6 +141,29 @@ This route gets all the settings for the application. It returns an array of val
 ]
 ```
 
+### POST /api/settings
+This route sets the settings for the application. Sent data should be in JSON format via POST as follows:
+
+```js
+{
+    "notifications": {
+        "followerNotificationTime": 10,
+        "donationNotificationTime": 10,
+        "musicChangeNotificationTime": 5
+    }
+}
+```
+
+The values for the settings are just objects with the group being the name of the object and the properties being the names and values of the settings.
+
+If successful a success message will be sent back in the response as per below, else an error will be returned:
+
+```js
+{
+    "success": true
+}
+```
+
 ### GET /api/settings/:group
 This route gets all the settings for the application within the group specified. It returns an array of values as per below:
 

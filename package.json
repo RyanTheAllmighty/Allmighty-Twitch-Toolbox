@@ -31,6 +31,7 @@
     "archiver": "^0.14.3",
     "async": "^1.4.2",
     "autolinker": "^0.18.1",
+    "body-parser": "^1.14.1",
     "del": "^2.0.2",
     "express": "^4.13.3",
     "ffmetadata": "git://github.com/RyanTheAllmighty/node-ffmetadata.git",

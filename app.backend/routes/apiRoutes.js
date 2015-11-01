@@ -37,6 +37,16 @@
         });
     });
 
+    router.post('/settings', function (req, res) {
+        services.settings.setAll(req.body).then(function () {
+            res.json({
+                success: true
+            });
+        }, function (err) {
+            res.status(500).send({error: err.message});
+        });
+    });
+
     router.get('/settings/:group', function (req, res) {
         services.settings.getGroup(req.params.group).then(function (settings) {
             res.json(settings);

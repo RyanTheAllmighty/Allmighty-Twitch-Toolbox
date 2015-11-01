@@ -25,6 +25,7 @@
     let async = require('async');
     let express = require('express');
     let TwitchAPI = require('twitch-api');
+    let bodyParser = require('body-parser');
     let gui = global.window.nwDispatcher.requireNwGui();
 
     // Our Classes
@@ -182,6 +183,8 @@
 
                 module.exports.expressApp.set('views', process.cwd());
                 module.exports.expressApp.set('view engine', 'jade');
+
+                module.exports.expressApp.use(bodyParser.json());
 
                 module.exports.expressApp.use('/', require(path.join(process.cwd(), 'app.backend', 'routes', 'appRoutes')));
                 module.exports.expressApp.use('/api', require(path.join(process.cwd(), 'app.backend', 'routes', 'apiRoutes')));
