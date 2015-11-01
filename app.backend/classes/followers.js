@@ -133,10 +133,10 @@
             }
 
             return new Promise(function (resolve, reject) {
-                this.getFollower(follower).then(function (theFollow) {
+                self.getFollower(follower).then(function (theFollow) {
                     if (_.isEqual(follower, theFollow)) {
                         // Not new or different
-                        return reject(options.errorOnNonNew ? new Error('Non new follower') : null);
+                        return reject(options ? options.errorOnNonNew ? new Error('Non new follower') : null : null);
                     } else {
                         // The follower has different information in our DB than what Twitch says (refollow, username change) so update that
                         self.updateFollower(follower).then(function () {

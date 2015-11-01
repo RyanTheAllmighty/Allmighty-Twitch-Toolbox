@@ -24,9 +24,6 @@
     let path = require('path');
     let async = require('async');
 
-    // Include our services module
-    let services = require(path.join(process.cwd(), 'app.backend', 'services'));
-
     let objectSymbol = Symbol();
 
     class FollowerChecker {
@@ -46,23 +43,18 @@
         }
 
         doInitialCheck() {
-            console.log(2);
             let self = this;
 
             this[objectSymbol].doingInitialCheck = true;
 
             return new Promise(function (resolve, reject) {
-                console.log(3);
                 let offset = 0;
                 let added = 0;
 
-                console.log(4);
-                services.settings.get('twitch', 'username').then(function (username) {
-                    console.log(4);
+                global.services.settings.get('twitch', 'username').then(function (username) {
                     async.doWhilst(
                         function (cb) {
-                            services.twitchAPI.getChannelFollows(username.value, {limit: 100, offset, direction: 'DESC'}, function (err, followers) {
-                                console.log(5);
+                            global.services.twitchAPI.getChannelFollows(username.value, {limit: 100, offset, direction: 'DESC'}, function (err, followers) {
                                 if (err) {
                                     return cb(err);
                                 }
@@ -70,19 +62,19 @@
                                 added = 0;
 
                                 async.each(followers.follows, function (follow, next) {
-                                    services.followers.process({
+                                    global.services.followers.process({
                                         date: new Date(follow.created_at),
                                         id: follow.user._id,
                                         username: follow.user.name,
                                         display_name: follow.user.display_name
                                     }, {noNotification: true, errorOnNonNew: true}).then(function () {
+                                        added++;
+
                                         next();
                                     }).catch(function (err) {
                                         if (err && err.message !== 'Non new follower') {
-                                            next(err);
+                                            return next(err);
                                         }
-
-                                        added++;
 
                                         next();
                                     });
@@ -106,8 +98,8 @@
                             return added !== 0;
                         },
                         function (err) {
-                            console.log(6);
                             if (err) {
+                                console.error(err);
                                 self[objectSymbol].doingInitialCheck = false;
 
                                 return reject(err);
@@ -134,13 +126,11 @@
                     return reject(new Error('Follower Checker already started!'));
                 }
 
-                console.log(1);
                 self.doInitialCheck().then(function () {
-                    console.log(7);
-                    services.settings.getAll().then(function (settings) {
+                    global.services.settings.getAll().then(function (settings) {
                         // Save this interval so we can cancel it if we get another one later
                         self[objectSymbol].interval = setInterval(function () {
-                            services.twitchAPI.getChannelFollows(_.result(_.findWhere(settings, {group: 'twitch', name: 'username'}), 'value'), {
+                            global.services.twitchAPI.getChannelFollows(_.result(_.findWhere(settings, {group: 'twitch', name: 'username'}), 'value'), {
                                 limit: 25,
                                 direction: 'DESC'
                             }, function (err, followers) {
@@ -149,7 +139,7 @@
                                 }
 
                                 async.each(followers.follows, function (follow, next) {
-                                    services.followers.process({
+                                    global.services.followers.process({
                                         date: new Date(follow.created_at),
                                         id: follow.user._id,
                                         username: follow.user.name,
@@ -164,7 +154,9 @@
                                 });
                             });
                         }, _.result(_.findWhere(settings, {group: 'checks', name: 'followers'}), 'value') * 1000);
-                    });
+
+                        return resolve();
+                    }).catch(reject);
                 });
             });
         }

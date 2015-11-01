@@ -35,8 +35,6 @@
     let NotificationQueue = require('./classes/notificationQueue');
     let FollowerChecker = require('./checkers/followerChecker');
 
-    console.log(process.env.BROWSER);
-
     module.exports = {
         donations: null,
         followers: null,
@@ -74,10 +72,13 @@
             });
         },
         load: function () {
-            return new Promise(function (resolve, reject) {
+            return new Promise(function (resolve) {
                 module.exports.donations = new Donations({autoload: true});
                 module.exports.followers = new Followers({autoload: true});
                 module.exports.settings = new Settings({autoload: true});
+
+                module.exports.notificationQueue = new NotificationQueue();
+                module.exports.followerChecker = new FollowerChecker();
 
                 module.exports.socketIOApp = require('http').createServer();
                 module.exports.io = require('socket.io')(module.exports.socketIOApp);
@@ -126,13 +127,9 @@
             });
         },
         startNotificationQueue: function () {
-            module.exports.notificationQueue = new NotificationQueue();
-
             return module.exports.notificationQueue.startQueue();
         },
         startFollowerChecker: function () {
-            module.exports.followerChecker = new FollowerChecker();
-
             return module.exports.followerChecker.startChecking();
         },
         startDonationChecker: function () {
@@ -210,5 +207,4 @@
             });
         }
     };
-    console.log(module.exports.donations);
 })();

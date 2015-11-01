@@ -3,6 +3,13 @@
     <head>
     </head>
     <body>
-        <script type="text/javascript" src="app.backend/app.js"></script>
+        <script type="text/javascript">
+            (function () {
+                'use strict';
+
+                // This will run our app. We need to do this otherwise we have mixed scopes. This forces the application to run in the NodeJS scope and not the browser.
+                require(require('path').join(process.cwd(), 'app.backend', 'app'));
+            })();
+        </script>
     </body>
 </html>

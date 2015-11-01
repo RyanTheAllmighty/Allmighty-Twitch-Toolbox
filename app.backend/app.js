@@ -21,11 +21,12 @@
 
     // NodeJS Modules
     let path = require('path');
-    let gui = require('nw.gui');
+    let gui = global.window.nwDispatcher.requireNwGui();
     let nwNotify = require('nw-notify');
 
     // Include our services module
     let services = require(path.join(process.cwd(), 'app.backend', 'services'));
+    global.services = services;
 
     // Add the applications storage dir to the global namespace
     global.applicationStorageDir = path.join(gui.App.dataPath, 'ApplicationStorage');
@@ -50,6 +51,7 @@
     services.load()
         .then(services.showSplashScreen)
         .then(services.setupTwitchAPI)
+        .then(services.startFollowerChecker)
         .then(services.startNotificationQueue)
         .then(services.startDonationChecker)
         .then(services.startMusicChecker)
