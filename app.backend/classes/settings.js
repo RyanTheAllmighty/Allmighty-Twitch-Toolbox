@@ -20,6 +20,7 @@
     'use strict';
 
     let _ = require('lodash');
+    let async = require('async');
 
     let Datastore = require('./datastore');
 
@@ -97,6 +98,24 @@
 
                     if (numReplaced === 0 && !newDoc) {
                         return reject(new Error('Setting not saved!'));
+                    }
+
+                    return resolve();
+                });
+            });
+        }
+
+        setAll(settings) {
+            let self = this;
+
+            return new Promise(function (resolve, reject) {
+                async.each(Object.keys(settings), function (group, nextMain) {
+                    async.forEachOf(settings[group], function (value, key, next) {
+                        self.datastore.update({group, name: key}, {group, name: key, value}, {upsert: true}, next);
+                    }, nextMain);
+                }, function (err) {
+                    if (err) {
+                        return reject(err);
                     }
 
                     return resolve();

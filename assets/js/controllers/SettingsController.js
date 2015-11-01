@@ -19,14 +19,34 @@
 (function () {
     'use strict';
 
-    let settingsService = require('./assets/js/services/settingsService');
+    let _ = require('lodash');
 
-    angular.module('AllmightyTwitchToolbox').controller('SettingsController', ['$scope', 'Notification', function ($scope, Notification) {
-        $scope.settings = angular.copy($scope.App.settings);
+    angular.module('AllmightyTwitchToolbox').controller('SettingsController', ['$scope', '$timeout', 'Notification', 'Settings', function ($scope, $timeout, Notification, Settings) {
+        $scope.settings = {};
 
         $scope.reset = function () {
-            $scope.settings = angular.copy($scope.App.settings);
+            Settings.getAll().then(function (settings) {
+                $timeout(function () {
+                    _.forEach(settings, function (setting) {
+                        if (!$scope.settings[setting.group]) {
+                            $scope.settings[setting.group] = {};
+                        }
+
+                        if (!$scope.settings[setting.group][setting.name]) {
+                            $scope.settings[setting.group][setting.name] = {};
+                        }
+
+                        $scope.settings[setting.group][setting.name] = setting.value;
+                    });
+
+                    $scope.$apply();
+                });
+            }).catch(function (err) {
+                return Notification.error({message: err.message, delay: 3000});
+            });
         };
+
+        $scope.reset();
 
         $scope.save = function () {
             if (document.getElementById('newDonation').files[0]) {
@@ -49,15 +69,10 @@
                 $scope.settings.directories.music = document.getElementById('musicDirectory').files[0].path.toString();
             }
 
-            $scope.App.settings = angular.copy($scope.settings);
-
-            settingsService.saveSettings(function (err) {
-                if (err) {
-                    console.error(err);
-                    return Notification.error({message: 'Couldn\'t save settings!', delay: 3000});
-                }
-
+            Settings.setAll($scope.settings).then(function () {
                 Notification.success({message: 'Settings saved!', delay: 3000});
+            }).catch(function (err) {
+                return Notification.error({message: err.message, delay: 3000});
             });
         };
     }]);
