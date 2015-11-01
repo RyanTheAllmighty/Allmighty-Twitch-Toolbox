@@ -109,26 +109,20 @@
 
         $scope.setGame = function () {
             if ($scope.gameSelected) {
-                Stream.setGame($scope.gameSelected, function (err) {
-                    if (err) {
-                        console.error(err);
-                        return Notification.error({message: err.message, delay: 3000});
-                    }
-
+                Stream.setGame($scope.gameSelected).then(function () {
                     Notification.success({message: 'Game Updated!', delay: 3000});
+                }).catch(function (err) {
+                    return Notification.error({message: err.message, delay: 3000});
                 });
             }
         };
 
         $scope.setTitle = function () {
             if ($scope.titleSelected) {
-                Stream.setTitle($scope.titleSelected, function (err) {
-                    if (err) {
-                        console.error(err);
-                        return Notification.error({message: err.message, delay: 3000});
-                    }
-
+                Stream.setTitle($scope.titleSelected).then(function () {
                     Notification.success({message: 'Title Updated!', delay: 3000});
+                }).catch(function (err) {
+                    return Notification.error({message: err.message, delay: 3000});
                 });
             }
         };
@@ -144,11 +138,7 @@
                     }).catch(next);
                 },
                 function (next) {
-                    Stream.getLastStatus(function (err, status) {
-                        if (err) {
-                            return next(err);
-                        }
-
+                    Stream.getLastStatus().then(function (status) {
                         $scope.streamOnline = status.online;
 
                         $scope.followersCount = status.followers;
@@ -164,18 +154,14 @@
                         $scope.titleSelected = status.title;
 
                         if (status.online) {
-                            Viewers.getViewers(function (err, viewers) {
-                                if (err) {
-                                    return next(err);
-                                }
-
+                            Viewers.getViewers().then(function (viewers) {
                                 $scope.viewerCount = viewers;
                                 next();
-                            });
+                            }).catch(next);
                         } else {
                             next();
                         }
-                    });
+                    }).catch(next);
                 }
             ], function (err) {
                 if (err) {

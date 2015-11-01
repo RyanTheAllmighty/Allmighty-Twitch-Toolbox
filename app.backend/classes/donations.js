@@ -56,6 +56,10 @@
                         return reject(err);
                     }
 
+                    if (total === 0) {
+                        return reject(new Error('There are no donation records.'));
+                    }
+
                     if (options.offset >= total) {
                         return reject(new Error('Invalid option for \'offset\' provided. Offset is larger than the total.'));
                     }

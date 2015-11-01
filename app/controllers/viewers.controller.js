@@ -68,12 +68,8 @@
         };
 
         let getViewers = function () {
-            Viewers.getViewers(function (err, data) {
-                if (err) {
-                    return console.error(err);
-                }
-
-                $scope.chart.data[0].values = _.map(data, function (item) {
+            Viewers.getViewers({limit: 100}).then(function (data) {
+                $scope.chart.data[0].values = _.map(data.viewers, function (item) {
                     return {
                         x: item.date.getTime(),
                         y: item.count
@@ -81,12 +77,14 @@
                 });
 
                 $scope.chart.api.update();
+            }).catch(function (err) {
+                console.error(err);
             });
         };
 
         getViewers();
 
-        // Viewer count updated
-        $scope.$on('viewer-count-updated', getViewers);
+        // Viewer count changed
+        $scope.$on('viewer-count-changed', getViewers);
     }]);
 })();

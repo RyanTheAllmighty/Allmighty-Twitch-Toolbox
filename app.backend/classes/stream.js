@@ -28,7 +28,7 @@
             super('stream', options);
         }
 
-        processInfo(channelInfo, streamInfo) {
+        process(channelInfo, streamInfo) {
             let self = this;
 
             return new Promise(function (resolve, reject) {

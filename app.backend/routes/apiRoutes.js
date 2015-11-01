@@ -127,5 +127,53 @@
         });
     });
 
+    router.get('/stream', function (req, res) {
+        services.stream.getLastStatus().then(function (status) {
+            res.json(status);
+        }, function (err) {
+            res.status(500).send({error: err.message});
+        });
+    });
+
+    router.post('/stream/game', function (req, res) {
+        services.stream.setGame(req.body).then(function () {
+            res.json({
+                success: true
+            });
+        }, function (err) {
+            res.status(500).send({error: err.message});
+        });
+    });
+
+    router.post('/stream/title', function (req, res) {
+        services.stream.setTitle(req.body).then(function () {
+            res.json({
+                success: true
+            });
+        }, function (err) {
+            res.status(500).send({error: err.message});
+        });
+    });
+
+    router.get('/viewers', function (req, res) {
+        services.viewers.get({
+            limit: req.query.limit || 100,
+            offset: req.query.offset || 0,
+            order: req.query.order || 'desc'
+        }).then(function (donations) {
+            res.json(donations);
+        }, function (err) {
+            res.status(500).send({error: err.message});
+        });
+    });
+
+    router.get('/viewers/count', function (req, res) {
+        services.viewers.getTotalViewers().then(function (count) {
+            res.json(count);
+        }, function (err) {
+            res.status(500).send({error: err.message});
+        });
+    });
+
     module.exports = router;
 })();

@@ -128,6 +128,49 @@ This route gets the data of a user who has followed the channel. The user can be
 }
 ```
 
+### GET /api/stream
+This route gets the status details about the stream. It returns the following:
+
+```js
+{
+    "followers": 110003, // The number of followers the channel has
+    "views": 529837, // The number of views the channel has
+    "game": "Minecraft: Story Mode", // The game set on the channel
+    "title": "Watch me play games and stuff!", // The title/status of the channel
+    "online": true // If the stream is online or not
+}
+```
+
+### POST /api/stream/game
+This route sets the channels current game. Sent data should be in JSON format via POST as follows:
+                                           
+```js
+"Game Name"
+```
+
+If successful a success message will be sent back in the response as per below, else an error will be returned:
+
+```js
+{
+    "success": true
+}
+```
+
+### POST /api/stream/title
+This route sets the channels current title. Sent data should be in JSON format via POST as follows:
+                                           
+```js
+"My Title"
+```
+
+If successful a success message will be sent back in the response as per below, else an error will be returned:
+
+```js
+{
+    "success": true
+}
+```
+
 ### GET /api/settings
 This route gets all the settings for the application. It returns an array of values as per below:
 
@@ -191,3 +234,38 @@ This route gets all the settings for the application. It returns an object with 
 ```
 
 If there is no setting found with the given group and name then an error will be returned.
+
+### GET /api/viewers
+This route returns an array of viewer objects over time. It returns the following:
+
+```js
+{
+    "_total": 345, // The total number of viewer objects in the database
+    "_count": 25, // The number of items in the viewers array
+    "_offset": 0, // The offset provided
+    "_order": "desc", // The order the viewers are sorted in
+    "viewers": [
+        {
+            "date": "2015-01-17T10:37:59.995Z", // The date this viewer count corresponds to
+            "count": 22 // The number of viewers in the stream
+        }
+    ]
+}
+```
+
+You can specify URL query strings to change the behaviour of the call as per below:
+
+| Name | Description | Default |
+| --- | --- | -------- |
+| limit | Limits the number of results to return. Maximum is 100. | 25 |
+| offset | The number of results to skip. Used in conjunction with limit to paginate between all results | 0 |
+| order | Changes the order of the results based upon date. Can be 'asc' or 'desc' | desc |
+
+### GET /api/viewers/count
+This route returns the number of viewers currently in the stream. It returns the following:
+
+```js
+25
+```
+
+If the stream is offline then this route will return an error.

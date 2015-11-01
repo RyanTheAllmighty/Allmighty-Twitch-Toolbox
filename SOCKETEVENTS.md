@@ -39,6 +39,13 @@ This event is emitted when the number of views your channel has changed. This ev
 529837
 ```
 
+## viewer-count-changed
+This event is emitted when the number of viewers currently on your live channel has changed. This event sends the number of viewers in the stream now as per below as an unformatted number:
+
+```js
+1458
+```
+
 ## game-updated
 This event is emitted when the set game on your channel has changed. This event sends the new game set on your channel as per below:
 

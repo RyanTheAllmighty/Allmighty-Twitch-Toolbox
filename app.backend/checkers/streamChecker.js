@@ -68,7 +68,7 @@
                             return reject(err);
                         }
 
-                        global.services.stream.processInfo(channelInfo, streamInfo).then(function () {
+                        global.services.stream.process(channelInfo, streamInfo).then(function () {
                             if (streamInfo.stream) {
                                 global.services.viewers.addViewerCount(streamInfo.stream.viewers || 0).then(function () {
                                     return resolve();
