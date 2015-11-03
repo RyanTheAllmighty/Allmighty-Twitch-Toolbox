@@ -20,13 +20,14 @@
     'use strict';
 
     // NodeJS Modules
+    let path = require('path');
     let express = require('express');
 
     // The Express router
     let router = express.Router();
 
     router.get('/', function (req, res) {
-        res.render('shell');
+        res.render(path.join(process.cwd(), 'shell'));
     });
 
     module.exports = router;

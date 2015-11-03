@@ -22,39 +22,32 @@
     'use strict';
 
     var vue = new Vue({
-        el: '.songInfo',
+        el: '.alert',
         data: {
-            nowPlaying: {}
+            username: '',
+            message: ''
         }
     });
 
-    var socket = io('http://127.0.0.1:' + window.customData.port);
+    var socket = io('http://127.0.0.1:28801');
 
-    // Received song data
-    socket.on('song-changed', function (data) {
-        vue.nowPlaying = data;
-        if (!vue.nowPlaying.title) {
-            vue.nowPlaying.title = 'Unknown';
-        }
-
-        showSongInfo();
+    // Received new follower data
+    socket.on('new-follower', function (data) {
+        vue.username = data.display_name;
+        vue.message = 'has followed the channel!';
+        showAlert(window.customData.followerNotificationTime);
     });
 
-    // Asked to reshow the current song's data
-    socket.on('song-reshow', function (data) {
-        if (data) {
-            vue.nowPlaying = data;
-            if (!vue.nowPlaying.title) {
-                vue.nowPlaying.title = 'Unknown';
-            }
-        }
-
-        showSongInfo();
+    // Received new donation data
+    socket.on('new-donation', function (data) {
+        vue.username = data.username;
+        vue.message = 'just donated ' + accounting.formatMoney(data.amount) + '!';
+        showAlert(window.customData.donationNotificationTime);
     });
 
-    function showSongInfo() {
-        var $songInfo = $('.songInfo');
+    function showAlert(time) {
+        var $alert = $('.alert');
 
-        $songInfo.transition({x: '-170px'}).transition({opacity: 0, delay: window.customData.musicChangeNotificationTime - 500}, 500, 'linear').transition({x: '165px'}).transition({opacity: 100});
+        $alert.transition({x: '505px'}, 500).transition({opacity: 0, delay: time - 1000}, 500, 'linear').transition({x: '-505px'}, 1).transition({opacity: 100}, 1);
     }
 })();

@@ -58,7 +58,6 @@
         'notification-queue',
         'luegg.directives',
         'LocalStorageModule',
-        'web-server',
         'timers',
         'angularMoment',
         'viewers',
@@ -70,7 +69,7 @@
 
     // Load everything before we proceed
     loadingService.load(function () {
-        app.config(function ($stateProvider, $urlRouterProvider, localStorageServiceProvider, WebServerProvider, NotificationProvider, GiantBombProvider, SocketIOProvider, SocketIOServerProvider, MusicCheckerProvider) {
+        app.config(function ($stateProvider, $urlRouterProvider, localStorageServiceProvider, NotificationProvider, GiantBombProvider, SocketIOProvider, SocketIOServerProvider, MusicCheckerProvider) {
             // Setup the routes
             $stateProvider.state('dashboard', {
                 url: '/dashboard',
@@ -120,15 +119,6 @@
             });
 
             localStorageServiceProvider.setPrefix('AllmightyTwitchToolbox');
-
-            WebServerProvider.setOptions({
-                port: global.App.settings.network.webPort,
-                socketIOPort: global.App.settings.network.socketIOPort,
-                donationNotificationTime: global.App.settings.notifications.donationNotificationTime,
-                followerNotificationTime: global.App.settings.notifications.followerNotificationTime,
-                musicChangeNotificationTime: global.App.settings.notifications.musicChangeNotificationTime,
-                foobarHttpControlPort: global.App.settings.network.foobarHttpControlPort
-            });
 
             // Setup the NotificationProvider
             NotificationProvider.setOptions({
@@ -187,15 +177,11 @@
             }
         }]);
 
-        app.run(['$state', 'SocketIOServer', 'MusicChecker', 'WebServer', 'NotificationQueue', function ($state, SocketIOServer, MusicChecker, WebServer, NotificationQueue) {
+        app.run(['$state', 'SocketIOServer', 'MusicChecker', 'NotificationQueue', function ($state, SocketIOServer, MusicChecker, NotificationQueue) {
             async.parallel([
                 function (next) {
                     // Start the socket IO server
                     SocketIOServer.startServer(next);
-                },
-                function (next) {
-                    // Start the web server
-                    WebServer.startServer(next);
                 },
                 function (next) {
                     // Start checking for song changes

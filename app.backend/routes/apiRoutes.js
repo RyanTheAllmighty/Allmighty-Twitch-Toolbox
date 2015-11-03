@@ -175,5 +175,21 @@
         });
     });
 
+    router.get('/timers', function (req, res) {
+        services.timers.getAll().then(function (timers) {
+            res.json(timers);
+        }, function (err) {
+            res.status(500).send({error: err.message});
+        });
+    });
+
+    router.get('/timers/:id', function (req, res) {
+        services.timers.get(req.params.id).then(function (timer) {
+            res.json(timer);
+        }, function (err) {
+            res.status(500).send({error: err.message});
+        });
+    });
+
     module.exports = router;
 })();

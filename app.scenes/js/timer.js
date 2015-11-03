@@ -25,7 +25,7 @@
         var secondsLeft = 0;
 
         $.ajax({
-            url: 'http://127.0.0.1:' + window.customData.webPort + '/api/timer/' + (window.customData.timer.name ? window.customData.timer.name : window.customData.timer._id),
+            url: 'http://127.0.0.1:28800/api/timers/' + (window.customData.timer.name ? window.customData.timer.name : window.customData.timer._id),
             type: 'GET',
             async: false,
             success: function (result) {
@@ -46,7 +46,7 @@
             countdown: true
         });
 
-        var socket = io('http://127.0.0.1:' + window.customData.port);
+        var socket = io('http://127.0.0.1:28801');
 
         // Received a timer set event
         socket.on('timer-set', function (data) {

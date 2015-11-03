@@ -239,6 +239,29 @@ This route gets all the settings for the application. It returns an object with 
 
 If there is no setting found with the given group and name then an error will be returned.
 
+### GET /api/timers
+This route returns an array of all the timers. It returns the following:
+
+```js
+[ 
+    {
+      "name": "UntilStart", // The name of the timer
+      "date": "2015-10-29T12:25:00.000Z", // The date the timer is set for
+      "_id": "nYanqP68aurbExCf" // The ID of the timer
+    }
+]
+
+### GET /api/timers/:id
+This route returns information about a timer. You can specify it's ID or it's name. It returns the following:
+
+```js
+{
+  "name": "UntilStart", // The name of the timer
+  "date": "2015-10-29T12:25:00.000Z", // The date the timer is set for
+  "_id": "nYanqP68aurbExCf" // The ID of the timer
+}
+```
+
 ### GET /api/viewers
 This route returns an array of viewer objects over time. It returns the following:
 

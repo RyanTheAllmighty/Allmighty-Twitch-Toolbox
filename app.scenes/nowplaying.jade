@@ -4,7 +4,7 @@ html(lang='en')
         meta(charset='UTF-8')
         title Now Playing
         link(href='https://fonts.googleapis.com/css?family=Rubik:400,300', rel='stylesheet', type='text/css')
-        link(href='/css/nowplaying.css', rel='stylesheet', type='text/css')
+        link(href='/scenes/css/nowplaying.css', rel='stylesheet', type='text/css')
     body
         .songInfo
             .artwork(v-show='nowPlaying.artwork')
@@ -14,12 +14,12 @@ html(lang='en')
                 .strike
                     span By
                 .artist(v-text='nowPlaying.artist')
-        script(src='/js/libs/jquery-2.1.4.min.js')
-        script(src='/js/libs/jquery.transit-0.9.12.min.js')
-        script(src='/js/libs/socket.io-1.3.7.min.js')
-        script(src='/js/libs/vue-0.12.16.min.js')
+        script(src='/assets/js/libs/jquery-2.1.4.min.js')
+        script(src='/assets/js/libs/jquery.transit-0.9.12.min.js')
+        script(src='/assets/js/libs/socket.io-1.3.7.min.js')
+        script(src='/assets/js/libs/vue-0.12.16.min.js')
 
         script(type='text/javascript').
             window.customData = !{JSON.stringify(data)};
 
-        script(src='/js/nowplaying.js')
+        script(src='/scenes/js/nowplaying.js')

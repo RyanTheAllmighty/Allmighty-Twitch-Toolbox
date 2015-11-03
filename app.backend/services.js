@@ -30,6 +30,7 @@
 
     // Our Classes
     let Stream = require('./classes/stream');
+    let Timers = require('./classes/timers');
     let Viewers = require('./classes/viewers');
     let Settings = require('./classes/settings');
     let Donations = require('./classes/donations');
@@ -46,6 +47,7 @@
         settings: null,
         stream: null,
         viewers: null,
+        timers: null,
         expressApp: null,
         socketIOApp: null,
         io: null,
@@ -86,6 +88,7 @@
                 module.exports.settings = new Settings({autoload: true});
                 module.exports.stream = new Stream({autoload: true});
                 module.exports.viewers = new Viewers({autoload: true});
+                module.exports.timers = new Timers({autoload: true});
 
                 module.exports.notificationQueue = new NotificationQueue();
 
@@ -196,13 +199,21 @@
         },
         setupExpress: function () {
             return new Promise(function (resolve) {
-                module.exports.expressApp.use('/assets', express.static(path.join(process.cwd(), 'assets')));
                 module.exports.expressApp.use('/app', express.static(path.join(process.cwd(), 'app')));
+                module.exports.expressApp.use('/assets', express.static(path.join(process.cwd(), 'assets')));
+                module.exports.expressApp.use('/scenes/js', express.static(path.join(process.cwd(), 'app.scenes', 'js')));
+                module.exports.expressApp.use('/scenes/css', express.static(path.join(process.cwd(), 'app.scenes', 'css')));
 
-                module.exports.expressApp.set('views', process.cwd());
                 module.exports.expressApp.set('view engine', 'jade');
 
                 module.exports.expressApp.use(bodyParser.json());
+
+                module.exports.expressApp.use(function (req, res, next) {
+                    res.header('Access-Control-Allow-Origin', '*');
+                    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+
+                    next();
+                });
 
                 module.exports.expressApp.use('/foobar/*', function (req, res, next) {
                     global.services.settings.get('network', 'foobarHttpControlPort').then(function (port) {
@@ -213,9 +224,23 @@
                     });
                 });
 
+                module.exports.expressApp.use('/scenes/*', function (req, res, next) {
+                    global.services.settings.getGroup('notifications').then(function (settings) {
+                        req.notificationSettings = settings;
+                        next();
+                    }).catch(function (err) {
+                        res.status(500).send({error: err.message});
+                    });
+                });
+
                 module.exports.expressApp.use('/', require(path.join(process.cwd(), 'app.backend', 'routes', 'appRoutes')));
                 module.exports.expressApp.use('/api', require(path.join(process.cwd(), 'app.backend', 'routes', 'apiRoutes')));
                 module.exports.expressApp.use('/foobar', require(path.join(process.cwd(), 'app.backend', 'routes', 'foobarRoutes')));
+                module.exports.expressApp.use('/scenes', require(path.join(process.cwd(), 'app.backend', 'routes', 'scenesRoutes')));
+
+                module.exports.expressApp.use(function (req, res, next) {
+                    res.status(404).json({error: 'Page not found!'});
+                });
 
                 return resolve();
             });
