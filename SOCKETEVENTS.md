@@ -104,3 +104,18 @@ This event is emitted when a timer has been set. This event sends the following 
     "date": "2015-10-29T12:25:00.000Z" // The date the timer is set for
 }
 ```
+
+## song-changed
+This event is emitted when the song playing has changed. This event sends the following data:
+
+```js
+{
+    "title": "Interstellar Rush", // The title of the song
+    "artist": "From The Dust", // The name of the artist
+    "artwork": "/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAMCAgMCAgM....", // A bas64 encoded jpeg of the album art (may not be set)
+    "websites": {
+        "artist": "http://soundcloud.com/ftdmusic", // The artists webpage (may not be set)
+        "song": "http://soundcloud.com/ftdmusic/from-the-dust-interstellar-rush-free" // The songs webpage (may not be set)
+    }
+}
+```

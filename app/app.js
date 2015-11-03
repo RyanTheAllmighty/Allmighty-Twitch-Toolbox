@@ -49,7 +49,6 @@
         'ui.bootstrap',
         'ui.router',
         'socket-io',
-        'music-checker',
         'datatables',
         'datatables.bootstrap',
         'followers',
@@ -68,7 +67,7 @@
 
     // Load everything before we proceed
     loadingService.load(function () {
-        app.config(function ($stateProvider, $urlRouterProvider, localStorageServiceProvider, NotificationProvider, GiantBombProvider, SocketIOProvider, MusicCheckerProvider) {
+        app.config(function ($stateProvider, $urlRouterProvider, localStorageServiceProvider, NotificationProvider, GiantBombProvider, SocketIOProvider) {
             // Setup the routes
             $stateProvider.state('dashboard', {
                 url: '/dashboard',
@@ -139,13 +138,6 @@
             SocketIOProvider.setOptions({
                 socketPort: global.App.settings.network.socketIOPort
             });
-
-            MusicCheckerProvider.setOptions({
-                nowPlayingPath: path.join(global.App.settings.directories.data, 'NowPlayingPath.txt'),
-                ffmpegPath: path.join(global.App.settings.directories.binary, 'ffmpeg.exe'),
-                songInfoTxtPath: path.join(global.App.settings.directories.data, 'SongInfo.txt'),
-                songInfoJsonPath: path.join(global.App.settings.directories.data, 'SongInfo.json')
-            });
         });
 
         app.run(['$rootScope', 'localStorageService', function ($rootScope, localStorageService) {
@@ -171,12 +163,8 @@
             }
         }]);
 
-        app.run(['$state', 'MusicChecker', 'NotificationQueue', function ($state, MusicChecker, NotificationQueue) {
+        app.run(['$state', 'NotificationQueue', function ($state, NotificationQueue) {
             async.parallel([
-                function (next) {
-                    // Start checking for song changes
-                    MusicChecker.startChecking(next);
-                },
                 function (next) {
                     // Start the notification queue
                     NotificationQueue.startQueue(next);

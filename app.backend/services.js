@@ -36,6 +36,7 @@
     let Donations = require('./classes/donations');
     let Followers = require('./classes/followers');
     let StreamTipAPI = require('./classes/streamTipAPI');
+    let MusicChecker = require('./checkers/musicChecker');
     let StreamChecker = require('./checkers/streamChecker');
     let FollowerChecker = require('./checkers/followerChecker');
     let DonationChecker = require('./checkers/donationChecker');
@@ -95,6 +96,7 @@
                 module.exports.followerChecker = new FollowerChecker();
                 module.exports.donationChecker = new DonationChecker();
                 module.exports.streamChecker = new StreamChecker();
+                module.exports.musicChecker = new MusicChecker();
 
                 module.exports.socketIOApp = require('http').createServer();
                 module.exports.io = require('socket.io')(module.exports.socketIOApp);
@@ -165,9 +167,7 @@
             return module.exports.donationChecker.startChecking();
         },
         startMusicChecker: function () {
-            return new Promise(function (resolve) {
-                return resolve();
-            });
+            return module.exports.musicChecker.startChecking();
         },
         startStreamChecker: function () {
             return module.exports.streamChecker.startChecking();
