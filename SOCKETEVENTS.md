@@ -72,3 +72,35 @@ This event is emitted when the stream comes online/offline. This event sends the
     "online": true // If the stream is online or not
 }
 ```
+
+## timer-added
+This event is emitted when a new timer has been added. This event sends the following data:
+
+```js
+{
+    "name": "UntilStart", // The name of the timer
+    "date": "2015-10-29T12:25:00.000Z", // The date the timer is set for
+    "_id": "nYanqP68aurbExCf" // The ID of the timer
+}
+```
+
+## timer-deleted
+This event is emitted when a timer has been deleted. This event sends the following data:
+
+```js
+{
+    "_id": "nYanqP68aurbExCf", // The id of the timer
+    "name": "UntilStart" // The name of the timer (may not be present if there is no name set for the timer)
+}
+```
+
+## timer-set
+This event is emitted when a timer has been set. This event sends the following data:
+
+```js
+{
+    "_id": "nYanqP68aurbExCf", // The id of the timer
+    "name": "UntilStart", // The name of the timer (may not be present if there is no name set for the timer)
+    "date": "2015-10-29T12:25:00.000Z" // The date the timer is set for
+}
+```

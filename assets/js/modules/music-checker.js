@@ -36,7 +36,7 @@
             this.options = angular.extend({}, this.options, options);
         };
 
-        this.$get = ['$rootScope', 'SocketIOServer', function ($rootScope, SocketIOServer) {
+        this.$get = ['$rootScope', function ($rootScope) {
             let self = this;
 
             return {

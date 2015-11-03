@@ -183,9 +183,33 @@
         });
     });
 
+    router.post('/timers', function (req, res) {
+        services.timers.create(req.body.name, req.body.date).then(function (timer) {
+            res.json(timer);
+        }, function (err) {
+            res.status(500).send({error: err.message});
+        });
+    });
+
     router.get('/timers/:id', function (req, res) {
         services.timers.get(req.params.id).then(function (timer) {
             res.json(timer);
+        }, function (err) {
+            res.status(500).send({error: err.message});
+        });
+    });
+
+    router.delete('/timers/:id', function (req, res) {
+        services.timers.remove(req.params.id).then(function () {
+            res.json({success: true});
+        }, function (err) {
+            res.status(500).send({error: err.message});
+        });
+    });
+
+    router.post('/timers/:id', function (req, res) {
+        services.timers.set(req.params.id, req.body.name, req.body.date).then(function () {
+            res.json({success: true});
         }, function (err) {
             res.status(500).send({error: err.message});
         });

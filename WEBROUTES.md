@@ -251,14 +251,65 @@ This route returns an array of all the timers. It returns the following:
     }
 ]
 
+### POST /api/timers
+This creates a new timer with the given data. Sent data should be in JSON format via POST as follows:
+                                                               
+```js
+{
+    "name": "UntilStart", // The name of the timer
+    "date": "2015-10-29T12:25:00.000Z", // The date the timer is set for
+}
+```
+
+If successful the newly created timer will be sent back in the response as per below, else an error will be returned:
+
+```js
+{
+    "name": "UntilStart", // The name of the timer
+    "date": "2015-10-29T12:25:00.000Z", // The date the timer is set for
+    "_id": "nYanqP68aurbExCf" // The ID of the timer
+}
+```
+
 ### GET /api/timers/:id
 This route returns information about a timer. You can specify it's ID or it's name. It returns the following:
 
 ```js
 {
-  "name": "UntilStart", // The name of the timer
-  "date": "2015-10-29T12:25:00.000Z", // The date the timer is set for
-  "_id": "nYanqP68aurbExCf" // The ID of the timer
+    "name": "UntilStart", // The name of the timer
+    "date": "2015-10-29T12:25:00.000Z", // The date the timer is set for
+    "_id": "nYanqP68aurbExCf" // The ID of the timer
+}
+```
+
+### POST /api/timers/:id
+This sets the timer with the given ID (not name) and sets the date and name of it. Sent data should be in JSON format via POST as follows:
+                                                               
+```js
+{
+    "name": "UntilStart", // The name of the timer
+    "date": "2015-10-29T12:25:00.000Z" // The date the timer is set for
+}
+```
+
+If successful the edited timer will be sent back in the response as per below, else an error will be returned:
+
+```js
+{
+    "name": "UntilStart", // The name of the timer
+    "date": "2015-10-29T12:25:00.000Z", // The date the timer is set for
+    "_id": "nYanqP68aurbExCf" // The ID of the timer
+}
+```
+
+### DELETE /api/timers/:id
+This route deletes a timer. You can specify it's ID or it's name.
+
+If successful a success message will be sent back in the response as per below, else an error will be returned:
+
+```js
+{
+    "success": true
 }
 ```
 

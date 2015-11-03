@@ -22,7 +22,7 @@
     let request = require('request');
     let musicInformationParser = require('./assets/js/tools/musicInformationParser');
 
-    angular.module('AllmightyTwitchToolbox').controller('ToolsController', ['$scope', '$timeout', 'SocketIOServer', function ($scope, $timeout, SocketIOServer) {
+    angular.module('AllmightyTwitchToolbox').controller('ToolsController', ['$scope', '$timeout', function ($scope, $timeout) {
         $scope.log = {
             musicInformationParsing: ''
         };

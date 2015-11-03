@@ -49,7 +49,6 @@
         'ui.bootstrap',
         'ui.router',
         'socket-io',
-        'socket-io-server',
         'music-checker',
         'datatables',
         'datatables.bootstrap',
@@ -69,7 +68,7 @@
 
     // Load everything before we proceed
     loadingService.load(function () {
-        app.config(function ($stateProvider, $urlRouterProvider, localStorageServiceProvider, NotificationProvider, GiantBombProvider, SocketIOProvider, SocketIOServerProvider, MusicCheckerProvider) {
+        app.config(function ($stateProvider, $urlRouterProvider, localStorageServiceProvider, NotificationProvider, GiantBombProvider, SocketIOProvider, MusicCheckerProvider) {
             // Setup the routes
             $stateProvider.state('dashboard', {
                 url: '/dashboard',
@@ -136,11 +135,6 @@
                 apiKey: global.App.settings.giantbomb.apiKey
             });
 
-            // Setup the SocketIOServerProvider
-            SocketIOServerProvider.setOptions({
-                socketPort: global.App.settings.network.socketIOPort
-            });
-
             // Setup the SocketIOProvider
             SocketIOProvider.setOptions({
                 socketPort: global.App.settings.network.socketIOPort
@@ -177,12 +171,8 @@
             }
         }]);
 
-        app.run(['$state', 'SocketIOServer', 'MusicChecker', 'NotificationQueue', function ($state, SocketIOServer, MusicChecker, NotificationQueue) {
+        app.run(['$state', 'MusicChecker', 'NotificationQueue', function ($state, MusicChecker, NotificationQueue) {
             async.parallel([
-                function (next) {
-                    // Start the socket IO server
-                    SocketIOServer.startServer(next);
-                },
                 function (next) {
                     // Start checking for song changes
                     MusicChecker.startChecking(next);

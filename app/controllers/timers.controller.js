@@ -20,20 +20,19 @@
     'use strict';
 
     let gui = require('nw.gui');
+    let moment = require('moment');
 
     angular.module('AllmightyTwitchToolbox').controller('TimersController', ['$scope', '$timeout', 'Timers', 'Notification', function ($scope, $timeout, Timers, Notification) {
         $scope.timers = [];
 
         function updateTimers() {
             $timeout(function () {
-                Timers.getTimers(function (err, timers) {
-                    if (err) {
-                        console.error(err);
-                        return Notification.error({message: err.message, delay: 3000});
-                    }
-
+                Timers.getTimers().then(function (timers) {
                     $scope.timers = timers;
                     $scope.$apply();
+                }).catch(function (err) {
+                    console.error(err);
+                    return Notification.error({message: err.message, delay: 3000});
                 });
             });
         }
@@ -41,80 +40,68 @@
         updateTimers();
 
         $scope.addTimer = function () {
-            Timers.addTimer($('#createTimerName').val(), $('#createTimerPicker').data('DateTimePicker').date(), function (err) {
-                if (err) {
-                    console.error(err);
-                    return Notification.error({message: err.message, delay: 3000});
-                }
-
+            Timers.addTimer($('#createTimerName').val(), $('#createTimerPicker').data('DateTimePicker').date()).then(function () {
                 Notification.success({message: 'Timer Created!', delay: 3000});
 
                 updateTimers();
+            }).catch(function (err) {
+                console.error(err);
+                return Notification.error({message: err.message, delay: 3000});
             });
         };
 
         $scope.setTimer = function () {
-            Timers.setTimer($('#editingTimerID').val(), $('#updateTimerName').val(), $('#setTimerPicker').data('DateTimePicker').date(), function (err) {
-                if (err) {
-                    console.error(err);
-                    return Notification.error({message: err.message, delay: 3000});
-                }
-
+            Timers.setTimer($('#editingTimerID').val(), $('#updateTimerName').val(), $('#setTimerPicker').data('DateTimePicker').date()).then(function () {
                 Notification.success({message: 'Timer Set!', delay: 3000});
 
                 updateTimers();
+            }).catch(function (err) {
+                console.error(err);
+                return Notification.error({message: err.message, delay: 3000});
             });
         };
 
         $scope.addToTimer = function (timer, seconds) {
-            Timers.addToTimer(timer._id, seconds, function (err) {
-                if (err) {
-                    console.error(err);
-                    return Notification.error({message: err.message, delay: 3000});
-                }
-
+            Timers.setTimer(timer._id, timer.name, moment(timer.date).add(seconds, 'seconds').toDate()).then(function () {
                 Notification.success({message: 'Added time to timer!', delay: 3000});
 
                 updateTimers();
+            }).catch(function (err) {
+                console.error(err);
+                return Notification.error({message: err.message, delay: 3000});
             });
         };
 
         $scope.removeFromTimer = function (timer, seconds) {
-            Timers.removeFromTimer(timer._id, seconds, function (err) {
-                if (err) {
-                    console.error(err);
-                    return Notification.error({message: err.message, delay: 3000});
-                }
-
+            Timers.setTimer(timer._id, timer.name, moment(timer.date).subtract(seconds, 'seconds').toDate()).then(function () {
                 Notification.success({message: 'Removed time from timer!', delay: 3000});
 
                 updateTimers();
+            }).catch(function (err) {
+                console.error(err);
+                return Notification.error({message: err.message, delay: 3000});
             });
         };
 
         $scope.copyTimerURL = function (id) {
-            Timers.getTimer(id, function (err, timer) {
-                if (err) {
-                    console.error(err);
-                    return Notification.error({message: err.message, delay: 3000});
-                }
-
-                gui.Clipboard.get().set('http://localhost:' + $scope.App.settings.network.webPort + '/timer/' + (timer.name ? timer.name : timer._id), 'text');
+            Timers.getTimer(id).then(function (timer) {
+                gui.Clipboard.get().set('http://127.0.0.1:28800/scenes/timer/' + (timer.name ? timer.name : timer._id), 'text');
 
                 Notification.success({message: 'Link copied to clipboard!', delay: 3000});
+            }).catch(function (err) {
+                console.error(err);
+                return Notification.error({message: err.message, delay: 3000});
             });
         };
 
         $scope.deleteTimer = function (id) {
-            Timers.deleteTimer(id, function (err) {
-                if (err) {
-                    console.error(err);
-                    return Notification.error({message: err.message, delay: 3000});
-                }
-
+            Timers.deleteTimer(id).then(function () {
                 Notification.success({message: 'Timer Deleted!', delay: 3000});
 
                 updateTimers();
+            }).catch(function (err) {
+                console.error(err);
+                return Notification.error({message: err.message, delay: 3000});
             });
         };
     }]);
