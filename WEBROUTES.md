@@ -273,3 +273,35 @@ This route returns the number of viewers currently in the stream. It returns the
 ```
 
 If the stream is offline then this route will return an error.
+
+### GET /foobar/stop
+This route stops foobar.
+
+### GET /foobar/play
+This route plays the current song in foobar.
+
+### GET /foobar/pause
+This route pauses foobar.
+
+### GET /foobar/previous
+This route skips back to the previous song in foobar.
+
+### GET /foobar/next
+This route skips to the new song in foobar.
+
+### GET /foobar/nextpause
+This route skips to the next song in foobar and pauses.
+
+### GET /foobar/volume
+This route changes foobar's volume.
+
+You can specify URL query strings to change the behaviour of the call as per below:
+
+| Name | Description | Default |
+| --- | --- | -------- |
+| volume | The volume to set foobar to, between -100 and 0 where -100 is muted and 0 is full volume | 0 |
+
+### GET /foobar/state
+This returns the current state of foobar including playing song, album art and more.
+
+The return value contains alot of information and isn't mentioned here.

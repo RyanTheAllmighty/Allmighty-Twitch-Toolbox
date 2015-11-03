@@ -204,8 +204,18 @@
 
                 module.exports.expressApp.use(bodyParser.json());
 
+                module.exports.expressApp.use('/foobar/*', function (req, res, next) {
+                    global.services.settings.get('network', 'foobarHttpControlPort').then(function (port) {
+                        req.foobarPort = port.value;
+                        next();
+                    }).catch(function (err) {
+                        res.status(500).send({error: err.message});
+                    });
+                });
+
                 module.exports.expressApp.use('/', require(path.join(process.cwd(), 'app.backend', 'routes', 'appRoutes')));
                 module.exports.expressApp.use('/api', require(path.join(process.cwd(), 'app.backend', 'routes', 'apiRoutes')));
+                module.exports.expressApp.use('/foobar', require(path.join(process.cwd(), 'app.backend', 'routes', 'foobarRoutes')));
 
                 return resolve();
             });

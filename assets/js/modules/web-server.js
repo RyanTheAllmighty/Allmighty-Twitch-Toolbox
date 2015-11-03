@@ -106,67 +106,6 @@
                                 }
                             });
                         });
-
-                        self.expressApp.get('/foobar/:action', function (req, res) {
-                            switch (req.params.action) {
-                                case 'stop':
-                                    request('http://127.0.0.1:' + self.options.foobarHttpControlPort + '/ajquery/?cmd=Stop&param3=NoResponse', function (error, response, body) {
-                                        res.writeHead(response.statusCode);
-                                        res.end(body);
-                                    });
-                                    break;
-                                case 'play':
-                                    request('http://127.0.0.1:' + self.options.foobarHttpControlPort + '/ajquery/?cmd=Start&param3=NoResponse', function (error, response, body) {
-                                        res.writeHead(response.statusCode);
-                                        res.end(body);
-                                    });
-                                    break;
-                                case 'pause':
-                                    request('http://127.0.0.1:' + self.options.foobarHttpControlPort + '/ajquery/?cmd=PlayOrPause&param3=NoResponse', function (error, response, body) {
-                                        res.writeHead(response.statusCode);
-                                        res.end(body);
-                                    });
-                                    break;
-                                case 'previous':
-                                    request('http://127.0.0.1:' + self.options.foobarHttpControlPort + '/ajquery/?cmd=StartPrevious&param3=NoResponse', function (error, response, body) {
-                                        res.writeHead(response.statusCode);
-                                        res.end(body);
-                                    });
-                                    break;
-                                case 'next':
-                                    request('http://127.0.0.1:' + self.options.foobarHttpControlPort + '/ajquery/?cmd=StartNext&param3=NoResponse', function (error, response, body) {
-                                        res.writeHead(response.statusCode);
-                                        res.end(body);
-                                    });
-                                    break;
-                                case 'nextpause':
-                                    request('http://127.0.0.1:' + self.options.foobarHttpControlPort + '/ajquery/?cmd=StartNext&param3=NoResponse', function () {
-                                        request('http://127.0.0.1:' + self.options.foobarHttpControlPort + '/ajquery/?cmd=PlayOrPause&param3=NoResponse', function (error, response, body) {
-                                            res.writeHead(response.statusCode);
-                                            res.end(body);
-                                        });
-                                    });
-                                    break;
-                                case 'volume':
-                                    request('http://127.0.0.1:' + self.options.foobarHttpControlPort + '/ajquery/?cmd=VolumeDB&param1=' + req.query.level || 0 + '&param3=NoResponse', function (error, response, body) {
-                                        res.writeHead(response.statusCode);
-                                        res.end(body);
-                                    });
-                                    break;
-                                case 'state':
-                                    request.get({url: 'http://127.0.0.1:' + self.options.foobarHttpControlPort + '/ajquery/?param3=js/state.json', json: true}, function (error, response, body) {
-                                        request.get({url: 'http://127.0.0.1:' + self.options.foobarHttpControlPort + body.albumArt, json: true, encoding: null}, function (error2, response2, body2) {
-                                            body.albumArt = body2.toString('base64');
-                                            res.send(JSON.stringify(body));
-                                        });
-                                    });
-                                    break;
-                                default:
-                                    res.writeHead(500);
-                                    res.end('Unknown Action!');
-                                    break;
-                            }
-                        });
                     }
 
                     self.expressApp.listen(self.options.port);
