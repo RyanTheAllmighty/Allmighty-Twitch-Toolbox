@@ -16,12 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global accounting, d3 */
+/* global _, accounting, d3 */
 
 (function () {
     'use strict';
-
-    let _ = require('lodash');
 
     angular.module('AllmightyTwitchToolbox').controller('ViewersController', viewersController);
 

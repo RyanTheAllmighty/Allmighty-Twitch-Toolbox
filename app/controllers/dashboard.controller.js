@@ -16,10 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* globals async */
+
 (function () {
     'use strict';
-
-    let async = require('async');
 
     angular.module('AllmightyTwitchToolbox').controller('DashboardController', dashboardController);
 

@@ -16,11 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* globals moment */
+
 (function () {
     'use strict';
 
     let gui = require('nw.gui');
-    let moment = require('moment');
 
     angular.module('AllmightyTwitchToolbox').controller('TimersController', timersController);
 
