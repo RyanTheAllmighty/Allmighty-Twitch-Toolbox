@@ -27,26 +27,28 @@
         js: {
             angular: 'app/**/*.js',
             node: 'app.backend/**/*.js',
-            scenes: 'app.scenes/js/*.js'
+            scenes: 'app.scenes/js/*.js',
+            misc: '*.js'
         }
     };
 
     gulp.task('jshint', function() {
-        return gulp.src([paths.js.angular, paths.js.node, paths.js.scenes])
+        return gulp.src([paths.js.angular, paths.js.node, paths.js.scenes, paths.js.misc])
             .pipe(jshint())
             .pipe(jshint.reporter())
             .pipe(jshint.reporter('fail'));
     });
 
     gulp.task('jscs', function() {
-        return gulp.src([paths.js.angular, paths.js.node, paths.js.scenes])
+        return gulp.src([paths.js.angular, paths.js.node, paths.js.scenes, paths.js.misc])
             .pipe(jscs())
             .pipe(jscs.reporter())
             .pipe(jscs.reporter('fail'));
     });
 
     gulp.task('watch', function() {
-        gulp.watch([paths.js.angular, paths.js.node, paths.js.scenes], ['jshint', 'jscs']);
+        gulp.watch([paths.js.angular, paths.js.node, paths.js.scenes, paths.js.misc], ['jshint', 'jscs']);
+        gulp.start('default');
     });
 
     // The default task (called when you run `gulp` from cli)

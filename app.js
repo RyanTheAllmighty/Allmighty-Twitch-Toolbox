@@ -16,8 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-'use strict';
+(function () {
+    'use strict';
 
-process.on('uncaughtException', function (err) {
-    console.error(err);
-});
+    process.on('uncaughtException', function (err) {
+        console.error(err);
+    });
+})();
