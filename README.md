@@ -9,11 +9,15 @@ This is a collection of tools and utilities I use for Twitch to tell me such as 
 ### Coding standards & styling guidelines
 Please see the STYLE.md file for coding standards and style guidelines.
 
-### Setting up a development environment
-To get started you need a couple pieces of software installed on your computer. The versions next to the package is the version we build against so you would be best to get that version or newer:
+### Requirements
+In order to run the application you'll need to install the following programs on your computer. The versions next to the package is the version we build against so you would be best to get that
+version or newer:
 
 - [NodeJS](https://nodejs.org/) (4.2.1)
 - [NW.js](http://nwjs.io/) (0.12.3)
+
+This project uses ES6 features, so a version of NodeJS is required to aupport the ES6 features we use. Using the listed NodeJS version listed above or newer is most likely the best move. We recommend
+using [NVM](https://github.com/creationix/nvm) to manage and use specific NodeJS versions on your system.
 
 To make sure you have those all installed correctly, open up a command line/terminal and run the following commands and make sure they all work with no errors:
 
@@ -40,8 +44,8 @@ node util.js package
 
 This will create an app.nw file in the current directory.
 
-Alternatively if you just want the latest build binary you can download it from 
-[here](https://build.atlcdn.net/job/Allmighty%20Twitch%20Toolbox/)
+Alternatively if you just want the latest build binary you can download it from [here](https://build.atlcdn.net/job/Allmighty%20Twitch%20Toolbox/) but please note that while we try to stay away from
+native modules as much as possible, you may need to build your own binary to work on your system.
 
 #### Running the application
 To run the application you can simply go into the root directory of the project and run the below command, making sure that NW.js is in your PATH:
@@ -57,11 +61,11 @@ nw app.nw
 ```
 
 ### Getting Started
-To get a Twitch API token for use in the application you can either visit http://www.ryandowling.me/twitch-api-token-generator to generate a token using my site or you can follow the directions on Twitch's API docs (https://github.com/justintv/Twitch-API/blob/master/authentication.md) making sure to grant rights for all scopes when doing so.
-
-For details on setup and information about the inbuilt server used and what you can do with it (such as display notifications on your stream), click the Open Server button on the Settings page to be taken to the index page for the inbuilt server.
-
 More instructions to follow
+
+### Known Limitations
+During first startup, the application will query all the followers on your channel. Due to a limitation with Twitch's API, we can only retrieve the first and last 1,700 records, so if you have more
+than 3,400 followers, the application won't be able to get them all and thus re follow alerts may become an issue for some followers.
 
 ### Attributions
 Toolbox icon by Daniel Garrett Hickey
