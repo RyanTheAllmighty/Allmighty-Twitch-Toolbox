@@ -23,7 +23,11 @@
 
     angular.module('followers', []);
 
-    angular.module('followers').factory('Followers', ['$http', function ($http) {
+    angular.module('followers').factory('Followers', followersFactory);
+
+    followersFactory.$inject = ['$http'];
+
+    function followersFactory($http) {
         return {
             getFollows,
             getFollowers
@@ -60,5 +64,5 @@
                 });
             });
         }
-    }]);
+    }
 })();

@@ -22,7 +22,11 @@
     let gui = require('nw.gui');
     let moment = require('moment');
 
-    angular.module('AllmightyTwitchToolbox').controller('TimersController', ['$scope', '$timeout', 'Timers', 'Notification', function ($scope, $timeout, Timers, Notification) {
+    angular.module('AllmightyTwitchToolbox').controller('TimersController', timersController);
+
+    timersController.$inject = ['$scope', '$timeout', 'Timers', 'Notification'];
+
+    function timersController($scope, $timeout, Timers, Notification) {
         $scope.timers = [];
 
         function updateTimers() {
@@ -104,5 +108,5 @@
                 return Notification.error({message: err.message, delay: 3000});
             });
         };
-    }]);
+    }
 })();

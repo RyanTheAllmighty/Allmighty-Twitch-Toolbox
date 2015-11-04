@@ -19,7 +19,11 @@
 (function () {
     'use strict';
 
-    angular.module('AllmightyTwitchToolbox').directive('collapsible', ['$compile', function ($compile) {
+    angular.module('AllmightyTwitchToolbox').directive('collapsible', collapsibleDirective);
+
+    collapsibleDirective.$inject = ['$compile'];
+
+    function collapsibleDirective($compile) {
         return {
             restrict: 'E',
             link: function (scope, element, attrs) {
@@ -31,5 +35,5 @@
                 $compile(element.contents())(scope);
             }
         };
-    }]);
+    }
 })();

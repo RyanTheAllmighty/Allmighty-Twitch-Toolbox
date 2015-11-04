@@ -19,11 +19,13 @@
 (function () {
     'use strict';
 
-    let moment = require('moment');
-
     angular.module('timers', []);
 
-    angular.module('timers').factory('Timers', ['$http', function ($http) {
+    angular.module('timers').factory('Timers', timersFactory);
+
+    timersFactory.$inject = ['$http'];
+
+    function timersFactory($http) {
         return {
             addTimer,
             deleteTimer,
@@ -81,5 +83,5 @@
                 });
             });
         }
-    }]);
+    }
 })();

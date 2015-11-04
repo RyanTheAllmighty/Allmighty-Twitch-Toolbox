@@ -82,7 +82,7 @@
     });
 
     router.get('/nextpause', function (req, res) {
-        request('http://127.0.0.1:' + req.foobarPort + '/ajquery/?cmd=StartNext&param3=NoResponse', function (err, response, body) {
+        request('http://127.0.0.1:' + req.foobarPort + '/ajquery/?cmd=StartNext&param3=NoResponse', function (err) {
             if (err) {
                 return res.status(500).send({error: err.message});
             }

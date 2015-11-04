@@ -23,7 +23,11 @@
 
     angular.module('donations', []);
 
-    angular.module('donations').factory('Donations', ['$http', function ($http) {
+    angular.module('donations').factory('Donations', donationsFactory);
+
+    donationsFactory.$inject = ['$http'];
+
+    function donationsFactory($http) {
         return {
             getDonations,
             getTotal
@@ -54,5 +58,5 @@
                 });
             });
         }
-    }]);
+    }
 })();

@@ -19,7 +19,11 @@
 (function () {
     'use strict';
 
-    angular.module('AllmightyTwitchToolbox').controller('FollowersController', ['$scope', 'Followers', 'DTOptionsBuilder', 'DTColumnBuilder', function ($scope, Followers, DTOptionsBuilder, DTColumnBuilder) {
+    angular.module('AllmightyTwitchToolbox').controller('FollowersController', followersController);
+
+    followersController.$inject = ['$scope', 'Followers', 'DTOptionsBuilder', 'DTColumnBuilder'];
+
+    function followersController($scope, Followers, DTOptionsBuilder, DTColumnBuilder) {
         let getFollowers = function () {
             return Followers.getFollowers({limit: 100, order: 'desc'});
         };
@@ -44,5 +48,5 @@
 
         // New follower
         $scope.$on('new-follower', changeData);
-    }]);
+    }
 })();

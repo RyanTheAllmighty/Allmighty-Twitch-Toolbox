@@ -21,7 +21,11 @@
 
     angular.module('settings', []);
 
-    angular.module('settings').factory('Settings', ['$http', function ($http) {
+    angular.module('settings').factory('Settings', settingsFactory);
+
+    settingsFactory.$inject = ['$http'];
+
+    function settingsFactory($http) {
         return {
             getSetting,
             getAll,
@@ -68,5 +72,5 @@
                 });
             });
         }
-    }]);
+    }
 })();

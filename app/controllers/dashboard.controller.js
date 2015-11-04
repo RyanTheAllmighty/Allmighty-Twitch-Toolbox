@@ -21,7 +21,11 @@
 
     let async = require('async');
 
-    angular.module('AllmightyTwitchToolbox').controller('DashboardController', ['$scope', '$timeout', 'Donations', 'Viewers', 'Stream', 'GiantBomb', 'Notification', function ($scope, $timeout, Donations, Viewers, Stream, GiantBomb, Notification) {
+    angular.module('AllmightyTwitchToolbox').controller('DashboardController', dashboardController);
+
+    dashboardController.$inject = ['$scope', '$timeout', 'Donations', 'Viewers', 'Stream', 'GiantBomb', 'Notification'];
+
+    function dashboardController($scope, $timeout, Donations, Viewers, Stream, GiantBomb, Notification) {
         $scope.streamOnline = false;
         $scope.viewerCount = 0;
 
@@ -173,5 +177,5 @@
                 });
             });
         }
-    }]);
+    }
 })();

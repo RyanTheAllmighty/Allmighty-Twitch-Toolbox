@@ -19,7 +19,11 @@
 (function () {
     'use strict';
 
-    angular.module('AllmightyTwitchToolbox').controller('NavigationController', ['$scope', '$location', function ($scope, $location) {
+    angular.module('AllmightyTwitchToolbox').controller('NavigationController', navigationController);
+
+    navigationController.$inject = ['$scope', '$location'];
+
+    function navigationController($scope, $location) {
         $scope.$location = $location;
-    }]);
+    }
 })();

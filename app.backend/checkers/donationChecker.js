@@ -20,7 +20,6 @@
     'use strict';
 
     // NodeJS Modules
-    let _ = require('lodash');
     let async = require('async');
 
     let objectSymbol = Symbol();

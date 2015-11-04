@@ -19,7 +19,11 @@
 (function () {
     'use strict';
 
-    angular.module('AllmightyTwitchToolbox').controller('TestController', ['$scope', 'Followers', 'Donations', 'Notification', function ($scope, Followers, Donations, Notification) {
+    angular.module('AllmightyTwitchToolbox').controller('TestController', testController);
+
+    testController.$inject = ['$scope', 'Followers', 'Donations', 'Notification'];
+
+    function testController($scope, Followers, Donations, Notification) {
         $scope.donation = {
             username: '',
             amount: 0
@@ -70,5 +74,5 @@
         $scope.clearFollower = function () {
             $scope.follower.username = '';
         };
-    }]);
+    }
 })();

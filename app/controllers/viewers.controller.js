@@ -23,7 +23,11 @@
 
     let _ = require('lodash');
 
-    angular.module('AllmightyTwitchToolbox').controller('ViewersController', ['$scope', 'Viewers', function ($scope, Viewers) {
+    angular.module('AllmightyTwitchToolbox').controller('ViewersController', viewersController);
+
+    viewersController.$inject = ['$scope', 'Viewers'];
+
+    function viewersController($scope, Viewers) {
         $scope.chart = {
             options: {
                 chart: {
@@ -86,5 +90,5 @@
 
         // Viewer count changed
         $scope.$on('viewer-count-changed', getViewers);
-    }]);
+    }
 })();

@@ -238,7 +238,7 @@
                 module.exports.expressApp.use('/foobar', require(path.join(process.cwd(), 'app.backend', 'routes', 'foobarRoutes')));
                 module.exports.expressApp.use('/scenes', require(path.join(process.cwd(), 'app.backend', 'routes', 'scenesRoutes')));
 
-                module.exports.expressApp.use(function (req, res, next) {
+                module.exports.expressApp.use(function (req, res) {
                     res.status(404).json({error: 'Page not found!'});
                 });
 

@@ -21,7 +21,9 @@
 
     let AutoLinker = require('autolinker');
 
-    angular.module('AllmightyTwitchToolbox').filter('autolink', function () {
+    angular.module('AllmightyTwitchToolbox').filter('autolink', autoLinkFilter);
+
+    function autoLinkFilter() {
         let linker = new AutoLinker({
             email: false,
             phone: false
@@ -30,5 +32,5 @@
         return function (input) {
             return linker.link(input).replace('href=', 'ng-click="openLinkInBrowser()" href=');
         };
-    });
+    }
 })();

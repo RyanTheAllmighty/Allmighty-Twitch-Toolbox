@@ -21,7 +21,6 @@
 
     // NodeJS Modules
     let _ = require('lodash');
-    let path = require('path');
     let async = require('async');
     let nwNotify = require('nw-notify');
 
@@ -141,8 +140,6 @@
         }
 
         generateActionFunctions() {
-            let self = this;
-
             let toDo = [];
 
             if (this.data.onAction) {

@@ -9,7 +9,6 @@
         "catch"
     ],
     "requireOperatorBeforeLineBreak": true,
-    "requireCamelCaseOrUpperCaseIdentifiers": true,
     "maximumLineLength": {
         "value": 200,
         "allowComments": true,
@@ -20,7 +19,6 @@
 
     "disallowMultipleLineStrings": true,
     "disallowMixedSpacesAndTabs": true,
-    "disallowTrailingWhitespace": true,
     "disallowSpaceAfterPrefixUnaryOperators": true,
     "disallowMultipleVarDecl": null,
 
@@ -64,8 +62,10 @@
     "disallowDanglingUnderscores": null,
     "disallowEmptyBlocks": null,
     "disallowTrailingComma": null,
+    "disallowTrailingWhitespace": null,
     "requireCommaBeforeLineBreak": null,
     "requireDotNotation": null,
     "requireMultipleVarDecl": null,
-    "requireParenthesesAroundIIFE": true
+    "requireParenthesesAroundIIFE": true,
+    "requireCamelCaseOrUpperCaseIdentifiers": null
 }

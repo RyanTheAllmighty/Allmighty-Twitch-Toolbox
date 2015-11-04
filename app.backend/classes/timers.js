@@ -30,7 +30,7 @@
             let self = this;
 
             return new Promise(function (resolve, reject) {
-                self.get(name).then(function (t) {
+                self.get(name).then(function () {
                     return reject(new Error('A timer with that name already exists!'));
                 }).catch(function () {
                     self.datastore.insert({name, date}).exec(function (err, timer) {

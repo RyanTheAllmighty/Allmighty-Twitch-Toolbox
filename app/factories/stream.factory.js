@@ -19,11 +19,13 @@
 (function () {
     'use strict';
 
-    let _ = require('lodash');
-
     angular.module('stream', []);
 
-    angular.module('stream').factory('Stream', ['$http', function ($http) {
+    angular.module('stream').factory('Stream', streamFactory);
+
+    streamFactory.$inject = ['$http'];
+
+    function streamFactory($http) {
         return {
             isOnline,
             getLastStatus,
@@ -70,5 +72,5 @@
                 });
             });
         }
-    }]);
+    }
 })();

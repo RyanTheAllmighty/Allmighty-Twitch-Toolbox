@@ -21,7 +21,11 @@
 
     let _ = require('lodash');
 
-    angular.module('AllmightyTwitchToolbox').controller('SettingsController', ['$scope', '$timeout', 'Notification', 'Settings', function ($scope, $timeout, Notification, Settings) {
+    angular.module('AllmightyTwitchToolbox').controller('SettingsController', settingsController);
+
+    settingsController.$inject = ['$scope', '$timeout', 'Notification', 'Settings'];
+
+    function settingsController($scope, $timeout, Notification, Settings) {
         $scope.settings = {};
 
         $scope.reset = function () {
@@ -75,5 +79,5 @@
                 return Notification.error({message: err.message, delay: 3000});
             });
         };
-    }]);
+    }
 })();

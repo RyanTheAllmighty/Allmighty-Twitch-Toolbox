@@ -23,7 +23,11 @@
 
     angular.module('viewers', []);
 
-    angular.module('viewers').factory('Viewers', ['$http', function ($http) {
+    angular.module('viewers').factory('Viewers', viewersFactory);
+
+    viewersFactory.$inject = ['$http'];
+
+    function viewersFactory($http) {
         return {
             getViewers
         };
@@ -43,5 +47,5 @@
                 });
             });
         }
-    }]);
+    }
 })();

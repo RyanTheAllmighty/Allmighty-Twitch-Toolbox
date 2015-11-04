@@ -19,7 +19,11 @@
 (function () {
     'use strict';
 
-    angular.module('AllmightyTwitchToolbox').controller('HelpController', ['$scope', function ($scope) {
+    angular.module('AllmightyTwitchToolbox').controller('HelpController', helpController);
+
+    helpController.$inject = ['$scope'];
+
+    function helpController($scope) {
         $scope.webPort = global.App.settings.network.webPort;
-    }]);
+    }
 })();

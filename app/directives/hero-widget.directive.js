@@ -19,7 +19,9 @@
 (function () {
     'use strict';
 
-    angular.module('AllmightyTwitchToolbox').directive('heroWidget', function () {
+    angular.module('AllmightyTwitchToolbox').directive('heroWidget', heroWidgetDirective);
+
+    function heroWidgetDirective() {
         return {
             restrict: 'E',
             scope: {
@@ -33,5 +35,5 @@
             templateUrl: 'app/directives/hero-widget.directive.html',
             replace: true
         };
-    });
+    }
 })();
