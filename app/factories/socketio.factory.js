@@ -16,12 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global io */
-
 (function () {
     'use strict';
 
-    angular.module('socketio', []);
+    angular.module('socketio', ['btford.socket-io']);
 
     angular.module('socketio').factory('SocketIO', socketIOFactory);
 

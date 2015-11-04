@@ -37,7 +37,6 @@
         'stream',
         'giantbomb',
         'settings',
-        'btford.socket-io',
         'socketio',
         'music'
     ]);

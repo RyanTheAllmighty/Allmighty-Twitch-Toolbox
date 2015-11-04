@@ -21,9 +21,8 @@
 
     angular.module('AllmightyTwitchToolbox').controller('HelpController', helpController);
 
-    helpController.$inject = ['$scope'];
+    helpController.$inject = [];
 
-    function helpController($scope) {
-        $scope.webPort = global.App.settings.network.webPort;
+    function helpController() {
     }
 })();

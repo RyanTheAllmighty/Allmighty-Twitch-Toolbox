@@ -21,7 +21,7 @@
 
     angular.module('AllmightyTwitchToolbox').controller('ToolsController', toolsController);
 
-    toolsController.$inject = ['$scope', '$timeout', '$http', 'SocketIO', 'Music'];
+    toolsController.$inject = ['$scope', '$timeout', 'SocketIO', 'Music'];
 
     function toolsController($scope, $timeout, SocketIO, Music) {
         $scope.log = {
