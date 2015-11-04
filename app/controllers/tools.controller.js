@@ -72,7 +72,7 @@
             });
         };
 
-        $scope.runMusicInformationParsing = function (force) {
+        $scope.runMusicInformationParsing = function () {
             //if (!$scope.running.musicInformationParsing) {
             //    $scope.log.musicInformationParsing = '';
             //    $scope.running.musicInformationParsing = true;

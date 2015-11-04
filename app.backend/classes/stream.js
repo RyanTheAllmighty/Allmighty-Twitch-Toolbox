@@ -128,7 +128,9 @@
         setGame(game) {
             return new Promise(function (resolve, reject) {
                 global.services.settings.getGroup('twitch').then(function (settings) {
-                    global.services.twitchAPI.updateChannel(_.result(_.findWhere(settings, {name: 'username'}), 'value'), _.result(_.findWhere(settings, {name: 'apiToken'}), 'value'), {channel: {game}}, function (err) {
+                    let username = _.result(_.findWhere(settings, {name: 'username'}), 'value');
+                    let apiToken = _.result(_.findWhere(settings, {name: 'apiToken'}), 'value');
+                    global.services.twitchAPI.updateChannel(username, apiToken, {channel: {game}}, function (err) {
                         if (err) {
                             return reject(err);
                         }
@@ -142,7 +144,9 @@
         setTitle(title) {
             return new Promise(function (resolve, reject) {
                 global.services.settings.getGroup('twitch').then(function (settings) {
-                    global.services.twitchAPI.updateChannel(_.result(_.findWhere(settings, {name: 'username'}), 'value'), _.result(_.findWhere(settings, {name: 'apiToken'}), 'value'), {channel: {status: title}}, function (err) {
+                    let username = _.result(_.findWhere(settings, {name: 'username'}), 'value');
+                    let apiToken = _.result(_.findWhere(settings, {name: 'apiToken'}), 'value');
+                    global.services.twitchAPI.updateChannel(username, apiToken, {channel: {status: title}}, function (err) {
                         if (err) {
                             return reject(err);
                         }

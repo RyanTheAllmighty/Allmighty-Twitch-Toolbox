@@ -268,7 +268,6 @@
             return new Promise(function (resolve) {
                 window.location = 'http://localhost:' + 28800;
 
-
                 // Close the splash screen
                 global.splashScreen.close();
 
