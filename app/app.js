@@ -19,7 +19,7 @@
 (function () {
     'use strict';
 
-    let app = angular.module('AllmightyTwitchToolbox', [
+    angular.module('AllmightyTwitchToolbox', [
         'ngSanitize',
         'ui-notification',
         'ui.bootstrap',
@@ -37,11 +37,11 @@
         'stream',
         'giantbomb',
         'settings',
-        'socketio',
+        'socket-io',
         'music'
     ]);
 
-    app.config(function ($stateProvider, $urlRouterProvider, localStorageServiceProvider, NotificationProvider) {
+    angular.module('AllmightyTwitchToolbox').config(function ($stateProvider, $urlRouterProvider, localStorageServiceProvider, NotificationProvider) {
         // Setup the routes
         $stateProvider.state('dashboard', {
             url: '/dashboard',
@@ -104,7 +104,7 @@
         });
     });
 
-    app.run(['$rootScope', 'localStorageService', function ($rootScope, localStorageService) {
+    angular.module('AllmightyTwitchToolbox').run(['$rootScope', 'localStorageService', function ($rootScope, localStorageService) {
         $rootScope._updateCollapse = function (model) {
             let parts = model.split('.').splice(1);
 
@@ -124,7 +124,7 @@
         }
     }]);
 
-    app.run(['$state', function ($state) {
+    angular.module('AllmightyTwitchToolbox').run(['$state', function ($state) {
         // Go to the dashboard
         $state.go('dashboard');
     }]);

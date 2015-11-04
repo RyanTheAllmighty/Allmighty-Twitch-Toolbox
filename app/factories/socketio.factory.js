@@ -19,9 +19,9 @@
 (function () {
     'use strict';
 
-    angular.module('socketio', ['btford.socket-io']);
+    angular.module('socket-io', ['btford.socket-io']);
 
-    angular.module('socketio').factory('SocketIO', socketIOFactory);
+    angular.module('socket-io').factory('SocketIO', socketIOFactory);
 
     socketIOFactory.$inject = ['socketFactory'];
 
