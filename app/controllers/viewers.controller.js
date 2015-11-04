@@ -23,9 +23,9 @@
 
     angular.module('AllmightyTwitchToolbox').controller('ViewersController', viewersController);
 
-    viewersController.$inject = ['$scope', 'Viewers'];
+    viewersController.$inject = ['$scope', 'Viewers', 'SocketIO'];
 
-    function viewersController($scope, Viewers) {
+    function viewersController($scope, Viewers, SocketIO) {
         $scope.chart = {
             options: {
                 chart: {
@@ -86,7 +86,6 @@
 
         getViewers();
 
-        // Viewer count changed
-        $scope.$on('viewer-count-changed', getViewers);
+        SocketIO.on('viewer-count-changed', getViewers);
     }
 })();

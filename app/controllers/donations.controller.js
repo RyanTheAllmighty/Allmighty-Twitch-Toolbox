@@ -23,9 +23,9 @@
 
     angular.module('AllmightyTwitchToolbox').controller('DonationsController', donationsController);
 
-    donationsController.$inject = ['$scope', 'Donations', 'DTOptionsBuilder', 'DTColumnBuilder'];
+    donationsController.$inject = ['$scope', 'Donations', 'DTOptionsBuilder', 'DTColumnBuilder', 'SocketIO'];
 
-    function donationsController($scope, Donations, DTOptionsBuilder, DTColumnBuilder) {
+    function donationsController($scope, Donations, DTOptionsBuilder, DTColumnBuilder, SocketIO) {
         let getDonations = function () {
             return Donations.getDonations({limit: 100, order: 'desc'});
         };
@@ -49,10 +49,8 @@
             $scope.dtInstance.changeData(getDonations);
         }
 
-        // Donations list updated
-        $scope.$on('donations', changeData);
+        SocketIO.on('donations', changeData);
 
-        // New donation
-        $scope.$on('new-donation', changeData);
+        SocketIO.on('new-donation', changeData);
     }
 })();

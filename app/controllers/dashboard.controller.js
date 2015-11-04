@@ -23,9 +23,9 @@
 
     angular.module('AllmightyTwitchToolbox').controller('DashboardController', dashboardController);
 
-    dashboardController.$inject = ['$scope', '$timeout', 'Donations', 'Viewers', 'Stream', 'GiantBomb', 'Notification'];
+    dashboardController.$inject = ['$scope', '$timeout', 'Donations', 'Viewers', 'Stream', 'GiantBomb', 'Notification', 'SocketIO'];
 
-    function dashboardController($scope, $timeout, Donations, Viewers, Stream, GiantBomb, Notification) {
+    function dashboardController($scope, $timeout, Donations, Viewers, Stream, GiantBomb, Notification, SocketIO) {
         $scope.streamOnline = false;
         $scope.viewerCount = 0;
 
@@ -41,40 +41,23 @@
         $scope.game = '';
         $scope.title = '';
 
-        // Followers count changed
-        $scope.$on('follower-count-changed', function (event, number) {
-            $timeout(function () {
-                $scope.followersCount = number;
-                $scope.$apply();
-            });
+        SocketIO.on('follower-count-changed', function (number) {
+            $scope.followersCount = number;
         });
 
-        // Views count changed
-        $scope.$on('view-count-changed', function (event, number) {
-            $timeout(function () {
-                $scope.viewsCount = number;
-                $scope.$apply();
-            });
+        SocketIO.on('view-count-changed', function (number) {
+            $scope.viewsCount = number;
         });
 
-        // Game updated
-        $scope.$on('game-updated', function (event, game) {
-            $timeout(function () {
-                $scope.game = game;
-                $scope.$apply();
-            });
+        SocketIO.on('game-updated', function (game) {
+            $scope.game = game;
         });
 
-        // Title updated
-        $scope.$on('title-updated', function (event, title) {
-            $timeout(function () {
-                $scope.title = title;
-                $scope.$apply();
-            });
+        SocketIO.on('title-updated', function (title) {
+            $scope.title = title;
         });
 
-        // Donations list updated
-        $scope.$on('donations', function () {
+        SocketIO.on('donations', function () {
             Donations.getTotal().then(function (total) {
                 $timeout(function () {
                     $scope.donationsTotal = total;
@@ -85,22 +68,14 @@
             });
         });
 
-        // Stream is now online
-        $scope.$on('stream-online', function (event, data) {
-            $timeout(function () {
-                $scope.streamOnline = true;
-                $scope.followersStart = data.followers;
-                $scope.$apply();
-            });
+        SocketIO.on('stream-online', function (data) {
+            $scope.streamOnline = true;
+            $scope.followersStart = data.followers;
         });
 
-        // Stream is now offline
-        $scope.$on('stream-offline', function (event, data) {
-            $timeout(function () {
-                $scope.streamOnline = false;
-                $scope.followersStart = data.followers;
-                $scope.$apply();
-            });
+        SocketIO.on('stream-offline', function (data) {
+            $scope.streamOnline = false;
+            $scope.followersStart = data.followers;
         });
 
         $scope.searchGames = function (val) {

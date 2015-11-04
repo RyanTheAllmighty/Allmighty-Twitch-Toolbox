@@ -21,9 +21,9 @@
 
     angular.module('AllmightyTwitchToolbox').controller('FollowersController', followersController);
 
-    followersController.$inject = ['$scope', 'Followers', 'DTOptionsBuilder', 'DTColumnBuilder'];
+    followersController.$inject = ['$scope', 'Followers', 'DTOptionsBuilder', 'DTColumnBuilder', 'SocketIO'];
 
-    function followersController($scope, Followers, DTOptionsBuilder, DTColumnBuilder) {
+    function followersController($scope, Followers, DTOptionsBuilder, DTColumnBuilder, SocketIO) {
         let getFollowers = function () {
             return Followers.getFollowers({limit: 100, order: 'desc'});
         };
@@ -43,10 +43,7 @@
             $scope.dtInstance.changeData(getFollowers);
         }
 
-        // Followers list updated
-        $scope.$on('followers', changeData);
-
-        // New follower
-        $scope.$on('new-follower', changeData);
+        SocketIO.on('followers', changeData);
+        SocketIO.on('new-follower', changeData);
     }
 })();
