@@ -51,7 +51,7 @@
         viewers: null,
         timers: null,
         expressApp: null,
-        socketIOApp: null,
+        expressServer: null,
         io: null,
         sockets: [],
         notificationQueue: null,
@@ -100,10 +100,10 @@
                 module.exports.streamChecker = new StreamChecker();
                 module.exports.musicChecker = new MusicChecker();
 
-                module.exports.socketIOApp = require('http').createServer();
-                module.exports.io = require('socket.io')(module.exports.socketIOApp);
-
                 module.exports.expressApp = express();
+                module.exports.expressServer = require('http').Server(module.exports.expressApp);
+
+                module.exports.io = require('socket.io')(module.exports.expressServer);
 
                 return resolve();
             });
@@ -183,11 +183,8 @@
         startStreamChecker: function () {
             return module.exports.streamChecker.startChecking();
         },
-        startSocketIOServer: function () {
+        setupSocketIOServer: function () {
             return new Promise(function (resolve) {
-                // Listen on our socket.io server
-                module.exports.socketIOApp.listen(28801);
-
                 module.exports.io.on('connection', function (socket) {
                     // This signals to all connected sockets to reload their state (if available) useful
                     socket.emit('reload-state');
@@ -258,7 +255,7 @@
         },
         startExpressServer: function () {
             return new Promise(function (resolve, reject) {
-                module.exports.expressApp.listen(28800, function (err) {
+                module.exports.expressServer.listen(28800, function (err) {
                     if (err) {
                         return reject(err);
                     }

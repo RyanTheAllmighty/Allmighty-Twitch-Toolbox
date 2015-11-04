@@ -58,7 +58,7 @@
         .then(services.startDonationChecker)
         .then(services.startMusicChecker)
         .then(services.startStreamChecker)
-        .then(services.startSocketIOServer)
+        .then(services.setupSocketIOServer)
         .then(services.setupExpress)
         .then(services.startExpressServer)
         .then(services.loadAngularApp)

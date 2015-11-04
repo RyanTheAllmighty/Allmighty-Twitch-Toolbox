@@ -28,7 +28,7 @@
         }
     });
 
-    var socket = io('http://127.0.0.1:28801');
+    var socket = io('http://127.0.0.1:28800');
 
     // Received song data
     socket.on('song-changed', function (data) {

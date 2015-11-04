@@ -24,9 +24,9 @@
 
     angular.module('AllmightyTwitchToolbox').controller('ToolsController', toolsController);
 
-    toolsController.$inject = ['$scope', '$timeout'];
+    toolsController.$inject = ['$scope', '$timeout', 'SocketIOApp'];
 
-    function toolsController($scope, $timeout) {
+    function toolsController($scope, $timeout, SocketIOApp) {
         $scope.log = {
             musicInformationParsing: ''
         };
@@ -42,7 +42,7 @@
             artwork: null
         };
 
-        $scope.$on('song-changed', function (event, info) {
+        SocketIOApp.on('song-changed', function (info) {
             $scope.nowPlaying.isPlaying = true;
             $scope.nowPlaying.artist = info.artist;
             $scope.nowPlaying.title = info.title;

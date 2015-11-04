@@ -16,36 +16,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global io */
+
 (function () {
     'use strict';
 
-    angular.module('socket-io', []);
+    angular.module('socketioapp', []);
 
-    let clientSocketIO;
+    angular.module('socketioapp').factory('SocketIOApp', socketIOFactory);
 
-    angular.module('socket-io').provider('SocketIO', function () {
-        this.options = {
-            socketPort: 4000
-        };
+    socketIOFactory.$inject = ['socketFactory'];
 
-        this.setOptions = function (options) {
-            if (!angular.isObject(options)) {
-                throw new Error('Options should be an object!');
-            }
-
-            this.options = angular.extend({}, this.options, options);
-        };
-
-        this.$get = function () {
-            if (!clientSocketIO) {
-                clientSocketIO = require('socket.io-client')('http://127.0.0.1:' + this.options.socketPort);
-
-                clientSocketIO.on('disconnect', function () {
-                    clientSocketIO = undefined;
-                });
-            }
-
-            return clientSocketIO;
-        };
-    });
+    function socketIOFactory(socketFactory) {
+        return socketFactory();
+    }
 })();

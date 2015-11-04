@@ -38,7 +38,9 @@
         'nvd3',
         'stream',
         'giantbomb',
-        'settings'
+        'settings',
+        'btford.socket-io',
+        'socketioapp'
     ]);
 
     app.config(function ($stateProvider, $urlRouterProvider, localStorageServiceProvider, NotificationProvider) {

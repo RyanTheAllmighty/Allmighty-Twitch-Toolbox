@@ -46,7 +46,7 @@
             countdown: true
         });
 
-        var socket = io('http://127.0.0.1:28801');
+        var socket = io('http://127.0.0.1:28800');
 
         // Received a timer set event
         socket.on('timer-set', function (data) {

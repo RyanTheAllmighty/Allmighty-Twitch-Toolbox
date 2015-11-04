@@ -29,7 +29,7 @@
         }
     });
 
-    var socket = io('http://127.0.0.1:28801');
+    var socket = io('http://127.0.0.1:28800');
 
     // Received new follower data
     socket.on('new-follower', function (data) {
