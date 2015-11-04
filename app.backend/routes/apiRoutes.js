@@ -215,5 +215,26 @@
         });
     });
 
+    router.get('/nowplaying/reshow', function (req, res) {
+        global.services.socketIOEmit('song-reshow');
+        res.status(200).send();
+    });
+
+    router.post('/nowplaying/reshow', function (req, res) {
+        global.services.socketIOEmit('song-reshow', req.body);
+        res.status(200).send();
+    });
+
+    router.post('/giantbomb/search/games', function (req, res) {
+        global.services.giantBombAPI.searchGames(req.body.title, {
+            namesOnly: req.query.namesOnly,
+            limit: req.query.limit || 25
+        }).then(function (games) {
+            res.json(games);
+        }, function (err) {
+            res.status(500).send({error: err.message});
+        });
+    });
+
     module.exports = router;
 })();

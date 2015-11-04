@@ -52,6 +52,7 @@
         .then(services.showSplashScreen)
         .then(services.setupTwitchAPI)
         .then(services.setupStreamTipAPI)
+        .then(services.setupGiantBombAPI)
         .then(services.startNotificationQueue)
         .then(services.startFollowerChecker)
         .then(services.startDonationChecker)

@@ -112,10 +112,21 @@ This event is emitted when the song playing has changed. This event sends the fo
 {
     "title": "Interstellar Rush", // The title of the song
     "artist": "From The Dust", // The name of the artist
-    "artwork": "/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAMCAgMCAgM....", // A bas64 encoded jpeg of the album art (may not be set)
+    "artwork": "/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAMCAgMCAgM....", // A base64 encoded jpeg of the album art (may not be set)
     "websites": {
         "artist": "http://soundcloud.com/ftdmusic", // The artists webpage (may not be set)
         "song": "http://soundcloud.com/ftdmusic/from-the-dust-interstellar-rush-free" // The songs webpage (may not be set)
     }
+}
+```
+
+## song-reshow
+This event is emitted when something is requesting that the currently playing song be reshowed. This event CAN send the following data, but can also be empty:
+
+```js
+{
+    "title": "Interstellar Rush", // The title of the song
+    "artist": "From The Dust", // The name of the artist
+    "artwork": "/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAMCAgMCAgM...." // A base64 encoded jpeg of the album art (may not be set)
 }
 ```

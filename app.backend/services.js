@@ -26,6 +26,7 @@
     let express = require('express');
     let TwitchAPI = require('twitch-api');
     let bodyParser = require('body-parser');
+    let GiantBombAPI = require('giantbombapi');
     let gui = global.window.nwDispatcher.requireNwGui();
 
     // Our Classes
@@ -60,6 +61,7 @@
         streamChecker: null,
         twitchAPI: null,
         streamTipAPI: null,
+        giantBombAPI: null,
         socketIOEmit: function (name, message) {
             return new Promise(function (resolve, reject) {
                 if (_.isUndefined(message)) {
@@ -152,6 +154,15 @@
                         clientId: _.result(_.findWhere(settings, {name: 'clientID'}), 'value'),
                         accessToken: _.result(_.findWhere(settings, {name: 'accessToken'}), 'value')
                     });
+
+                    return resolve();
+                }).catch(reject);
+            });
+        },
+        setupGiantBombAPI: function () {
+            return new Promise(function (resolve, reject) {
+                module.exports.settings.get('giantbomb', 'apiKey').then(function (setting) {
+                    module.exports.giantBombAPI = new GiantBombAPI(setting.value);
 
                     return resolve();
                 }).catch(reject);

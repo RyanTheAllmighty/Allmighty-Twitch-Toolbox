@@ -128,6 +128,47 @@ This route gets the data of a user who has followed the channel. The user can be
 }
 ```
 
+### POST /api/giantbomb/search/games
+This route searches the GiantBomb API for games with the given query. Sent data should be in JSON format via POST as follows:
+                                                                                                                                                               
+```js
+{
+    "title": "Minecraft" // The title (or partial title) of the game to search for
+}
+```
+
+If successful a list of found games will be sent back in the response as per below, else an error will be returned:
+
+```js
+[
+    "Minecraft",
+    "Minecraft: Story Mode"
+]
+```
+
+You can specify URL query strings to change the behaviour of the call as per below:
+
+| Name | Description | Default |
+| --- | --- | -------- |
+| limit | Limits the number of results to return. Maximum is 100. | 25 |
+| namesOnly | If you only want to return an array of names else it will return an array of game objects from GiantBomb. | false |
+
+### GET /api/nowplaying/reshow
+This route sends a message to any displayed now playing scenes to reshow the currently playing song. This will return a 200 status code.
+
+### POST /api/nowplaying/reshow
+This route sends a message to any displayed now playing scenes to show the notification with the given information. Sent data should be in JSON format via POST as follows:
+                                                                                                                                                               
+```js
+{
+    "title": "Interstellar Rush", // The title of the song
+    "artist": "From The Dust", // The name of the artist
+    "artwork": "/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAMCAgMCAgM....", // A base64 encoded jpeg of the album art (may not be set)
+}
+```
+
+This will return a 200 status code.
+
 ### GET /api/stream
 This route gets the status details about the stream. It returns the following:
 

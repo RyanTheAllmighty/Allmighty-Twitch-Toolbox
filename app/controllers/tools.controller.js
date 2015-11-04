@@ -52,25 +52,25 @@
         updateNowPlaying();
 
         $scope.previousSong = function () {
-            request.get('http://localhost:' + $scope.App.settings.network.webPort + '/foobar/previous/', function () {
+            request.get('http://localhost:28800/foobar/previous/', function () {
                 $timeout(updateNowPlaying, 300);
             });
         };
 
         $scope.stopSong = function () {
-            request.get('http://localhost:' + $scope.App.settings.network.webPort + '/foobar/stop/', function () {
+            request.get('http://localhost:28800/foobar/stop/', function () {
                 $timeout(updateNowPlaying, 300);
             });
         };
 
         $scope.playPauseSong = function () {
-            request.get('http://localhost:' + $scope.App.settings.network.webPort + '/foobar/pause/', function () {
+            request.get('http://localhost:28800/foobar/pause/', function () {
                 $timeout(updateNowPlaying, 300);
             });
         };
 
         $scope.nextSong = function () {
-            request.get('http://localhost:' + $scope.App.settings.network.webPort + '/foobar/next/', function () {
+            request.get('http://localhost:28800/foobar/next/', function () {
                 $timeout(updateNowPlaying, 300);
             });
         };
@@ -115,20 +115,22 @@
         };
 
         $scope.reshowSong = function () {
+            // If we have info then reshow it with our known info as to prevent issues with no info on the receivers end
             if ($scope.nowPlaying.isPlaying) {
-                // If we have info then reshow it with our known info as to prevent issues with no info on the receivers end
-                SocketIOServer.emit('song-reshow', {
+                let musicData = {
                     title: $scope.nowPlaying.title,
                     artist: $scope.nowPlaying.artist,
                     artwork: $scope.nowPlaying.artwork
-                });
+                };
+
+                request.post({url: 'http://localhost:28800/api/nowplaying/reshow/', json: musicData});
             } else {
-                SocketIOServer.emit('song-reshow');
+                request.get({url: 'http://localhost:28800/api/nowplaying/reshow/'});
             }
         };
 
         function updateNowPlaying() {
-            request.get({url: 'http://localhost:' + $scope.App.settings.network.webPort + '/foobar/state/', json: true}, function (err, response, body) {
+            request.get({url: 'http://localhost:28800/foobar/state/', json: true}, function (err, response, body) {
                 $timeout(function () {
                     $scope.nowPlaying.isPlaying = body.isPlaying === '1';
 
