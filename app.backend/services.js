@@ -268,6 +268,13 @@
             return new Promise(function (resolve) {
                 window.location = 'http://localhost:' + 28800;
 
+
+                // Close the splash screen
+                global.splashScreen.close();
+
+                // Show the window
+                gui.Window.get().show();
+
                 return resolve();
             });
         }

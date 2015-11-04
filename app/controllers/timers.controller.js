@@ -21,8 +21,6 @@
 (function () {
     'use strict';
 
-    let gui = require('nw.gui');
-
     angular.module('AllmightyTwitchToolbox').controller('TimersController', timersController);
 
     timersController.$inject = ['$scope', '$timeout', 'Timers', 'Notification'];
@@ -82,17 +80,6 @@
                 Notification.success({message: 'Removed time from timer!', delay: 3000});
 
                 updateTimers();
-            }).catch(function (err) {
-                console.error(err);
-                return Notification.error({message: err.message, delay: 3000});
-            });
-        };
-
-        $scope.copyTimerURL = function (id) {
-            Timers.getTimer(id).then(function (timer) {
-                gui.Clipboard.get().set('http://127.0.0.1:28800/scenes/timer/' + (timer.name ? timer.name : timer._id), 'text');
-
-                Notification.success({message: 'Link copied to clipboard!', delay: 3000});
             }).catch(function (err) {
                 console.error(err);
                 return Notification.error({message: err.message, delay: 3000});

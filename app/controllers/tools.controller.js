@@ -19,14 +19,11 @@
 (function () {
     'use strict';
 
-    let request = require('request');
-    let musicInformationParser = require('./assets/js/tools/musicInformationParser');
-
     angular.module('AllmightyTwitchToolbox').controller('ToolsController', toolsController);
 
-    toolsController.$inject = ['$scope', '$timeout', '$http', 'SocketIOApp'];
+    toolsController.$inject = ['$scope', '$timeout', '$http', 'SocketIO', 'Music'];
 
-    function toolsController($scope, $timeout, SocketIOApp) {
+    function toolsController($scope, $timeout, SocketIO, Music) {
         $scope.log = {
             musicInformationParsing: ''
         };
@@ -42,7 +39,7 @@
             artwork: null
         };
 
-        SocketIOApp.on('song-changed', function (info) {
+        SocketIO.on('song-changed', function (info) {
             $scope.nowPlaying.isPlaying = true;
             $scope.nowPlaying.artist = info.artist;
             $scope.nowPlaying.title = info.title;
@@ -52,95 +49,93 @@
         updateNowPlaying();
 
         $scope.previousSong = function () {
-            request.get('http://localhost:28800/foobar/previous/', function () {
+            Music.previousSong().then(function () {
                 $timeout(updateNowPlaying, 300);
             });
         };
 
         $scope.stopSong = function () {
-            request.get('http://localhost:28800/foobar/stop/', function () {
+            Music.stopSong().then(function () {
                 $timeout(updateNowPlaying, 300);
             });
         };
 
         $scope.playPauseSong = function () {
-            request.get('http://localhost:28800/foobar/pause/', function () {
+            Music.playPauseSong().then(function () {
                 $timeout(updateNowPlaying, 300);
             });
         };
 
         $scope.nextSong = function () {
-            request.get('http://localhost:28800/foobar/next/', function () {
+            Music.nextSong().then(function () {
                 $timeout(updateNowPlaying, 300);
             });
         };
 
         $scope.runMusicInformationParsing = function (force) {
-            if (!$scope.running.musicInformationParsing) {
-                $scope.log.musicInformationParsing = '';
-                $scope.running.musicInformationParsing = true;
-
-                let ee = musicInformationParser.run({
-                    clientID: $scope.App.settings.soundcloud.clientID,
-                    ffmpegPath: $scope.App.settings.directories.binary + '/ffmpeg.exe',
-                    path: $scope.App.settings.directories.music,
-                    force
-                });
-
-                ee.on('info', function (message) {
-                    $timeout(function () {
-                        $scope.log.musicInformationParsing += message;
-                        $scope.$apply();
-                    });
-                });
-
-                ee.on('error', function (err) {
-                    $timeout(function () {
-                        $scope.log.musicInformationParsing += '\nError: ' + err.message;
-                        $scope.$apply();
-                    });
-
-                    $scope.running.musicInformationParsing = false;
-                });
-
-                ee.on('done', function () {
-                    $timeout(function () {
-                        $scope.log.musicInformationParsing += '\nDone';
-                        $scope.$apply();
-                    });
-
-                    $scope.running.musicInformationParsing = false;
-                });
-            }
+            //if (!$scope.running.musicInformationParsing) {
+            //    $scope.log.musicInformationParsing = '';
+            //    $scope.running.musicInformationParsing = true;
+            //
+            //    let ee = musicInformationParser.run({
+            //        clientID: $scope.App.settings.soundcloud.clientID,
+            //        ffmpegPath: $scope.App.settings.directories.binary + '/ffmpeg.exe',
+            //        path: $scope.App.settings.directories.music,
+            //        force
+            //    });
+            //
+            //    ee.on('info', function (message) {
+            //        $timeout(function () {
+            //            $scope.log.musicInformationParsing += message;
+            //            $scope.$apply();
+            //        });
+            //    });
+            //
+            //    ee.on('error', function (err) {
+            //        $timeout(function () {
+            //            $scope.log.musicInformationParsing += '\nError: ' + err.message;
+            //            $scope.$apply();
+            //        });
+            //
+            //        $scope.running.musicInformationParsing = false;
+            //    });
+            //
+            //    ee.on('done', function () {
+            //        $timeout(function () {
+            //            $scope.log.musicInformationParsing += '\nDone';
+            //            $scope.$apply();
+            //        });
+            //
+            //        $scope.running.musicInformationParsing = false;
+            //    });
+            //}
         };
 
         $scope.reshowSong = function () {
             // If we have info then reshow it with our known info as to prevent issues with no info on the receivers end
             if ($scope.nowPlaying.isPlaying) {
-                let musicData = {
+                Music.reshowSong({
                     title: $scope.nowPlaying.title,
                     artist: $scope.nowPlaying.artist,
                     artwork: $scope.nowPlaying.artwork
-                };
-
-                request.post({url: 'http://localhost:28800/api/nowplaying/reshow/', json: musicData});
+                });
             } else {
-                request.get({url: 'http://localhost:28800/api/nowplaying/reshow/'});
+                Music.reshowSong();
             }
         };
 
         function updateNowPlaying() {
-            request.get({url: 'http://localhost:28800/foobar/state/', json: true}, function (err, response, body) {
+            Music.getState().then(function (state) {
                 $timeout(function () {
-                    $scope.nowPlaying.isPlaying = body.isPlaying === '1';
+                    $scope.nowPlaying.isPlaying = state.isPlaying === '1';
 
-                    if (body.isPlaying === '1') {
-                        let item = body.playlist[body.playingItem - (body.playlistItemsPerPage * (body.playlistPage - 1))];
+                    if (state.isPlaying === '1') {
+                        let item = state.playlist[state.playingItem - (state.playlistItemsPerPage * (state.playlistPage - 1))];
 
                         if (item) {
                             $scope.nowPlaying.artist = item.a;
                             $scope.nowPlaying.title = item.t;
-                            $scope.nowPlaying.artwork = body.albumArt;
+                            $scope.nowPlaying.artwork = state.albumArt;
                         }
                     }
 

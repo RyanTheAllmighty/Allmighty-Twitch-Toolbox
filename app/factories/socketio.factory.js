@@ -21,9 +21,9 @@
 (function () {
     'use strict';
 
-    angular.module('socketioapp', []);
+    angular.module('socketio', []);
 
-    angular.module('socketioapp').factory('SocketIOApp', socketIOFactory);
+    angular.module('socketio').factory('SocketIO', socketIOFactory);
 
     socketIOFactory.$inject = ['socketFactory'];
 

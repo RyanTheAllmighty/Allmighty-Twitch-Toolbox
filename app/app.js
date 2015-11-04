@@ -19,8 +19,6 @@
 (function () {
     'use strict';
 
-    let gui = require('nw.gui');
-
     let app = angular.module('AllmightyTwitchToolbox', [
         'ngSanitize',
         'ui-notification',
@@ -40,7 +38,8 @@
         'giantbomb',
         'settings',
         'btford.socket-io',
-        'socketioapp'
+        'socketio',
+        'music'
     ]);
 
     app.config(function ($stateProvider, $urlRouterProvider, localStorageServiceProvider, NotificationProvider) {
@@ -127,13 +126,7 @@
     }]);
 
     app.run(['$state', function ($state) {
-        // Close the splash screen
-        global.splashScreen.close();
-
         // Go to the dashboard
         $state.go('dashboard');
-
-        // Show the window
-        gui.Window.get().show();
     }]);
 })();
