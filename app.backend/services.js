@@ -124,7 +124,6 @@
                 // Once the splash screen has loaded then we show the window. This prevents the window from showing a blank white window as it loads
                 global.splashScreen.on('loaded', function () {
                     global.splashScreen.show();
-                    global.splashScreen.showDevTools();
                 });
 
                 // When the splash screen is closed, remove it from global
