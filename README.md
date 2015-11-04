@@ -16,7 +16,7 @@ version or newer:
 - [NodeJS](https://nodejs.org/) (4.2.2)
 - [NW.js](http://nwjs.io/) (0.12.3)
 
-This project uses ES6 features, so a version of NodeJS is required to aupport the ES6 features we use. Using the listed NodeJS version listed above or newer is most likely the best move. We recommend
+This project uses ES6 features, so a version of NodeJS is required to support the ES6 features we use. Using the listed NodeJS version listed above or newer is most likely the best move. We recommend
 using [NVM](https://github.com/creationix/nvm) to manage and use specific NodeJS versions on your system.
 
 To make sure you have those all installed correctly, open up a command line/terminal and run the following commands and make sure they all work with no errors:
@@ -59,6 +59,8 @@ Alternatively if you've built the application as said above you can run that wit
 ```sh
 nw app.nw
 ```
+
+But please be aware that running from a packaged application will cause some slowdown on initial load as it unpacks the application ready to start loading.
 
 ### Getting Started
 More instructions to follow
