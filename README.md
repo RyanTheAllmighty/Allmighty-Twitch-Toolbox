@@ -13,7 +13,7 @@ Please see the STYLE.md file for coding standards and style guidelines.
 In order to run the application you'll need to install the following programs on your computer. The versions next to the package is the version we build against so you would be best to get that
 version or newer:
 
-- [NodeJS](https://nodejs.org/) (4.2.1)
+- [NodeJS](https://nodejs.org/) (4.2.2)
 - [NW.js](http://nwjs.io/) (0.12.3)
 
 This project uses ES6 features, so a version of NodeJS is required to aupport the ES6 features we use. Using the listed NodeJS version listed above or newer is most likely the best move. We recommend

@@ -16,10 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* globals accounting */
+
 (function () {
     'use strict';
 
-    angular.module('AllmightyTwitchToolbox').controller('DonationsController', ['$scope', 'Donations', 'DTOptionsBuilder', 'DTColumnBuilder', function ($scope, Donations, DTOptionsBuilder, DTColumnBuilder) {
+    angular.module('AllmightyTwitchToolbox').controller('DonationsController', donationsController);
+
+    donationsController.$inject = ['$scope', 'Donations', 'DTOptionsBuilder', 'DTColumnBuilder'];
+
+    function donationsController($scope, Donations, DTOptionsBuilder, DTColumnBuilder) {
         let getDonations = function () {
             return Donations.getDonations({limit: 100, order: 'desc'});
         };
@@ -48,5 +54,5 @@
 
         // New donation
         $scope.$on('new-donation', changeData);
-    }]);
+    }
 })();

@@ -41,16 +41,13 @@ function packageApp() {
 
         archive.pipe(output);
 
-
         let toArchive = [
             '**',
             '!node_modules/.bin/**',
             '!node_modules/chai/**',
-            '!node_modules/grunt/**',
-            '!node_modules/grunt-cli/**',
-            '!node_modules/grunt-contrib-jshint/**',
-            '!node_modules/grunt-mocha-test/**',
-            '!node_modules/jshint/**',
+            '!node_modules/gulp/**',
+            '!node_modules/gulp-jscs/**',
+            '!node_modules/gulp-jshint/**',
             '!node_modules/mocha/**',
             '!node_modules/sinon/**',
             '!node_modules/ffmetadata/test/**',
@@ -58,13 +55,17 @@ function packageApp() {
             '!.idea/**',
             '!test/**',
             '!.gitignore',
+            '!.jscsrc',
             '!.jshintrc',
             '!.jshintignore',
             '!README.md',
+            '!SOCKETEVENTS.md',
             '!STYLE.md',
+            '!WEBROUTES.md',
             '!util.js',
-            '!Gruntfile.js',
-            '!app.nw'
+            '!gulpfile.js',
+            '!app.nw',
+            '!npm-debug.log'
         ];
 
         archive.bulk([
