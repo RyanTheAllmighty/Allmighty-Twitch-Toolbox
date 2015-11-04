@@ -15,6 +15,7 @@ version or newer:
 
 - [NodeJS](https://nodejs.org/) (4.2.2)
 - [NW.js](http://nwjs.io/) (0.12.3)
+- [Gulp](http://gulpjs.com/) (3.9.0) (Install via 'npm install -g gulp')
 
 This project uses ES6 features, so a version of NodeJS is required to support the ES6 features we use. Using the listed NodeJS version listed above or newer is most likely the best move. We recommend
 using [NVM](https://github.com/creationix/nvm) to manage and use specific NodeJS versions on your system.
@@ -25,6 +26,7 @@ To make sure you have those all installed correctly, open up a command line/term
 node -v
 npm -v
 nw -v
+gulp -v
 ```
 
 Once you have those installed on your system you can clone the repository and get started.
@@ -36,15 +38,23 @@ To get started you firstly need to install all the NPM modules needed. Run the b
 npm install
 ```
 
-Then, assuming there were no errors, all you need to do is run our util.js file with the package option:
+Then, assuming there were no errors, all you need to do is run the package gulp task to generate a packaged nw file:
 
 ```sh
-node util.js package
+gulp package
 ```
 
-This will create an app.nw file in the current directory.
+This will create an app.nw file in the 'dist/{Application Name} v{Application Version}/' folder.
 
-Alternatively if you just want the latest build binary you can download it from [here](https://build.atlcdn.net/job/Allmighty%20Twitch%20Toolbox/) but please note that while we try to stay away from
+If you want to create executable for every platform then you can run the following:
+
+```sh
+gulp distribute
+```
+
+Which will create all the necessary zip files (and .nw file) in the 'dist/{Application Name} v{Application Version}/' folder.
+
+Alternatively if you just want the latest binary build you can download it from [here](https://build.atlcdn.net/job/Allmighty%20Twitch%20Toolbox/) but please note that while we try to stay away from
 native modules as much as possible, you may need to build your own binary to work on your system.
 
 #### Running the application
@@ -57,7 +67,7 @@ nw .
 Alternatively if you've built the application as said above you can run that with the following command:
 
 ```sh
-nw app.nw
+nw *.nw
 ```
 
 But please be aware that running from a packaged application will cause some slowdown on initial load as it unpacks the application ready to start loading.
