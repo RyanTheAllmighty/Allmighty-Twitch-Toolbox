@@ -124,8 +124,16 @@
         }
     }]);
 
-    angular.module('AllmightyTwitchToolbox').run(['$state', function ($state) {
+    angular.module('AllmightyTwitchToolbox').run(['$state', 'SocketIO', function ($state, SocketIO) {
         // Go to the dashboard
         $state.go('dashboard');
+
+        // Setup the sound socket listener
+        SocketIO.on('play-sound', function (data) {
+            new Howl({
+                urls: [data.data],
+                volume: data.volume || 1
+            }).play();
+        });
     }]);
 })();

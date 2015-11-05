@@ -20,7 +20,9 @@
     'use strict';
 
     // NodeJS Modules
+    let fs = require('fs');
     let _ = require('lodash');
+    let path = require('path');
     let async = require('async');
     let nwNotify = require('nw-notify');
 
@@ -140,6 +142,8 @@
         }
 
         generateActionFunctions() {
+            let self = this;
+
             let toDo = [];
 
             if (this.data.onAction) {
@@ -150,7 +154,9 @@
 
             if (this.data.sound) {
                 toDo.push(function (next) {
+                    let audioData = 'data:audio/' + path.extname(self.data.sound.file).substr(1) + ';base64,' + fs.readFileSync(self.data.sound.file).toString('base64');
 
+                    global.services.socketIOEmit('play-sound', {data: audioData, volume: self.data.sound.volume}).then(next).catch(next);
                     next();
                 });
             }

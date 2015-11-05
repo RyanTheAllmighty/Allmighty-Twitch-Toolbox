@@ -130,3 +130,15 @@ This event is emitted when something is requesting that the currently playing so
     "artwork": "/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAMCAgMCAgM...." // A base64 encoded jpeg of the album art (may not be set)
 }
 ```
+
+## play-sound
+This event is emitted when something is requesting that a sound should be played. This event will send the following data:
+
+```js
+{
+    "data": "/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAMCAgMCAgM....", // A base64 encoded string of the sound to play
+    "volume": 1 // The volume to play the sound at. Between 0 and 1 where 0 is silent and 1 is not silent. This MAY not be present, if not present then assume a volume of 1.
+}
+```
+
+Due to not being able to run sounds through NodeJS easily, and to keep things separate so Angular can be run without the context of NWjs, this is necessary in order to play sounds for alerts.
