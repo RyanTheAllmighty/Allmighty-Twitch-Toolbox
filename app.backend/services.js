@@ -62,6 +62,7 @@
         twitchAPI: null,
         streamTipAPI: null,
         giantBombAPI: null,
+        splashScreen: null,
         socketIOEmit: function (name, message) {
             return new Promise(function (resolve, reject) {
                 if (_.isUndefined(message)) {
@@ -110,7 +111,7 @@
         },
         showSplashScreen: function () {
             return new Promise(function (resolve) {
-                global.splashScreen = gui.Window.open('./splash-screen.html', {
+                module.exports.splashScreen = gui.Window.open('./splash-screen.html', {
                     position: 'center',
                     width: 500,
                     height: 200,
@@ -122,13 +123,13 @@
                 });
 
                 // Once the splash screen has loaded then we show the window. This prevents the window from showing a blank white window as it loads
-                global.splashScreen.on('loaded', function () {
-                    global.splashScreen.show();
+                module.exports.splashScreen.on('loaded', function () {
+                    module.exports.splashScreen.show();
                 });
 
                 // When the splash screen is closed, remove it from global
-                global.splashScreen.on('closed', function () {
-                    delete global.splashScreen;
+                module.exports.splashScreen.on('closed', function () {
+                    module.exports.splashScreen = null;
                 });
 
                 return resolve();
@@ -268,7 +269,7 @@
                 window.location = 'http://localhost:' + 28800;
 
                 // Close the splash screen
-                global.splashScreen.close();
+                module.exports.splashScreen.close();
 
                 // Show the window
                 gui.Window.get().show();

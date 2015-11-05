@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global _, accounting, d3 */
+/* globals _, accounting, d3 */
 
 (function () {
     'use strict';

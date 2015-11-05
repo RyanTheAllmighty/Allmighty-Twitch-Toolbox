@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global _ */
+/* globals _ */
 
 (function () {
     'use strict';
