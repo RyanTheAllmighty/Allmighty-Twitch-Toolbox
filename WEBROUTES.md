@@ -60,6 +60,24 @@ You can specify URL query strings to change the behaviour of the call as per bel
 | offset | The number of results to skip. Used in conjunction with limit to paginate between all results | 0 |
 | order | Changes the order of the results based upon date. Can be 'asc' or 'desc' | desc |
 
+### POST /api/donations/test
+This route tests adding a new donation for alerts. Sent data should be in JSON format via POST as follows:
+                                                                                              
+```js
+{
+    "username": "SomeUser", // The username of the user to test with
+    "amount": 10 // The amount to test with
+}
+```
+
+If successful a success message will be sent back in the response as per below, else an error will be returned:
+
+```js
+{
+    "success": true
+}
+```
+
 ### GET /api/donations/count
 This route gets a count of all the donations made. It returns the following:
 
@@ -103,6 +121,24 @@ You can specify URL query strings to change the behaviour of the call as per bel
 | limit | Limits the number of results to return. Maximum is 100. | 25 |
 | offset | The number of results to skip. Used in conjunction with limit to paginate between all results | 0 |
 | order | Changes the order of the results based upon date. Can be 'asc' or 'desc' | desc |
+
+### POST /api/followers/test
+This route tests adding a new follower for alerts. Sent data should be in JSON format via POST as follows:
+                                                                                              
+```js
+{
+    "username": "someuser", // The username of the user to test with
+    "display_name": "SomeUser" // The display name of the user to test with
+}
+```
+
+If successful a success message will be sent back in the response as per below, else an error will be returned:
+
+```js
+{
+    "success": true
+}
+```
 
 ### GET /api/followers/count
 This route gets a count of all the followers. It returns the following:
@@ -204,7 +240,7 @@ This route sets the channels current title. Sent data should be in JSON format v
                                            
 ```js
 {
-    title: "Watch me play games and stuff!"
+    "title": "Watch me play games and stuff!"
 }
 ```
 

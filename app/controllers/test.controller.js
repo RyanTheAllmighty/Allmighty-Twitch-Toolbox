@@ -38,7 +38,7 @@
 
                 $scope.clearDonation();
 
-                Donations.newDonation({username, amount, note: 'Test', id: 1, date: new Date(), test: true}).then(function () {
+                Donations.testDonation({username, amount, note: 'Test', id: 1, date: new Date(), test: true}).then(function () {
                     Notification.success({message: 'New donation triggered!', delay: 3000});
                 }).catch(function (err) {
                     Notification.error({message: err.message, delay: 3000});
@@ -63,7 +63,7 @@
 
                 $scope.clearFollower();
 
-                Followers.newFollower({username, display_name: username, id: 1, date: new Date(), test: true}).then(function () {
+                Followers.testFollower({username, display_name: username, id: 1, date: new Date(), test: true}).then(function () {
                     Notification.success({message: 'New follower triggered!', delay: 3000});
                 }).catch(function (err) {
                     Notification.error({message: err.message, delay: 3000});

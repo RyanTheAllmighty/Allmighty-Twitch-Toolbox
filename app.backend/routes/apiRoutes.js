@@ -75,6 +75,18 @@
         });
     });
 
+    router.post('/donations/test', function (req, res) {
+        if (!req.body.test) {
+            req.body.test = true;
+        }
+
+        global.services.donations.newDonation(req.body).then(function () {
+            res.json({success: true});
+        }).catch(function (err) {
+            res.status(500).send({error: err.message});
+        });
+    });
+
     router.get('/donations/count', function (req, res) {
         services.donations.count().then(function (count) {
             res.json(count);
@@ -99,6 +111,18 @@
         }).then(function (followers) {
             res.json(followers);
         }, function (err) {
+            res.status(500).send({error: err.message});
+        });
+    });
+
+    router.post('/followers/test', function (req, res) {
+        if (!req.body.test) {
+            req.body.test = true;
+        }
+
+        global.services.followers.newFollower(req.body).then(function () {
+            res.json({success: true});
+        }).catch(function (err) {
             res.status(500).send({error: err.message});
         });
     });

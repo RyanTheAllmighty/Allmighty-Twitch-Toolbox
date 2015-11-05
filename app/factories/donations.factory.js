@@ -29,9 +29,20 @@
 
     function donationsFactory($http) {
         return {
+            testDonation,
             getDonations,
             getTotal
         };
+
+        function testDonation(data) {
+            return new Promise(function (resolve, reject) {
+                $http.post('http://127.0.0.1:28800/api/donations/test', data).success(function () {
+                    return resolve();
+                }).error(function (data, code) {
+                    return reject(data.error || 'An error occurred with status code ' + code);
+                });
+            });
+        }
 
         function getDonations(options) {
             return new Promise(function (resolve, reject) {
