@@ -16,22 +16,23 @@ html(ng-app='AllmightyTwitchToolbox')
         nav.navbar.navbar-default.navbar-fixed-top(ng-controller='NavigationController')
             .container-fluid
                 .navbar-header
-                    a.navbar-brand(ui-sref='dashboard') Allmighty Twitch Toolbox
+                    a.navbar-brand(ng-show="hasSetup", ui-sref='dashboard') Allmighty Twitch Toolbox
+                    a.navbar-brand(ng-show="!hasSetup", ui-sref='settings') Allmighty Twitch Toolbox
                 .collapse.navbar-collapse
                     ul.nav.navbar-nav
-                        li(ng-class="{active: $location.path() === '/dashboard'}")
+                        li(ng-show="hasSetup", ng-class="{active: $location.path() === '/dashboard'}")
                             a(ui-sref='dashboard') Dashboard
-                        li(ng-class="{active: $location.path() === '/viewers'}")
+                        li(ng-show="hasSetup", ng-class="{active: $location.path() === '/viewers'}")
                             a(ui-sref='viewers') Viewers
-                        li(ng-class="{active: $location.path() === '/followers'}")
+                        li(ng-show="hasSetup", ng-class="{active: $location.path() === '/followers'}")
                             a(ui-sref='followers') Followers
-                        li(ng-class="{active: $location.path() === '/donations'}")
+                        li(ng-show="hasSetup", ng-class="{active: $location.path() === '/donations'}")
                             a(ui-sref='donations') Donations
-                        li(ng-class="{active: $location.path() === '/timers'}")
+                        li(ng-show="hasSetup", ng-class="{active: $location.path() === '/timers'}")
                             a(ui-sref='timers') Timers
-                        li(ng-class="{active: $location.path() === '/tools'}")
+                        li(ng-show="hasSetup", ng-class="{active: $location.path() === '/tools'}")
                             a(ui-sref='tools') Tools
-                        li(ng-class="{active: $location.path() === '/test'}")
+                        li(ng-show="hasSetup", ng-class="{active: $location.path() === '/test'}")
                             a(ui-sref='test') Test
                         li(ng-class="{active: $location.path() === '/settings'}")
                             a(ui-sref='settings') Settings

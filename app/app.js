@@ -126,9 +126,16 @@
         }
     }]);
 
-    angular.module('AllmightyTwitchToolbox').run(['$state', 'SocketIO', function ($state, SocketIO) {
-        // Go to the dashboard
-        $state.go('dashboard');
+    angular.module('AllmightyTwitchToolbox').run(['$state', 'SocketIO', 'Settings', function ($state, SocketIO, Settings) {
+        Settings.getSetting('application', 'hasSetup').then(function (setting) {
+            if (setting.value) {
+                // Go to the dashboard since we're setup
+                $state.go('dashboard');
+            } else {
+                // Go to the settings page since we're not setup
+                $state.go('settings');
+            }
+        });
 
         // Setup the sound socket listener
         SocketIO.on('play-sound', function (data) {

@@ -49,6 +49,10 @@
                 let offset = 0;
                 let added = 0;
 
+                if (!global.services.streamTipAPI.clientID || !global.services.streamTipAPI.apiToken) {
+                    return resolve();
+                }
+
                 async.doWhilst(
                     function (cb) {
                         added = 0;

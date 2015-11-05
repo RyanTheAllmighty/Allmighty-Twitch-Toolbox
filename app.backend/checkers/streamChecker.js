@@ -58,6 +58,10 @@
 
         check(username) {
             return new Promise(function (resolve, reject) {
+                if (!username) {
+                    return resolve();
+                }
+                
                 global.services.twitchAPI.getChannel(username, function (err, channelInfo) {
                     if (err) {
                         return reject(err);
@@ -96,14 +100,17 @@
 
                 self.doInitialCheck().then(function () {
                     global.services.settings.getAll().then(function (settings) {
+                        let username = _.result(_.findWhere(settings, {group: 'twitch', name: 'username'}), 'value');
+                        let intervalTime = _.result(_.findWhere(settings, {group: 'checks', name: 'stream'}), 'value');
+
                         // Save this interval so we can cancel it if we get another one later
                         self[objectSymbol].interval = setInterval(function () {
-                            self.check(_.result(_.findWhere(settings, {group: 'twitch', name: 'username'}), 'value')).catch(function (err) {
+                            self.check(username).catch(function (err) {
                                 if (err) {
                                     console.error(err);
                                 }
                             });
-                        }, _.result(_.findWhere(settings, {group: 'checks', name: 'stream'}), 'value') * 1000);
+                        }, intervalTime * 1000);
 
                         return resolve();
                     }).catch(reject);

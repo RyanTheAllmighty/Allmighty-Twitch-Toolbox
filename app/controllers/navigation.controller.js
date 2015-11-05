@@ -21,9 +21,14 @@
 
     angular.module('AllmightyTwitchToolbox').controller('NavigationController', navigationController);
 
-    navigationController.$inject = ['$scope', '$location'];
+    navigationController.$inject = ['$scope', '$location', 'Settings'];
 
-    function navigationController($scope, $location) {
+    function navigationController($scope, $location, Settings) {
+        $scope.hasSetup = true;
         $scope.$location = $location;
+
+        Settings.getSetting('application', 'hasSetup').then(function (setting) {
+            $scope.hasSetup = setting.value;
+        });
     }
 })();

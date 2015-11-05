@@ -24,9 +24,111 @@
 
     let Datastore = require('./datastore');
 
+    let defaultSettings = {
+        twitch: {
+            username: '',
+            apiToken: '',
+            apiClientID: ''
+        },
+        streamtip: {
+            accessToken: '',
+            clientID: ''
+        },
+        soundcloud: {
+            clientID: ''
+        },
+        giantbomb: {
+            apiKey: ''
+        },
+        checks: {
+            donations: 10,
+            followers: 10,
+            stream: 10
+        },
+        network: {
+            foobarHttpControlPort: 8888
+        },
+        sounds: {
+            newDonation: '',
+            newDonationVolume: 1.0,
+            newFollower: '',
+            newFollowerVolume: 1.0
+        },
+        notifications: {
+            donationNotificationTime: 5,
+            followerNotificationTime: 5,
+            musicChangeNotificationTime: 5
+        },
+        directories: {
+            binary: '',
+            data: '',
+            music: ''
+        },
+        application: {
+            hasSetup: false
+        }
+    };
+
     class Settings extends Datastore {
         constructor(options) {
             super('settings', options);
+        }
+
+        checkSettings() {
+            let self = this;
+
+            return new Promise(function (resolve, reject) {
+                let ourSettings = {};
+
+                self.getAll().then(function (settings) {
+                    if (settings.length === 0) {
+                        ourSettings = defaultSettings;
+
+                        self.setAll(ourSettings).then(resolve).catch(reject);
+                    } else {
+                        _.forEach(settings, function (setting) {
+                            if (!ourSettings[setting.group]) {
+                                ourSettings[setting.group] = {};
+                            }
+
+                            if (!ourSettings[setting.group][setting.name]) {
+                                ourSettings[setting.group][setting.name] = {};
+                            }
+
+                            ourSettings[setting.group][setting.name] = setting.value;
+                        });
+
+                        let needToSave = false;
+
+                        // This will set defaults for new settings that aren't defined in the settings DB yet
+                        async.forEachOf(defaultSettings, function (value, group, next) {
+                            if (typeof ourSettings[group] === 'undefined') {
+                                needToSave = true;
+                                ourSettings[group] = value;
+                            } else {
+                                Object.keys(value).forEach(function (name) {
+                                    if (typeof ourSettings[group][name] === 'undefined') {
+                                        needToSave = true;
+                                        ourSettings[group][name] = value[name];
+                                    }
+                                });
+                            }
+
+                            next();
+                        }, function (err) {
+                            if (err) {
+                                return reject(err);
+                            }
+
+                            if (needToSave) {
+                                self.setAll(ourSettings).then(resolve).catch(reject);
+                            } else {
+                                return resolve();
+                            }
+                        });
+                    }
+                }).catch(reject);
+            });
         }
 
         get(group, name) {
@@ -38,7 +140,7 @@
                         return reject(err);
                     }
 
-                    if (!doc || !doc.value) {
+                    if (!doc) {
                         return reject(new Error('No setting found!'));
                     }
 

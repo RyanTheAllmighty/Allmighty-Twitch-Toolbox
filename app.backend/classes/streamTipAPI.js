@@ -26,6 +26,14 @@
             this._options = options;
         }
 
+        get accessToken() {
+            return this._options.clientId;
+        }
+
+        get clientID() {
+            return this._options.clientId;
+        }
+
         getTips(options) {
             let self = this;
 
@@ -51,7 +59,7 @@
                     url: 'https://streamtip.com/api/tips' + queryString,
                     json: true,
                     headers: {
-                        'Authorization': self._options.clientId + ' ' + self._options.accessToken
+                        'Authorization': self.clientID + ' ' + self.accessToken
                     }
                 }, function (err, res, body) {
                     if (err) {

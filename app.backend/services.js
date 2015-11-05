@@ -86,30 +86,35 @@
             });
         },
         load: function () {
-            return new Promise(function (resolve) {
-                module.exports.donations = new Donations({autoload: true});
-                module.exports.followers = new Followers({autoload: true});
+            console.log(2);
+            return new Promise(function (resolve, reject) {
                 module.exports.settings = new Settings({autoload: true});
-                module.exports.stream = new Stream({autoload: true});
-                module.exports.viewers = new Viewers({autoload: true});
-                module.exports.timers = new Timers({autoload: true});
 
-                module.exports.notificationQueue = new NotificationQueue();
+                module.exports.settings.checkSettings().then(function () {
+                    module.exports.stream = new Stream({autoload: true});
+                    module.exports.timers = new Timers({autoload: true});
+                    module.exports.viewers = new Viewers({autoload: true});
+                    module.exports.donations = new Donations({autoload: true});
+                    module.exports.followers = new Followers({autoload: true});
 
-                module.exports.followerChecker = new FollowerChecker();
-                module.exports.donationChecker = new DonationChecker();
-                module.exports.streamChecker = new StreamChecker();
-                module.exports.musicChecker = new MusicChecker();
+                    module.exports.notificationQueue = new NotificationQueue();
 
-                module.exports.expressApp = express();
-                module.exports.expressServer = require('http').Server(module.exports.expressApp);
+                    module.exports.followerChecker = new FollowerChecker();
+                    module.exports.donationChecker = new DonationChecker();
+                    module.exports.streamChecker = new StreamChecker();
+                    module.exports.musicChecker = new MusicChecker();
 
-                module.exports.io = require('socket.io')(module.exports.expressServer);
+                    module.exports.expressApp = express();
+                    module.exports.expressServer = require('http').Server(module.exports.expressApp);
 
-                return resolve();
+                    module.exports.io = require('socket.io')(module.exports.expressServer);
+
+                    return resolve();
+                }).catch(reject);
             });
         },
         showSplashScreen: function () {
+            console.log(1);
             return new Promise(function (resolve) {
                 module.exports.splashScreen = gui.Window.open('./splash-screen.html', {
                     position: 'center',
@@ -125,17 +130,18 @@
                 // Once the splash screen has loaded then we show the window. This prevents the window from showing a blank white window as it loads
                 module.exports.splashScreen.on('loaded', function () {
                     module.exports.splashScreen.show();
+
+                    return resolve();
                 });
 
                 // When the splash screen is closed, remove it from global
                 module.exports.splashScreen.on('closed', function () {
                     module.exports.splashScreen = null;
                 });
-
-                return resolve();
             });
         },
         setupTwitchAPI: function () {
+            console.log(3);
             return new Promise(function (resolve, reject) {
                 module.exports.settings.getGroup('twitch').then(function (settings) {
                     module.exports.twitchAPI = new TwitchAPI({
@@ -148,6 +154,7 @@
             });
         },
         setupStreamTipAPI: function () {
+            console.log(4);
             return new Promise(function (resolve, reject) {
                 module.exports.settings.getGroup('streamtip').then(function (settings) {
                     module.exports.streamTipAPI = new StreamTipAPI({
@@ -160,6 +167,7 @@
             });
         },
         setupGiantBombAPI: function () {
+            console.log(5);
             return new Promise(function (resolve, reject) {
                 module.exports.settings.get('giantbomb', 'apiKey').then(function (setting) {
                     module.exports.giantBombAPI = new GiantBombAPI(setting.value);
@@ -169,21 +177,27 @@
             });
         },
         startNotificationQueue: function () {
+            console.log(6);
             return module.exports.notificationQueue.startQueue();
         },
         startFollowerChecker: function () {
+            console.log(7);
             return module.exports.followerChecker.startChecking();
         },
         startDonationChecker: function () {
+            console.log(8);
             return module.exports.donationChecker.startChecking();
         },
-        startMusicChecker: function () {
-            return module.exports.musicChecker.startChecking();
-        },
         startStreamChecker: function () {
+            console.log(9);
             return module.exports.streamChecker.startChecking();
         },
+        startMusicChecker: function () {
+            console.log(10);
+            return module.exports.musicChecker.startChecking();
+        },
         setupSocketIOServer: function () {
+            console.log(11);
             return new Promise(function (resolve) {
                 module.exports.io.on('connection', function (socket) {
                     // This signals to all connected sockets to reload their state (if available) useful
@@ -206,6 +220,7 @@
             });
         },
         setupExpress: function () {
+            console.log(12);
             return new Promise(function (resolve) {
                 module.exports.expressApp.use('/app', express.static(path.join(process.cwd(), 'app')));
                 module.exports.expressApp.use('/assets', express.static(path.join(process.cwd(), 'assets')));
@@ -254,6 +269,7 @@
             });
         },
         startExpressServer: function () {
+            console.log(13);
             return new Promise(function (resolve, reject) {
                 module.exports.expressServer.listen(28800, function (err) {
                     if (err) {
@@ -265,6 +281,7 @@
             });
         },
         loadAngularApp: function () {
+            console.log(14);
             return new Promise(function (resolve) {
                 window.location = 'http://localhost:' + 28800;
 

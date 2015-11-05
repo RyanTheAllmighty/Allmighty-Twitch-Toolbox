@@ -52,6 +52,10 @@
                 let cursor = null;
 
                 global.services.settings.get('twitch', 'username').then(function (username) {
+                    if (!username) {
+                        return resolve();
+                    }
+
                     async.doWhilst(
                         function (cb) {
                             let args = {limit: 100, offset, direction: 'DESC'};
@@ -133,9 +137,12 @@
 
                 self.doInitialCheck().then(function () {
                     global.services.settings.getAll().then(function (settings) {
+                        let username = _.result(_.findWhere(settings, {group: 'twitch', name: 'username'}), 'value');
+                        let intervalTime = _.result(_.findWhere(settings, {group: 'checks', name: 'followers'}), 'value');
+
                         // Save this interval so we can cancel it if we get another one later
                         self[objectSymbol].interval = setInterval(function () {
-                            global.services.twitchAPI.getChannelFollows(_.result(_.findWhere(settings, {group: 'twitch', name: 'username'}), 'value'), {
+                            global.services.twitchAPI.getChannelFollows(username, {
                                 limit: 25,
                                 direction: 'DESC'
                             }, function (err, followers) {
@@ -158,7 +165,7 @@
                                     }
                                 });
                             });
-                        }, _.result(_.findWhere(settings, {group: 'checks', name: 'followers'}), 'value') * 1000);
+                        }, intervalTime * 1000);
 
                         return resolve();
                     }).catch(reject);

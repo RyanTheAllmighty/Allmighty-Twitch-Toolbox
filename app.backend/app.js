@@ -56,14 +56,14 @@
         .then(services.startNotificationQueue)
         .then(services.startFollowerChecker)
         .then(services.startDonationChecker)
-        .then(services.startMusicChecker)
         .then(services.startStreamChecker)
+        .then(services.startMusicChecker)
         .then(services.setupSocketIOServer)
         .then(services.setupExpress)
         .then(services.startExpressServer)
         .then(services.loadAngularApp)
         .catch(function (err) {
             console.error(err);
-            gui.App.quit();
+            //gui.App.quit();
         });
 })();

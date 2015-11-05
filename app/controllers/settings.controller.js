@@ -73,8 +73,19 @@
                 $scope.settings.directories.music = document.getElementById('musicDirectory').files[0].path.toString();
             }
 
+            let isNowSetup = false;
+
+            if (!$scope.settings.application.hasSetup) {
+                isNowSetup = true;
+                $scope.settings.application.hasSetup = true;
+            }
+
             Settings.setAll($scope.settings).then(function () {
-                Notification.success({message: 'Settings saved!', delay: 3000});
+                if (isNowSetup) {
+                    Notification.success({message: 'Settings saved! Please restart the application!', delay: 3000});
+                } else {
+                    Notification.success({message: 'Settings saved!', delay: 3000});
+                }
             }).catch(function (err) {
                 return Notification.error({message: err.message, delay: 3000});
             });
