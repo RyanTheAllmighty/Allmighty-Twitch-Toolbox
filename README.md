@@ -54,6 +54,9 @@ gulp distribute
 
 Which will create all the necessary zip files (and .nw file) in the 'dist/{Application Name} v{Application Version}/' folder.
 
+Please note that to create distributable files with the distribute gulp task, you'll need a Windows machine with .net 2.0 or if you're on Linux/OSX then you'll need Wine with .net 2.0 installed and a
+X server installed (Xvfb works well for servers).
+
 Alternatively if you just want the latest binary build you can download it from [here](https://build.atlcdn.net/job/Allmighty%20Twitch%20Toolbox/) but please note that while we try to stay away from
 native modules as much as possible, you may need to build your own binary to work on your system.
 
