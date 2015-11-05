@@ -142,7 +142,7 @@
             }
         };
 
-        if (options._.skipWinIcon) {
+        if (options.skipWinIcon) {
             delete nwOpts.winIco;
         }
 
