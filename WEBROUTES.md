@@ -390,6 +390,25 @@ If successful a success message will be sent back in the response as per below, 
 }
 ```
 
+### GET /api/tools/musicparser/run
+This route runs the music information parser.
+
+If successful a success message will be sent back in the response as per below, else an error will be returned:
+
+```js
+{
+    "success": true
+}
+```
+
+You can specify URL query strings to change the behaviour of the call as per below:
+
+| Name | Description | Default |
+| --- | --- | -------- |
+| force | Forces the tool to parse everything even if previously parsed. | false |
+
+You can get information about what's going on via the 'tools-musicparser-*' socket events.
+
 ### GET /api/viewers
 This route returns an array of viewer objects over time. It returns the following:
 

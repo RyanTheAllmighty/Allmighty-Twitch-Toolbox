@@ -32,7 +32,8 @@
             nextSong,
             playPauseSong,
             reshowSong,
-            getState
+            getState,
+            runMusicInformationParsing
         };
 
         function previousSong() {
@@ -96,6 +97,16 @@
         function getState() {
             return new Promise(function (resolve, reject) {
                 $http.get('http://localhost:28800/foobar/state/').success(function (data) {
+                    return resolve(data);
+                }).error(function (data, code) {
+                    return reject(data.error || 'An error occurred with status code ' + code);
+                });
+            });
+        }
+
+        function runMusicInformationParsing(force) {
+            return new Promise(function (resolve, reject) {
+                $http.get('http://localhost:28800/api/tools/musicparser/run' + (force ? '?force=true' : '')).success(function (data) {
                     return resolve(data);
                 }).error(function (data, code) {
                     return reject(data.error || 'An error occurred with status code ' + code);

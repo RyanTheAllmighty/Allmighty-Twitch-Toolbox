@@ -142,3 +142,23 @@ This event is emitted when something is requesting that a sound should be played
 ```
 
 Due to not being able to run sounds through NodeJS easily, and to keep things separate so Angular can be run without the context of NWjs, this is necessary in order to play sounds for alerts.
+
+## tools-musicparser-started
+This event is emitted when the music parser has started. This event sends no information.
+
+## tools-musicparser-finished
+This event is emitted when the music parser has finished successfully. This event sends no information.
+
+## tools-musicparser-info
+This event is emitted when the music parser has returned some information. This event will send the following data:
+
+```js
+"Some message"
+```
+
+## tools-musicparser-error
+This event is emitted when the music parser has returned an error and has finished. This event will send the following data:
+
+```js
+"Some error message"
+```

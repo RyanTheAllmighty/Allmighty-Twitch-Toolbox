@@ -46,6 +46,25 @@
             $scope.nowPlaying.artwork = info.artwork;
         });
 
+        SocketIO.on('tools-musicparser-started', function () {
+            $scope.running.musicInformationParsing = true;
+            $scope.log.musicInformationParsing = '';
+        });
+
+        SocketIO.on('tools-musicparser-finished', function () {
+            $scope.running.musicInformationParsing = false;
+            $scope.log.musicInformationParsing += '\nDone';
+        });
+
+        SocketIO.on('tools-musicparser-info', function (message) {
+            $scope.log.musicInformationParsing += message;
+        });
+
+        SocketIO.on('tools-musicparser-error', function (err) {
+            $scope.running.musicInformationParsing = false;
+            $scope.log.musicInformationParsing += '\nError: ' + err.message;
+        });
+
         updateNowPlaying();
 
         $scope.previousSong = function () {
@@ -72,43 +91,10 @@
             });
         };
 
-        $scope.runMusicInformationParsing = function () {
-            //if (!$scope.running.musicInformationParsing) {
-            //    $scope.log.musicInformationParsing = '';
-            //    $scope.running.musicInformationParsing = true;
-            //
-            //    let ee = musicInformationParser.run({
-            //        clientID: $scope.App.settings.soundcloud.clientID,
-            //        ffmpegPath: $scope.App.settings.directories.binary + '/ffmpeg.exe',
-            //        path: $scope.App.settings.directories.music,
-            //        force
-            //    });
-            //
-            //    ee.on('info', function (message) {
-            //        $timeout(function () {
-            //            $scope.log.musicInformationParsing += message;
-            //            $scope.$apply();
-            //        });
-            //    });
-            //
-            //    ee.on('error', function (err) {
-            //        $timeout(function () {
-            //            $scope.log.musicInformationParsing += '\nError: ' + err.message;
-            //            $scope.$apply();
-            //        });
-            //
-            //        $scope.running.musicInformationParsing = false;
-            //    });
-            //
-            //    ee.on('done', function () {
-            //        $timeout(function () {
-            //            $scope.log.musicInformationParsing += '\nDone';
-            //            $scope.$apply();
-            //        });
-            //
-            //        $scope.running.musicInformationParsing = false;
-            //    });
-            //}
+        $scope.runMusicInformationParsing = function (force) {
+            if (!$scope.running.musicInformationParsing) {
+                Music.runMusicInformationParsing(force);
+            }
         };
 
         $scope.reshowSong = function () {

@@ -20,6 +20,7 @@
     'use strict';
 
     // NodeJS Modules
+    let _ = require('lodash');
     let path = require('path');
     let express = require('express');
 
@@ -28,6 +29,8 @@
 
     // Include our services module
     let services = require(path.join(process.cwd(), 'app.backend', 'services'));
+
+    let musicInformationParser = require(path.join(process.cwd(), 'app.backend', 'tools', 'musicInformationParser'));
 
     router.get('/settings', function (req, res) {
         services.settings.getAll().then(function (settings) {
@@ -256,6 +259,35 @@
         }).then(function (games) {
             res.json(games);
         }, function (err) {
+            res.status(500).send({error: err.message});
+        });
+    });
+
+    router.get('/tools/musicparser/run', function (req, res) {
+        global.services.settings.getAll().then(function(settings) {
+            let ee = musicInformationParser.run({
+                clientID: _.result(_.findWhere(settings, {group: 'soundcloud', name: 'apiKey'}), 'value'),
+                ffmpegPath: _.result(_.findWhere(settings, {group: 'directories', name: 'binary'}), 'value') + '/ffmpeg.exe',
+                path: _.result(_.findWhere(settings, {group: 'directories', name: 'music'}), 'value'),
+                force: req.query.force
+            });
+
+            global.services.socketIOEmit('tools-musicparser-started');
+
+            ee.on('info', function (message) {
+                global.services.socketIOEmit('tools-musicparser-info', message);
+            });
+
+            ee.on('error', function (err) {
+                global.services.socketIOEmit('tools-musicparser-error', err.message);
+            });
+
+            ee.on('done', function () {
+                global.services.socketIOEmit('tools-musicparser-finished');
+            });
+
+            res.json({success: true});
+        }).catch(function(err) {
             res.status(500).send({error: err.message});
         });
     });
