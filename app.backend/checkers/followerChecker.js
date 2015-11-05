@@ -49,13 +49,25 @@
             return new Promise(function (resolve, reject) {
                 let offset = 0;
                 let added = 0;
+                let cursor = null;
 
                 global.services.settings.get('twitch', 'username').then(function (username) {
                     async.doWhilst(
                         function (cb) {
-                            global.services.twitchAPI.getChannelFollows(username.value, {limit: 100, offset, direction: 'DESC'}, function (err, followers) {
+                            let args = {limit: 100, offset, direction: 'DESC'};
+
+                            if (cursor) {
+                                args.cursor = cursor;
+                                delete args.offset;
+                            }
+
+                            global.services.twitchAPI.getChannelFollows(username.value, args, function (err, followers) {
                                 if (err) {
                                     return cb(err);
+                                }
+
+                                if (followers._cursor) {
+                                    cursor = followers._cursor;
                                 }
 
                                 added = 0;
@@ -83,11 +95,6 @@
                                     }
 
                                     offset += 100;
-
-                                    // Twitch only allows looking at followers up to offset 1700
-                                    if (offset === 1700) {
-                                        added = 0;
-                                    }
 
                                     cb();
                                 });

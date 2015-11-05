@@ -75,10 +75,6 @@ But please be aware that running from a packaged application will cause some slo
 ### Getting Started
 More instructions to follow
 
-### Known Limitations
-During first startup, the application will query all the followers on your channel. Due to a limitation with Twitch's API, we can only retrieve the first and last 1,700 records, so if you have more
-than 3,400 followers, the application won't be able to get them all and thus re follow alerts may become an issue for some followers.
-
 ### Attributions
 Toolbox icon by Daniel Garrett Hickey
 
