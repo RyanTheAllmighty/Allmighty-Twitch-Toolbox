@@ -69,9 +69,7 @@
     "wsh": false,
     "yui": false,
     "globals": {
-        "accounting": true,
         "angular": true,
-        "Howl": true,
         "$": true
     }
 }

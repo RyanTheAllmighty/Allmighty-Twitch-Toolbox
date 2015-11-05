@@ -26,9 +26,12 @@
     let rimraf = require('rimraf');
     let jscs = require('gulp-jscs');
     let archiver = require('archiver');
+    let minimist = require('minimist');
     let jshint = require('gulp-jshint');
     let NwBuilder = require('nw-builder');
     let packageJson = require('./package.json');
+
+    let options = minimist(process.argv.slice(2));
 
     // Replace the package.json's name with a readable one
     packageJson.name = packageJson.name.replace(/-/g, ' ');
@@ -40,6 +43,7 @@
         '!node_modules/gulp/**',
         '!node_modules/gulp-jscs/**',
         '!node_modules/gulp-jshint/**',
+        '!node_modules/minimist/**',
         '!node_modules/mkdirp/**',
         '!node_modules/mocha/**',
         '!node_modules/nw-builder/**',
@@ -124,7 +128,7 @@
     });
 
     gulp.task('distribute', ['clean-dist', 'package'], function (cb) {
-        let nw = new NwBuilder({
+        let nwOpts = {
             files: toArchive,
             version: packageJson.nwJSVersion,
             appName: packageJson.name,
@@ -136,7 +140,13 @@
             buildType: function () {
                 return this.appName + ' v' + this.appVersion;
             }
-        });
+        };
+
+        if (options._.skipWinIcon) {
+            delete nwOpts.winIco;
+        }
+
+        let nw = new NwBuilder(nwOpts);
 
         nw.build().then(function () {
             async.each(['linux32', 'linux64', 'osx32', 'osx64', 'win32', 'win64'], function (dist, next) {
