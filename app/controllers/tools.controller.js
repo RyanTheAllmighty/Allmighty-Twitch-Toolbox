@@ -42,6 +42,10 @@
         $scope.followersReal = 0;
         $scope.followersDB = 0;
 
+        SocketIO.on('follower-count-changed', updateFollowerNumbers);
+        SocketIO.on('followers', updateFollowerNumbers);
+        SocketIO.on('new-follower', updateFollowerNumbers);
+
         SocketIO.on('song-changed', function (info) {
             $scope.nowPlaying.isPlaying = true;
             $scope.nowPlaying.artist = info.artist;

@@ -38,11 +38,12 @@
                     views: channelInfo.views,
                     game: channelInfo.game,
                     title: channelInfo.status,
-                    online: streamInfo.stream !== null
+                    online: streamInfo.stream !== null,
+                    date: new Date()
                 };
 
                 self.getLastStatus().then(function (status) {
-                    if (!_.isEqual(statusData, status)) {
+                    if (!_.isEqual(_.omit(statusData, 'date'), _.omit(status, 'date'))) {
                         self.datastore.insert(statusData, function (err) {
                             if (err) {
                                 return reject(err);
@@ -85,7 +86,19 @@
                     } else {
                         return resolve();
                     }
-                }).catch(reject);
+                }).catch(function (err) {
+                    if (err.message !== 'No status has been stored!') {
+                        return reject(err);
+                    }
+
+                    self.datastore.insert(statusData, function (err) {
+                        if (err) {
+                            return reject(err);
+                        }
+
+                        return resolve();
+                    });
+                });
             });
         }
 
