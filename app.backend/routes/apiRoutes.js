@@ -356,5 +356,10 @@
         });
     });
 
+    router.get('/scenes/reload', function (req, res) {
+        global.services.socketIOEmit('reload-state');
+        res.status(200).send();
+    });
+
     module.exports = router;
 })();

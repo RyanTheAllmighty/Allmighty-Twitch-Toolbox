@@ -40,7 +40,8 @@
         'giantbomb',
         'settings',
         'socket-io',
-        'music'
+        'music',
+        'scenes'
     ]);
 
     angular.module('AllmightyTwitchToolbox').config(function ($stateProvider, $urlRouterProvider, localStorageServiceProvider, NotificationProvider) {

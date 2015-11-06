@@ -96,4 +96,23 @@
             </div>
         </div>
     </div>
+
+    <div class="col-xs-6">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Reload Scenes State</h3>
+                <collapsible model="_collapsedPanels.tools.reloadScenesState"/>
+            </div>
+
+            <div uib-collapse="_collapsedPanels.tools.reloadScenesState">
+                <div class="panel-body">
+                    <p>This tool will send events to all scenes and ask them to reload their states. This can be useful for when there are visual display issues or data sync issues.</p>
+                </div>
+
+                <div class="panel-footer text-center">
+                    <button type="button" class="btn btn-primary" ng-click="reloadScenesState()">Reload Scenes State</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

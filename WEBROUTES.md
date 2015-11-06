@@ -267,6 +267,9 @@ This route sends a message to any displayed now playing scenes to show the notif
 
 This will return a 200 status code.
 
+### GET /api/scenes/reload
+This route sends a message to all scenes and asks them to reload their state. This will return a 200 status code.
+
 ### GET /api/stream
 This route gets the status details about the stream. It returns the following:
 

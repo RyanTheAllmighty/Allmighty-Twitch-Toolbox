@@ -21,9 +21,9 @@
 
     angular.module('AllmightyTwitchToolbox').controller('ToolsController', toolsController);
 
-    toolsController.$inject = ['$scope', '$timeout', 'SocketIO', 'Music', 'Stream', 'Followers', 'Notification'];
+    toolsController.$inject = ['$scope', '$timeout', 'SocketIO', 'Music', 'Stream', 'Followers', 'Notification', 'Scenes'];
 
-    function toolsController($scope, $timeout, SocketIO, Music, Stream, Followers, Notification) {
+    function toolsController($scope, $timeout, SocketIO, Music, Stream, Followers, Notification, Scenes) {
         $scope.log = {
             musicInformationParsing: ''
         };
@@ -69,7 +69,7 @@
 
         SocketIO.on('tools-musicparser-error', function (err) {
             $scope.running.musicInformationParsing = false;
-            $scope.log.musicInformationParsing += '\nError: ' + err.message;
+            $scope.log.musicInformationParsing += '\nError: ' + err.message || err;
         });
 
         updateNowPlaying();
@@ -121,6 +121,14 @@
         $scope.deleteFollowerData = function () {
             Followers.deleteAll().then(function () {
                 Notification.success({message: 'Followers Data Deleted!', delay: 3000});
+            }).catch(function (err) {
+                Notification.error({message: err.message, delay: 3000});
+            });
+        };
+
+        $scope.reloadScenesState = function () {
+            Scenes.reloadState().then(function () {
+                Notification.success({message: 'Scenes Reloading State!', delay: 3000});
             }).catch(function (err) {
                 Notification.error({message: err.message, delay: 3000});
             });
