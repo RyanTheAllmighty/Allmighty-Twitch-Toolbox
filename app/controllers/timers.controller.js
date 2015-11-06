@@ -96,5 +96,16 @@
                 return Notification.error({message: err.message, delay: 3000});
             });
         };
+
+        $scope.resetTimer = function (timer) {
+            Timers.setTimer(timer._id, timer.name, new Date()).then(function () {
+                Notification.success({message: 'Timer Reset!', delay: 3000});
+
+                updateTimers();
+            }).catch(function (err) {
+                console.error(err);
+                return Notification.error({message: err.message, delay: 3000});
+            });
+        };
     }
 })();
