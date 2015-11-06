@@ -16,6 +16,16 @@
     </div>
 </div>
 
+<div class="row" ng-show="obsOnline">
+    <div class="col-xs-6">
+        <hero-widget label="dropped frames" value="droppedFrames" filter="number" icon="blackboard"/>
+    </div>
+
+    <div class="col-xs-6">
+        <hero-widget label="frames per second" value="framesPerSecond" filter="number" icon="stats"/>
+    </div>
+</div>
+
 <div class="row">
     <div class="col-xs-6">
         <div class="panel panel-primary">

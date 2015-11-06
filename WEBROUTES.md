@@ -590,6 +590,15 @@ This route returns an array of all the scenes in OBS. It returns the following:
         ]
     }
 ]
+
+### GET /obs/streaming
+This route returns if OBS is streaming or not. It returns the following:
+
+```js
+{
+    "streaming": true, // If OBS is streaming or not
+    "preview": false // If OBS is in preview mode
+}
 ```
 
 ### GET /obs/status
@@ -609,7 +618,7 @@ This route returns the latest status of OBS (updated roughly every 1 second). It
 }
 ```
 
-Please note that this may be an empty as this data is only captured while OBS is streaming/recording/previewing.
+Please note that this may be an empty as this data is only captured while OBS is streaming/recording/previewing and as such may not have any recent data.
 
 ### GET /obs/statuses
 This route returns an array of the last statuses received from OBS. It returns the following:
@@ -630,4 +639,4 @@ This route returns an array of the last statuses received from OBS. It returns t
 ]
 ```
 
-Please note that this may be an empty array as this data is only captured while OBS is streaming/recording/previewing.
+Please note that this may be an empty array as this data is only captured while OBS is streaming/recording/previewing and as such may not have any recent data.

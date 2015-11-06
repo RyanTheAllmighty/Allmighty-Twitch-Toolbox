@@ -41,7 +41,8 @@
         'settings',
         'socket-io',
         'music',
-        'scenes'
+        'scenes',
+        'obs'
     ]);
 
     angular.module('AllmightyTwitchToolbox').config(function ($stateProvider, $urlRouterProvider, localStorageServiceProvider, NotificationProvider) {

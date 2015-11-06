@@ -44,7 +44,13 @@
 
         process(streaming, previewing, bytesPerSecond, strain, streamDurationInMS, totalFrames, droppedFrames, framesPerSecond) {
             if (this.datastore) {
-                this.datastore.insert({streaming, previewing, bytesPerSecond, strain, streamDurationInMS, totalFrames, droppedFrames, framesPerSecond, date: new Date(), index: index++});
+                let data = {streaming, previewing, bytesPerSecond, strain, streamDurationInMS, totalFrames, droppedFrames, framesPerSecond, date: new Date(), index: index++};
+                
+                this.datastore.insert(data, function (err) {
+                    if (!err) {
+                        global.services.socketIOEmit('obs-status-changed', _.omit(data, 'index'));
+                    }
+                });
             }
         }
 

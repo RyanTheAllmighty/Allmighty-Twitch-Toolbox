@@ -383,6 +383,15 @@
         });
     });
 
+    router.get('/obs/streaming', function (req, res) {
+        global.services.obsRemote.getStreamingStatus(function (streaming, preview) {
+            res.json({
+                streaming,
+                preview
+            });
+        });
+    });
+
     router.get('/obs/status', function (req, res) {
         global.services.obsStatus.getLatest().then(function (status) {
             res.json(status);

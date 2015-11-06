@@ -199,3 +199,20 @@ This event is emitted when OBS stops streaming, recording or exits preview mode.
     "preview": false // If we we're in preview mode or not
 }
 ```
+
+## obs-status-changed
+This event is emitted when OBS reports it's status. This event will send the following data:
+
+```js
+{
+    "streaming": true,
+    "previewing": true,
+    "bytesPerSecond": 454285,
+    "strain": 0,
+    "streamDurationInMS": 900990,
+    "totalFrames": 96121,
+    "droppedFrames": 0,
+    "framesPerSecond": 60,
+    "date": "2015-01-17T10:37:59.995Z"
+}
+```

@@ -23,10 +23,11 @@
 
     angular.module('AllmightyTwitchToolbox').controller('DashboardController', dashboardController);
 
-    dashboardController.$inject = ['$scope', '$timeout', 'Donations', 'Viewers', 'Stream', 'GiantBomb', 'Notification', 'SocketIO'];
+    dashboardController.$inject = ['$scope', '$timeout', 'Donations', 'Viewers', 'Stream', 'GiantBomb', 'Notification', 'SocketIO', 'OBS'];
 
-    function dashboardController($scope, $timeout, Donations, Viewers, Stream, GiantBomb, Notification, SocketIO) {
+    function dashboardController($scope, $timeout, Donations, Viewers, Stream, GiantBomb, Notification, SocketIO, OBS) {
         $scope.streamOnline = false;
+        $scope.obsOnline = false;
         $scope.viewerCount = 0;
 
         $scope.followersCount = 0;
@@ -38,8 +39,24 @@
         $scope.viewsCount = 0;
         $scope.viewsStart = 0;
 
+        $scope.droppedFrames = 0;
+        $scope.framesPerSecond = 0;
+
         $scope.game = '';
         $scope.title = '';
+
+        SocketIO.on('obs-stream-started', function () {
+            $scope.obsOnline = true;
+        });
+
+        SocketIO.on('obs-stream-stopped', function () {
+            $scope.obsOnline = false;
+        });
+
+        SocketIO.on('obs-status-changed', function (data) {
+            $scope.droppedFrames = data.droppedFrames;
+            $scope.framesPerSecond = data.framesPerSecond;
+        });
 
         SocketIO.on('follower-count-changed', function (number) {
             $scope.followersCount = number;
@@ -140,6 +157,13 @@
                         } else {
                             next();
                         }
+                    }).catch(next);
+                },
+                function (next) {
+                    OBS.isStreaming().then(function (streaming) {
+                        $scope.obsOnline = streaming;
+
+                        next();
                     }).catch(next);
                 }
             ], function (err) {
