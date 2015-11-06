@@ -68,6 +68,12 @@
         // Received a reload state event
         socket.on('reload-state', function () {
             clock.stop();
+
+            clock = $('#countdown').FlipClock({
+                autoStart: false,
+                countdown: true
+            });
+
             clock.setTime(getSecondsLeft());
             clock.start();
         });

@@ -190,9 +190,6 @@
         setupSocketIOServer: function () {
             return new Promise(function (resolve) {
                 module.exports.io.on('connection', function (socket) {
-                    // This signals to all connected sockets to reload their state (if available) useful
-                    socket.emit('reload-state');
-
                     // Add this socket to the list of active sockets
                     module.exports.sockets.push(socket);
 
