@@ -63,7 +63,7 @@
         .then(services.startExpressServer)
         .then(services.loadAngularApp)
         .catch(function (err) {
-            console.error(err);
+            console.error(err.stack);
             //gui.App.quit();
         });
 })();

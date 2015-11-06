@@ -26,9 +26,15 @@
 
     let defaultSettings = {
         twitch: {
-            username: '',
-            apiToken: '',
-            apiClientID: ''
+            redirectURI: 'http://127.0.0.1:28800/#/auth/twitch',
+            clientID: '62gqva8j7h003ar84w0gprmu8ebrqth',
+            scopes: ['user_read', 'chat_login'],
+            auth: {
+                accessToken: '',
+                scopes: '',
+                clientID: '',
+                username: ''
+            }
         },
         streamtip: {
             accessToken: '',
@@ -118,6 +124,30 @@
                         }, function (err) {
                             if (err) {
                                 return reject(err);
+                            }
+
+                            // User hasn't authenticated with Twitch
+                            if (!ourSettings.twitch.auth.accessToken || !ourSettings.twitch.auth.username || !ourSettings.twitch.auth.scopes || !ourSettings.twitch.auth.clientID) {
+                                ourSettings.twitch.auth = defaultSettings.twitch.auth;
+                                ourSettings.application.hasSetup = false;
+
+                                needToSave = true;
+                            } else {
+                                // User's auth doesn't have the correct scopes anymore
+                                if (_.difference(ourSettings.twitch.auth.scopes, defaultSettings.twitch.scopes).length !== 0) {
+                                    ourSettings.twitch.auth = defaultSettings.twitch.auth;
+                                    ourSettings.application.hasSetup = false;
+
+                                    needToSave = true;
+                                }
+
+                                // User changed the client ID
+                                if (ourSettings.twitch.auth.clientID !== ourSettings.twitch.clientID) {
+                                    ourSettings.twitch.auth = defaultSettings.twitch.auth;
+                                    ourSettings.application.hasSetup = false;
+
+                                    needToSave = true;
+                                }
                             }
 
                             if (needToSave) {

@@ -32,6 +32,40 @@
 
     let musicInformationParser = require(path.join(process.cwd(), 'app.backend', 'tools', 'musicInformationParser'));
 
+    router.get('/auth/twitch/url', function (req, res) {
+        res.json(global.services.twitchAPI.getAuthorizationUrl().replace('response_type=code', 'response_type=token'));
+    });
+
+    router.post('/auth/twitch', function (req, res) {
+        let auth = req.body;
+
+        if (!auth.accessToken) {
+            return res.status(500).send({error: 'Invalid request received!'});
+        }
+
+        global.services.twitchAPI.getRoot(auth.accessToken, function (err, data) {
+            if (err) {
+                return res.status(500).send({error: err.message});
+            }
+            global.services.settings.get('twitch', 'clientID').then(function (setting) {
+                auth.scopes = data.token.authorization.scopes;
+                auth.username = data.token.user_name;
+                auth.clientID = setting.value;
+
+                global.services.settings.set('twitch', 'auth', auth).then(function () {
+                    res.json({
+                        success: true
+                    });
+                }).catch(function (err) {
+                    res.status(500).send({error: err.message});
+                });
+            }).catch(function (err) {
+                res.status(500).send({error: err.message});
+            });
+        });
+
+    });
+
     router.get('/settings', function (req, res) {
         services.settings.getAll().then(function (settings) {
             res.json(settings);
@@ -264,7 +298,7 @@
     });
 
     router.get('/tools/musicparser/run', function (req, res) {
-        global.services.settings.getAll().then(function(settings) {
+        global.services.settings.getAll().then(function (settings) {
             let ee = musicInformationParser.run({
                 clientID: _.result(_.findWhere(settings, {group: 'soundcloud', name: 'apiKey'}), 'value'),
                 ffmpegPath: _.result(_.findWhere(settings, {group: 'directories', name: 'binary'}), 'value') + '/ffmpeg.exe',
@@ -287,7 +321,7 @@
             });
 
             res.json({success: true});
-        }).catch(function(err) {
+        }).catch(function (err) {
             res.status(500).send({error: err.message});
         });
     });

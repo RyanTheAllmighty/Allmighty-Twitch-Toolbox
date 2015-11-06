@@ -86,7 +86,6 @@
             });
         },
         load: function () {
-            console.log(2);
             return new Promise(function (resolve, reject) {
                 module.exports.settings = new Settings({autoload: true});
 
@@ -114,7 +113,6 @@
             });
         },
         showSplashScreen: function () {
-            console.log(1);
             return new Promise(function (resolve) {
                 module.exports.splashScreen = gui.Window.open('./splash-screen.html', {
                     position: 'center',
@@ -141,12 +139,12 @@
             });
         },
         setupTwitchAPI: function () {
-            console.log(3);
             return new Promise(function (resolve, reject) {
                 module.exports.settings.getGroup('twitch').then(function (settings) {
                     module.exports.twitchAPI = new TwitchAPI({
-                        clientId: _.result(_.findWhere(settings, {name: 'apiClientID'}), 'value'),
-                        accessToken: _.result(_.findWhere(settings, {name: 'apiToken'}), 'value')
+                        clientId: _.result(_.findWhere(settings, {name: 'clientID'}), 'value'),
+                        redirectUri: encodeURIComponent(_.result(_.findWhere(settings, {name: 'redirectURI'}), 'value')),
+                        scopes: _.result(_.findWhere(settings, {name: 'scopes'}), 'value')
                     });
 
                     return resolve();
@@ -154,7 +152,6 @@
             });
         },
         setupStreamTipAPI: function () {
-            console.log(4);
             return new Promise(function (resolve, reject) {
                 module.exports.settings.getGroup('streamtip').then(function (settings) {
                     module.exports.streamTipAPI = new StreamTipAPI({
@@ -167,7 +164,6 @@
             });
         },
         setupGiantBombAPI: function () {
-            console.log(5);
             return new Promise(function (resolve, reject) {
                 module.exports.settings.get('giantbomb', 'apiKey').then(function (setting) {
                     module.exports.giantBombAPI = new GiantBombAPI(setting.value);
@@ -177,27 +173,21 @@
             });
         },
         startNotificationQueue: function () {
-            console.log(6);
             return module.exports.notificationQueue.startQueue();
         },
         startFollowerChecker: function () {
-            console.log(7);
             return module.exports.followerChecker.startChecking();
         },
         startDonationChecker: function () {
-            console.log(8);
             return module.exports.donationChecker.startChecking();
         },
         startStreamChecker: function () {
-            console.log(9);
             return module.exports.streamChecker.startChecking();
         },
         startMusicChecker: function () {
-            console.log(10);
             return module.exports.musicChecker.startChecking();
         },
         setupSocketIOServer: function () {
-            console.log(11);
             return new Promise(function (resolve) {
                 module.exports.io.on('connection', function (socket) {
                     // This signals to all connected sockets to reload their state (if available) useful
@@ -220,7 +210,6 @@
             });
         },
         setupExpress: function () {
-            console.log(12);
             return new Promise(function (resolve) {
                 module.exports.expressApp.use('/app', express.static(path.join(process.cwd(), 'app')));
                 module.exports.expressApp.use('/assets', express.static(path.join(process.cwd(), 'assets')));
@@ -269,7 +258,6 @@
             });
         },
         startExpressServer: function () {
-            console.log(13);
             return new Promise(function (resolve, reject) {
                 module.exports.expressServer.listen(28800, function (err) {
                     if (err) {
@@ -281,7 +269,6 @@
             });
         },
         loadAngularApp: function () {
-            console.log(14);
             return new Promise(function (resolve) {
                 window.location = 'http://localhost:' + 28800;
 

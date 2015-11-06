@@ -85,12 +85,29 @@
             templateUrl: 'app/views/settings.html',
             controller: 'SettingsController',
             controllerAs: 'vm'
+        }).state('authtwitch', {
+            url: '/auth/twitch',
+            templateUrl: 'app/views/auth.html',
+            controller: 'AuthController',
+            controllerAs: 'vm'
         }).state('help', {
             url: '/help',
             templateUrl: 'app/views/help.html',
             controller: 'HelpController',
             controllerAs: 'vm'
         });
+
+        $urlRouterProvider.rule(function ($injector, $location) {
+            $injector.get('Settings').getSetting('application', 'hasSetup').then(function (setting) {
+                let path = $location.path();
+
+                if (!setting.value && (path !== '/auth/twitch' && path !== '/settings' && path !== '/help')) {
+                    $location.replace().path('/settings');
+                }
+            });
+        });
+
+        $urlRouterProvider.otherwise('/dashboard');
 
         localStorageServiceProvider.setPrefix('AllmightyTwitchToolbox');
 
@@ -126,17 +143,7 @@
         }
     }]);
 
-    angular.module('AllmightyTwitchToolbox').run(['$state', 'SocketIO', 'Settings', function ($state, SocketIO, Settings) {
-        Settings.getSetting('application', 'hasSetup').then(function (setting) {
-            if (setting.value) {
-                // Go to the dashboard since we're setup
-                $state.go('dashboard');
-            } else {
-                // Go to the settings page since we're not setup
-                $state.go('settings');
-            }
-        });
-
+    angular.module('AllmightyTwitchToolbox').run(['$state', 'SocketIO', function ($state, SocketIO) {
         // Setup the sound socket listener
         SocketIO.on('play-sound', function (data) {
             new Howl({

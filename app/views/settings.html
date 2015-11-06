@@ -9,29 +9,33 @@
             <div uib-collapse="_collapsedPanels.settings.twitch">
                 <div class="panel-body">
                     <div class="form-group">
-                        <label for="twitchUsername" class="col-lg-2 control-label">Username</label>
-
-                        <div class="col-lg-10">
-                            <input ng-model="settings.twitch.username" type="text" class="form-control" id="twitchUsername"/>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="twitchApiToken" class="col-lg-2 control-label">API Token</label>
-
-                        <div class="col-lg-10">
-                            <input ng-model="settings.twitch.apiToken" type="password" class="form-control" id="twitchApiToken"/>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
                         <label for="twitchApiClientID" class="col-lg-2 control-label">API Client ID</label>
 
                         <div class="col-lg-10">
-                            <input ng-model="settings.twitch.apiClientID" type="password" class="form-control" id="twitchApiClientID"/>
+                            <input ng-model="settings.twitch.clientID" type="text" class="form-control" id="twitchApiClientID"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="twitchApiRedirectURI" class="col-lg-2 control-label">API Redirect URI</label>
+
+                        <div class="col-lg-10">
+                            <input ng-model="settings.twitch.redirectURI" type="text" class="form-control" id="twitchApiRedirectURI"/>
+                        </div>
+                    </div>
+
+                    <div ng-show="settings.twitch.auth.accessToken" class="form-group">
+                        <label for="twitchApiAccessToken" class="col-lg-2 control-label">API Access Token</label>
+
+                        <div class="col-lg-10">
+                            <input ng-model="settings.twitch.auth.accessToken" type="text" class="form-control" id="twitchApiAccessToken" disabled/>
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div ng-show="!settings.twitch.auth.accessToken" class="panel-footer text-center">
+                <button type="button" class="btn btn-primary" ng-click="loginToTwitch()">Login to Twitch</button>
             </div>
         </div>
     </div>

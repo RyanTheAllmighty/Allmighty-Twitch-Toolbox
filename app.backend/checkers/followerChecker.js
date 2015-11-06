@@ -51,8 +51,8 @@
                 let added = 0;
                 let cursor = null;
 
-                global.services.settings.get('twitch', 'username').then(function (username) {
-                    if (!username) {
+                global.services.settings.get('twitch', 'auth').then(function (setting) {
+                    if (!setting.value.username) {
                         return resolve();
                     }
 
@@ -65,7 +65,7 @@
                                 delete args.offset;
                             }
 
-                            global.services.twitchAPI.getChannelFollows(username.value, args, function (err, followers) {
+                            global.services.twitchAPI.getChannelFollows(setting.value.username, args, function (err, followers) {
                                 if (err) {
                                     return cb(err);
                                 }
@@ -137,7 +137,7 @@
 
                 self.doInitialCheck().then(function () {
                     global.services.settings.getAll().then(function (settings) {
-                        let username = _.result(_.findWhere(settings, {group: 'twitch', name: 'username'}), 'value');
+                        let username = _.result(_.findWhere(settings, {group: 'twitch', name: 'auth'}), 'value').username;
                         let intervalTime = _.result(_.findWhere(settings, {group: 'checks', name: 'followers'}), 'value');
 
                         // Save this interval so we can cancel it if we get another one later

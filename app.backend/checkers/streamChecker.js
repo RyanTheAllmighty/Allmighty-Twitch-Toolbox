@@ -46,8 +46,8 @@
             this[objectSymbol].doingInitialCheck = true;
 
             return new Promise(function (resolve, reject) {
-                global.services.settings.get('twitch', 'username').then(function (username) {
-                    self.check(username.value).then(function () {
+                global.services.settings.get('twitch', 'auth').then(function (setting) {
+                    self.check(setting.value.username).then(function () {
                         self[objectSymbol].doingInitialCheck = false;
 
                         return resolve();
@@ -100,7 +100,7 @@
 
                 self.doInitialCheck().then(function () {
                     global.services.settings.getAll().then(function (settings) {
-                        let username = _.result(_.findWhere(settings, {group: 'twitch', name: 'username'}), 'value');
+                        let username = _.result(_.findWhere(settings, {group: 'twitch', name: 'auth'}), 'value').username;
                         let intervalTime = _.result(_.findWhere(settings, {group: 'checks', name: 'stream'}), 'value');
 
                         // Save this interval so we can cancel it if we get another one later

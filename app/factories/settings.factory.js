@@ -30,7 +30,9 @@
             getSetting,
             getAll,
             getGroup,
-            setAll
+            setAll,
+            getTwitchLoginURL,
+            setTwitchAuth
         };
 
         function getSetting(group, name) {
@@ -38,7 +40,7 @@
                 $http.get('http://127.0.0.1:28800/api/settings/' + group + '/' + name).success(function (data) {
                     return resolve(data);
                 }).error(function (data, code) {
-                    return reject(data.error || 'An error occurred with status code ' + code);
+                    return reject(new Error(data.error || 'An error occurred with status code ' + code));
                 });
             });
         }
@@ -48,7 +50,7 @@
                 $http.get('http://127.0.0.1:28800/api/settings/' + group).success(function (data) {
                     return resolve(data);
                 }).error(function (data, code) {
-                    return reject(data.error || 'An error occurred with status code ' + code);
+                    return reject(new Error(data.error || 'An error occurred with status code ' + code));
                 });
             });
         }
@@ -58,7 +60,7 @@
                 $http.get('http://127.0.0.1:28800/api/settings').success(function (data) {
                     return resolve(data);
                 }).error(function (data, code) {
-                    return reject(data.error || 'An error occurred with status code ' + code);
+                    return reject(new Error(data.error || 'An error occurred with status code ' + code));
                 });
             });
         }
@@ -68,7 +70,25 @@
                 $http.post('http://127.0.0.1:28800/api/settings', settings).success(function () {
                     return resolve();
                 }).error(function (data, code) {
-                    return reject(data.error || 'An error occurred with status code ' + code);
+                    return reject(new Error(data.error || 'An error occurred with status code ' + code));
+                });
+            });
+        }
+
+        function getTwitchLoginURL() {
+            return new Promise(function (resolve, reject) {
+                $http.get('http://127.0.0.1:28800/api/auth/twitch/url').success(function (url) {
+                    return resolve(url);
+                }).error(function (data, code) {
+                    return reject(new Error(data.error || 'An error occurred with status code ' + code));
+                });
+            });
+        }
+
+        function setTwitchAuth(details) {
+            return new Promise(function (resolve, reject) {
+                $http.post('http://127.0.0.1:28800/api/auth/twitch', details).success(resolve).error(function (data, code) {
+                    return reject(new Error(data.error || 'An error occurred with status code ' + code));
                 });
             });
         }

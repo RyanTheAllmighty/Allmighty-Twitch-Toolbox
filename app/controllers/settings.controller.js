@@ -52,6 +52,14 @@
 
         $scope.reset();
 
+        $scope.loginToTwitch = function () {
+            Settings.getTwitchLoginURL().then(function (url) {
+                window.location.replace(url);
+            }).catch(function (err) {
+                return Notification.error({message: err.message, delay: 3000});
+            });
+        };
+
         $scope.save = function () {
             if (document.getElementById('newDonation').files[0]) {
                 $scope.settings.sounds.newDonation = document.getElementById('newDonation').files[0].path.toString();
