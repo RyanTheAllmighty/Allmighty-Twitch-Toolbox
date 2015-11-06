@@ -122,6 +122,18 @@ You can specify URL query strings to change the behaviour of the call as per bel
 | offset | The number of results to skip. Used in conjunction with limit to paginate between all results | 0 |
 | order | Changes the order of the results based upon date. Can be 'asc' or 'desc' | desc |
 
+
+### DELETE /api/followers
+This route deletes all the followers in the follower database.
+
+If successful a success message will be sent back in the response as per below, else an error will be returned:
+
+```js
+{
+    "success": true
+}
+```
+
 ### POST /api/followers/test
 This route tests adding a new follower for alerts. Sent data should be in JSON format via POST as follows:
                                                                                               

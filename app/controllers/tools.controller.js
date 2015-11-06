@@ -21,9 +21,9 @@
 
     angular.module('AllmightyTwitchToolbox').controller('ToolsController', toolsController);
 
-    toolsController.$inject = ['$scope', '$timeout', 'SocketIO', 'Music'];
+    toolsController.$inject = ['$scope', '$timeout', 'SocketIO', 'Music', 'Stream', 'Followers', 'Notification'];
 
-    function toolsController($scope, $timeout, SocketIO, Music) {
+    function toolsController($scope, $timeout, SocketIO, Music, Stream, Followers, Notification) {
         $scope.log = {
             musicInformationParsing: ''
         };
@@ -38,6 +38,9 @@
             title: 'Unknown',
             artwork: null
         };
+
+        $scope.followersReal = 0;
+        $scope.followersDB = 0;
 
         SocketIO.on('song-changed', function (info) {
             $scope.nowPlaying.isPlaying = true;
@@ -66,6 +69,7 @@
         });
 
         updateNowPlaying();
+        updateFollowerNumbers();
 
         $scope.previousSong = function () {
             Music.previousSong().then(function () {
@@ -110,6 +114,14 @@
             }
         };
 
+        $scope.deleteFollowerData = function () {
+            Followers.deleteAll().then(function () {
+                Notification.success({message: 'Followers Data Deleted!', delay: 3000});
+            }).catch(function (err) {
+                Notification.error({message: err.message, delay: 3000});
+            });
+        };
+
         function updateNowPlaying() {
             Music.getState().then(function (state) {
                 $timeout(function () {
@@ -126,6 +138,19 @@
                     }
 
                     $scope.$apply();
+                });
+            });
+        }
+
+        function updateFollowerNumbers() {
+            Stream.getLastStatus().then(function (status) {
+                Followers.getCount().then(function (count) {
+                    $timeout(function () {
+                        $scope.followersReal = status.followers;
+                        $scope.followersDB = count;
+
+                        $scope.$apply();
+                    });
                 });
             });
         }

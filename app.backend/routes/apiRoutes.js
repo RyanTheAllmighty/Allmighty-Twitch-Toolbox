@@ -152,6 +152,16 @@
         });
     });
 
+    router.delete('/followers', function (req, res) {
+        services.followers.deleteAll().then(function () {
+            res.json({
+                success: true
+            });
+        }, function (err) {
+            res.status(500).send({error: err.message});
+        });
+    });
+
     router.post('/followers/test', function (req, res) {
         if (!req.body.test) {
             req.body.test = true;

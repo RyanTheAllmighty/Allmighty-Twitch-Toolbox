@@ -100,6 +100,20 @@
             });
         }
 
+        deleteAll() {
+            let self = this;
+
+            return new Promise(function (resolve, reject) {
+                self.datastore.remove({}, {multi: true}, function (err) {
+                    if (err) {
+                        return reject(err);
+                    }
+
+                    return resolve();
+                });
+            });
+        }
+
         getFollower(user) {
             let self = this;
 
