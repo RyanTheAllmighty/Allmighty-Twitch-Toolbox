@@ -24,6 +24,7 @@
     let path = require('path');
     let async = require('async');
     let express = require('express');
+    let OBSRemote = require('obs-remote');
     let TwitchAPI = require('twitch-api');
     let bodyParser = require('body-parser');
     let GiantBombAPI = require('giantbombapi');
@@ -36,6 +37,7 @@
     let Settings = require('./classes/settings');
     let Donations = require('./classes/donations');
     let Followers = require('./classes/followers');
+    let OBSStatus = require('./classes/obsStatus');
     let StreamTipAPI = require('./classes/streamTipAPI');
     let MusicChecker = require('./checkers/musicChecker');
     let StreamChecker = require('./checkers/streamChecker');
@@ -48,6 +50,7 @@
         followers: null,
         settings: null,
         stream: null,
+        obsStatus: null,
         viewers: null,
         timers: null,
         expressApp: null,
@@ -59,6 +62,7 @@
         donationChecker: null,
         musicChecker: null,
         streamChecker: null,
+        obsRemote: null,
         twitchAPI: null,
         streamTipAPI: null,
         giantBombAPI: null,
@@ -95,6 +99,7 @@
                     module.exports.viewers = new Viewers({autoload: true});
                     module.exports.donations = new Donations({autoload: true});
                     module.exports.followers = new Followers({autoload: true});
+                    module.exports.obsStatus = new OBSStatus({inMemoryOnly: true, autoload: true});
 
                     module.exports.notificationQueue = new NotificationQueue();
 
@@ -136,6 +141,39 @@
                 module.exports.splashScreen.on('closed', function () {
                     module.exports.splashScreen = null;
                 });
+            });
+        },
+        setupOBSRemote: function () {
+            return new Promise(function (resolve, reject) {
+                module.exports.settings.get('obs', 'remotePassword').then(function (setting) {
+                    module.exports.obsRemote = new OBSRemote();
+
+                    if (setting.value) {
+                        module.exports.obsRemote.connect('127.0.0.1', setting.value);
+                    } else {
+                        module.exports.obsRemote.connect('127.0.0.1');
+                    }
+
+                    module.exports.obsRemote.onStreamStarted = function (preview) {
+                        module.exports.socketIOEmit('obs-stream-started', {preview});
+                    };
+
+                    module.exports.obsRemote.onStreamStopped = function (preview) {
+                        module.exports.socketIOEmit('obs-stream-stopped', {preview});
+                    };
+
+                    module.exports.obsRemote.onSceneSwitched = function (name) {
+                        global.services.obsRemote.getSceneList(function (currentScene, allScenes) {
+                            module.exports.socketIOEmit('obs-scene-switched', _.findWhere(allScenes, {name}));
+                        });
+                    };
+
+                    module.exports.obsRemote.onStatusUpdate = function (streaming, previewing, bytesPerSecond, strain, streamDurationInMS, totalFrames, droppedFrames, framesPerSecond) {
+                        module.exports.obsStatus.process(streaming, previewing, bytesPerSecond, strain, streamDurationInMS, totalFrames, droppedFrames, framesPerSecond);
+                    };
+
+                    return resolve();
+                }).catch(reject);
             });
         },
         setupTwitchAPI: function () {

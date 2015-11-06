@@ -50,6 +50,7 @@
     // Load everything up
     services.load()
         .then(services.showSplashScreen)
+        .then(services.setupOBSRemote)
         .then(services.setupTwitchAPI)
         .then(services.setupStreamTipAPI)
         .then(services.setupGiantBombAPI)
@@ -63,7 +64,7 @@
         .then(services.startExpressServer)
         .then(services.loadAngularApp)
         .catch(function (err) {
-            console.error(err.stack);
-            //gui.App.quit();
+            console.error(err);
+            gui.App.quit();
         });
 })();

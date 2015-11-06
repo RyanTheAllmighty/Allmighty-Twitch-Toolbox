@@ -70,6 +70,9 @@
             data: '',
             music: ''
         },
+        obs: {
+            remotePassword: ''
+        },
         application: {
             hasSetup: false
         }

@@ -540,3 +540,94 @@ You can specify URL query strings to change the behaviour of the call as per bel
 This returns the current state of foobar including playing song, album art and more.
 
 The return value contains alot of information and isn't mentioned here.
+
+### GET /obs/scene
+This route returns the current active scene in OBS. It returns the following:
+
+```js
+{
+    "name": "Scene", // The name of the scene in OBS
+    "sources": [ // An array of all the sources in this scene
+        {
+            "width": 500, // The width of this source
+            "height": 125, // The height of this source
+            "x": 390, // The x position of this source
+            "y": 0, // The y position of this source
+            "name": "Start Timer", // The name of this source
+            "rendered": true // If this source is enabled or not
+        }
+    ]
+}
+```
+
+### POST /obs/scene
+This route changes the active scene in OBS. Sent data should be in JSON format via POST as follows:
+                                                                                                                      
+```js
+{
+   "name": "MyScene" // The name of the scene to switch to
+}
+```
+
+This route returns no information but if successful a socket event named 'obs-scene-switched' will be called.
+
+### GET /obs/scenes
+This route returns an array of all the scenes in OBS. It returns the following:
+
+```js
+[
+    {
+        "name": "Scene", // The name of the scene in OBS
+        "sources": [ // An array of all the sources in this scene
+            {
+                "width": 500, // The width of this source
+                "height": 125, // The height of this source
+                "x": 390, // The x position of this source
+                "y": 0, // The y position of this source
+                "name": "Start Timer", // The name of this source
+                "rendered": true // If this source is enabled or not
+            }
+        ]
+    }
+]
+```
+
+### GET /obs/status
+This route returns the latest status of OBS (updated roughly every 1 second). It returns the following:
+
+```js
+{
+    "streaming": true,
+    "previewing": true,
+    "bytesPerSecond": 454285,
+    "strain": 0,
+    "streamDurationInMS": 900990,
+    "totalFrames": 96121,
+    "droppedFrames": 0,
+    "framesPerSecond": 60,
+    "date": "2015-01-17T10:37:59.995Z"
+}
+```
+
+Please note that this may be an empty as this data is only captured while OBS is streaming/recording/previewing.
+
+### GET /obs/statuses
+This route returns an array of the last statuses received from OBS. It returns the following:
+
+```js
+[
+    {
+        "streaming": true,
+        "previewing": true,
+        "bytesPerSecond": 454285,
+        "strain": 0,
+        "streamDurationInMS": 900990,
+        "totalFrames": 96121,
+        "droppedFrames": 0,
+        "framesPerSecond": 60,
+        "date": "2015-01-17T10:37:59.995Z"
+    }
+]
+```
+
+Please note that this may be an empty array as this data is only captured while OBS is streaming/recording/previewing.

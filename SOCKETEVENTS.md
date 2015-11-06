@@ -162,3 +162,40 @@ This event is emitted when the music parser has returned an error and has finish
 ```js
 "Some error message"
 ```
+
+## obs-scene-switched
+This event is emitted when the current scene in OBS is switched to another one. This event will send the following data:
+
+```js
+{
+    "name": "Scene", // The name of the scene in OBS
+    "sources": [ // An array of all the sources in this scene
+        {
+            "width": 500, // The width of this source
+            "height": 125, // The height of this source
+            "x": 390, // The x position of this source
+            "y": 0, // The y position of this source
+            "name": "Start Timer", // The name of this source
+            "rendered": true // If this source is enabled or not
+        }
+    ]
+}
+```
+
+## obs-stream-started
+This event is emitted when OBS starts streaming, recording or enters preview mode. This event will send the following data:
+
+```js
+{
+    "preview": false // If we're in preview mode or not
+}
+```
+
+## obs-stream-stopped
+This event is emitted when OBS stops streaming, recording or exits preview mode. This event will send the following data:
+
+```js
+{
+    "preview": false // If we we're in preview mode or not
+}
+```

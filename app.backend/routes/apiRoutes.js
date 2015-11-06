@@ -361,5 +361,43 @@
         res.status(200).send();
     });
 
+    router.get('/obs/scene', function (req, res) {
+        global.services.obsRemote.getSceneList(function (currentScene, allScenes) {
+            res.json(_.findWhere(allScenes, {name: currentScene}));
+        });
+    });
+
+    router.post('/obs/scene', function (req, res) {
+        if (!req.body.name) {
+            res.status(500).send({error: 'No name was given!'});
+        }
+
+        global.services.obsRemote.setCurrentScene(req.body.name);
+
+        res.status(200).send();
+    });
+
+    router.get('/obs/scenes', function (req, res) {
+        global.services.obsRemote.getSceneList(function (currentScene, allScenes) {
+            res.json(allScenes);
+        });
+    });
+
+    router.get('/obs/status', function (req, res) {
+        global.services.obsStatus.getLatest().then(function (status) {
+            res.json(status);
+        }).catch(function (err) {
+            res.status(500).send({error: err.message});
+        });
+    });
+
+    router.get('/obs/statuses', function (req, res) {
+        global.services.obsStatus.getAll().then(function (statuses) {
+            res.json(statuses);
+        }).catch(function (err) {
+            res.status(500).send({error: err.message});
+        });
+    });
+
     module.exports = router;
 })();

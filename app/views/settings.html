@@ -23,14 +23,6 @@
                             <input ng-model="settings.twitch.redirectURI" type="text" class="form-control" id="twitchApiRedirectURI"/>
                         </div>
                     </div>
-
-                    <div ng-show="settings.twitch.auth.accessToken" class="form-group">
-                        <label for="twitchApiAccessToken" class="col-lg-2 control-label">API Access Token</label>
-
-                        <div class="col-lg-10">
-                            <input ng-model="settings.twitch.auth.accessToken" type="text" class="form-control" id="twitchApiAccessToken" disabled/>
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -61,7 +53,7 @@
                         <label for="streamTipClientID" class="col-lg-2 control-label">Client ID</label>
 
                         <div class="col-lg-10">
-                            <input ng-model="settings.streamtip.clientID" type="password" class="form-control" id="streamTipClientID"/>
+                            <input ng-model="settings.streamtip.clientID" type="text" class="form-control" id="streamTipClientID"/>
                         </div>
                     </div>
                 </div>
@@ -267,6 +259,29 @@
 </div>
 
 <div class="row">
+    <div class="col-xs-6">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">OBS</h3>
+                <collapsible model="_collapsedPanels.settings.obs"/>
+            </div>
+
+            <div uib-collapse="_collapsedPanels.settings.obs">
+                <div class="panel-body">
+
+
+                    <div class="form-group">
+                        <label for="obsRemotePassword" class="col-lg-2 control-label">OBS Remote Password (Blank for disabled)</label>
+
+                        <div class="col-lg-10">
+                            <input ng-model="settings.obs.remotePassword" type="password" class="form-control" id="obsRemotePassword"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="col-xs-6">
         <div class="panel panel-primary">
             <div class="panel-heading">

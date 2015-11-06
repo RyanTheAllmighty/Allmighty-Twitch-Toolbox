@@ -26,11 +26,15 @@
 
     class Datastore {
         constructor(name, options) {
-            this[objectSymbol] = {
-                datastore: new NEDB({filename: path.join(global.applicationStorageDir, 'db', name + '.db')})
-            };
+            this[objectSymbol] = {};
 
-            if (options.autoload) {
+            if (options.inMemoryOnly) {
+                this[objectSymbol].datastore = new NEDB();
+            } else {
+                this[objectSymbol].datastore = new NEDB({filename: path.join(global.applicationStorageDir, 'db', name + '.db')});
+            }
+
+            if (options.autoload && !options.inMemoryOnly) {
                 this.load();
             }
         }
