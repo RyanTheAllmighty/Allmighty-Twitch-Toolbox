@@ -21,64 +21,63 @@
 (function () {
     'use strict';
 
-    function getSecondsLeft() {
-        var secondsLeft = 0;
+    var clock;
 
+    function getSecondsLeft(cb) {
         $.ajax({
             url: 'http://127.0.0.1:28800/api/timers/' + (window.customData.timer.name ? window.customData.timer.name : window.customData.timer._id),
             type: 'GET',
-            async: false,
             success: function (result) {
-                secondsLeft = moment(result.date).diff(moment(), 'seconds');
+                cb(moment(result.date).diff(moment(), 'seconds'));
             }
         });
+    }
 
-        if (secondsLeft < 0) {
-            secondsLeft = 0;
+    function setTimer(seconds) {
+        if (!clock) {
+            clock = $('#countdown').FlipClock({
+                autoStart: false,
+                countdown: true
+            });
         }
 
-        return secondsLeft;
+        if (seconds < 0) {
+            seconds = 0;
+        }
+
+        clock.setTime(seconds);
+        clock.start();
+    }
+
+    function destroyClock() {
+        clock.setTime(0);
+        clock.stop();
+        clock = null;
     }
 
     $(document).ready(function () {
-        var clock = $('#countdown').FlipClock({
-            autoStart: false,
-            countdown: true
-        });
-
         var socket = io('http://127.0.0.1:28800');
 
         // Received a timer set event
         socket.on('timer-set', function (data) {
             if (data._id === window.customData.timer._id || data.name === window.customData.timer.name) {
-                clock.stop();
-                clock.setTime(moment(data.date).diff(moment(), 'seconds'));
-                clock.start();
+                setTimer(moment(data.date).diff(moment(), 'seconds'));
             }
         });
 
         // Received a timer deleted event
         socket.on('timer-deleted', function (data) {
             if (data._id === window.customData.timer._id || data.name === window.customData.timer.name) {
-                clock.stop();
-                clock.setTime(0);
+                destroyClock();
             }
         });
 
         // Received a reload state event
         socket.on('reload-state', function () {
-            clock.stop();
-
-            clock = $('#countdown').FlipClock({
-                autoStart: false,
-                countdown: true
-            });
-
-            clock.setTime(getSecondsLeft());
-            clock.start();
+            destroyClock();
+            getSecondsLeft(setTimer);
         });
 
-        clock.setTime(getSecondsLeft());
-        clock.start();
+        getSecondsLeft(setTimer);
     });
 })();
