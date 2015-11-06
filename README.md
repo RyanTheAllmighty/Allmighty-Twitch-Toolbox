@@ -87,6 +87,10 @@ Make sure you click the Login To Twitch button in the Twitch section in the sett
 
 Once done click the Save button and then restart the application to which then it will go through the initial load of getting all your Twitch followers, StreamTip tips and other initial information.
 
+## Using custom Twitch API Application
+The application comes built in with the details needed to authenticate with the API with our own application. If you want to use your own, then you can edit the settings in the Twitch settings panel
+with the details of your application you create [here](http://www.twitch.tv/kraken/oauth2/clients/new) making sure that you pass in http://127.0.0.1:28800/#/auth/twitch as the redirect uri.
+
 ## Attributions
 Toolbox icon by Daniel Garrett Hickey
 
