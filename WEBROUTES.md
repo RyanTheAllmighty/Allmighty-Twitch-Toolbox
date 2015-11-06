@@ -60,6 +60,32 @@ You can specify URL query strings to change the behaviour of the call as per bel
 | offset | The number of results to skip. Used in conjunction with limit to paginate between all results | 0 |
 | order | Changes the order of the results based upon date. Can be 'asc' or 'desc' | desc |
 
+### GET /api/donations/all
+This route gets a listing of all StreamTip donations. It returns the following:
+
+```js
+{
+    "_total": 345, // The total number of donations in the database
+    "_count": 345, // The number of items in the donations array
+    "_order": "desc", // The order the donations are sorted in
+    "donations": [
+        {
+            "date": "2015-01-17T10:37:59.995Z", // The date the donation was made
+            "id": "12983987fd37423", // The ID provided by Stream Tip
+            "username": "SomeUser", // The username of the user who donated
+            "amount": 10, // The amount that was donated
+            "note": "This is a donation!" // The note provided (can be null if none was provided)
+        }
+    ]
+}
+```
+
+You can specify URL query strings to change the behaviour of the call as per below:
+
+| Name | Description | Default |
+| --- | --- | -------- |
+| order | Changes the order of the results based upon date. Can be 'asc' or 'desc' | desc |
+
 ### POST /api/donations/test
 This route tests adding a new donation for alerts. Sent data should be in JSON format via POST as follows:
                                                                                               
@@ -122,6 +148,30 @@ You can specify URL query strings to change the behaviour of the call as per bel
 | offset | The number of results to skip. Used in conjunction with limit to paginate between all results | 0 |
 | order | Changes the order of the results based upon date. Can be 'asc' or 'desc' | desc |
 
+### GET /api/followers/all
+This route gets a listing of all Twitch followers. It returns the following:
+
+```js
+{
+    "_total": 345, // The total number of followers in the database
+    "_count": 345, // The number of items in the followers array
+    "_order": "desc", // The order the followers are sorted in
+    "followers": [
+        {
+            "date": "2015-01-17T10:37:59.995Z", // The date the user followed
+            "id": 3214235, // The Twitch ID of the user
+            "username": "someuser", // The username of the user who followed
+            "display_name": "SomeUser" // The display name of the user who followed
+        }
+    ]
+}
+```
+
+You can specify URL query strings to change the behaviour of the call as per below:
+
+| Name | Description | Default |
+| --- | --- | -------- |
+| order | Changes the order of the results based upon date. Can be 'asc' or 'desc' | desc |
 
 ### DELETE /api/followers
 This route deletes all the followers in the follower database.

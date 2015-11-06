@@ -196,6 +196,16 @@
                     // Add this socket to the list of active sockets
                     module.exports.sockets.push(socket);
 
+                    socket.once('angular-loaded', function () {
+                        if (module.exports.splashScreen) {
+                            // Close the splash screen
+                            module.exports.splashScreen.close();
+
+                            // Show the window
+                            gui.Window.get().show();
+                        }
+                    });
+
                     // This makes sure we don't try to send messages on the socket to disconnected clients
                     socket.on('disconnect', function () {
                         let index = module.exports.sockets.indexOf(socket);
@@ -271,12 +281,6 @@
         loadAngularApp: function () {
             return new Promise(function (resolve) {
                 window.location = 'http://localhost:' + 28800;
-
-                // Close the splash screen
-                module.exports.splashScreen.close();
-
-                // Show the window
-                gui.Window.get().show();
 
                 return resolve();
             });

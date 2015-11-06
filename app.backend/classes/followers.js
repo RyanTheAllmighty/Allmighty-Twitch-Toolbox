@@ -86,6 +86,35 @@
             });
         }
 
+        getAll(options) {
+            let self = this;
+
+            return new Promise(function (resolve, reject) {
+                options.order = options.order.toLowerCase();
+
+                if (options.order !== 'asc' && options.order !== 'desc') {
+                    return reject(new Error('Invalid option for \'order\' provided. Should be \'asc\' or \'desc\'.'));
+                }
+
+                self.datastore.find({}).sort({date: (options.order === 'asc' ? 1 : -1)}).exec(function (err, followers) {
+                    if (err) {
+                        return reject(err);
+                    }
+
+                    followers = _.map(followers, function (entry) {
+                        return _.omit(entry, '_id');
+                    });
+
+                    return resolve({
+                        _total: followers.length,
+                        _count: followers.length,
+                        _order: options.order,
+                        followers: followers
+                    });
+                });
+            });
+        }
+
         count() {
             let self = this;
 

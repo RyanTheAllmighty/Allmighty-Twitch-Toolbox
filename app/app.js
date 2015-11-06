@@ -151,5 +151,7 @@
                 volume: data.volume || 1
             }).play();
         });
+
+        SocketIO.emit('angular-loaded');
     }]);
 })();

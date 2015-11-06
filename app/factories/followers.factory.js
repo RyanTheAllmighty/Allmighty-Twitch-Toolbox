@@ -31,6 +31,7 @@
         return {
             testFollower,
             getFollows,
+            getAllFollowers,
             getFollowers,
             getCount,
             deleteAll
@@ -56,6 +57,22 @@
 
                 $http.get('http://127.0.0.1:28800/api/followers' + urlOpts).success(function (data) {
                     return resolve(data);
+                }).error(function (data, code) {
+                    return reject(data.error || 'An error occurred with status code ' + code);
+                });
+            });
+        }
+
+        function getAllFollowers(options) {
+            return new Promise(function (resolve, reject) {
+                let urlOpts = '?';
+
+                _.forEach(options, function (value, key) {
+                    urlOpts += key + '=' + value + '&';
+                });
+
+                $http.get('http://127.0.0.1:28800/api/followers/all' + urlOpts).success(function (data) {
+                    return resolve(data.followers);
                 }).error(function (data, code) {
                     return reject(data.error || 'An error occurred with status code ' + code);
                 });

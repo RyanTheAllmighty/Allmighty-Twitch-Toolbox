@@ -112,6 +112,16 @@
         });
     });
 
+    router.get('/donations/all', function (req, res) {
+        services.donations.getAll({
+            order: req.query.order || 'desc'
+        }).then(function (donations) {
+            res.json(donations);
+        }, function (err) {
+            res.status(500).send({error: err.message});
+        });
+    });
+
     router.post('/donations/test', function (req, res) {
         if (!req.body.test) {
             req.body.test = true;
@@ -144,6 +154,16 @@
         services.followers.get({
             limit: req.query.limit || 100,
             offset: req.query.offset || 0,
+            order: req.query.order || 'desc'
+        }).then(function (followers) {
+            res.json(followers);
+        }, function (err) {
+            res.status(500).send({error: err.message});
+        });
+    });
+
+    router.get('/followers/all', function (req, res) {
+        services.followers.getAll({
             order: req.query.order || 'desc'
         }).then(function (followers) {
             res.json(followers);

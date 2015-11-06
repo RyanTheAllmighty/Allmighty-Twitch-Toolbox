@@ -25,7 +25,7 @@
 
     function followersController($scope, Followers, DTOptionsBuilder, DTColumnBuilder, SocketIO) {
         let getFollowers = function () {
-            return Followers.getFollowers({limit: 100, order: 'desc'});
+            return Followers.getAllFollowers({order: 'desc'});
         };
 
         // The instance of the dataTable

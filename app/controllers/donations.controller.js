@@ -27,7 +27,7 @@
 
     function donationsController($scope, Donations, DTOptionsBuilder, DTColumnBuilder, SocketIO) {
         let getDonations = function () {
-            return Donations.getDonations({limit: 100, order: 'desc'});
+            return Donations.getAllDonations({order: 'desc'});
         };
 
         // The instance of the dataTable
