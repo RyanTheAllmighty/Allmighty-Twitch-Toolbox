@@ -268,13 +268,19 @@
 
             <div uib-collapse="_collapsedPanels.settings.obs">
                 <div class="panel-body">
-
-
                     <div class="form-group">
                         <label for="obsRemotePassword" class="col-lg-2 control-label">OBS Remote Password (Blank for disabled)</label>
 
                         <div class="col-lg-10">
                             <input ng-model="settings.obs.remotePassword" type="password" class="form-control" id="obsRemotePassword"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="obsMuteMicrophoneHotkey" class="col-lg-2 control-label">OBS Mute Microphone Hotkey</label>
+
+                        <div class="col-lg-10">
+                            <input ng-model="settings.obs.muteMicrophoneHotkey" type="text" class="form-control" id="obsMuteMicrophoneHotkey"/>
                         </div>
                     </div>
                 </div>

@@ -71,7 +71,8 @@
             music: ''
         },
         obs: {
-            remotePassword: ''
+            remotePassword: '',
+            muteMicrophoneHotkey: 'Ctrl+Alt+B'
         },
         application: {
             hasSetup: false

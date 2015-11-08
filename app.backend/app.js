@@ -51,6 +51,7 @@
     services.load()
         .then(services.showSplashScreen)
         .then(services.setupOBSRemote)
+        .then(services.setupGlobalKeyboardShortcuts)
         .then(services.setupTwitchAPI)
         .then(services.setupStreamTipAPI)
         .then(services.setupGiantBombAPI)

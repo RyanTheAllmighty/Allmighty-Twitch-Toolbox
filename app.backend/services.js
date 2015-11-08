@@ -67,6 +67,9 @@
         streamTipAPI: null,
         giantBombAPI: null,
         splashScreen: null,
+        shortcuts: {
+            muteMicrophone: null
+        },
         socketIOEmit: function (name, message) {
             return new Promise(function (resolve, reject) {
                 if (_.isUndefined(message)) {
@@ -168,9 +171,40 @@
                         });
                     };
 
+                    module.exports.obsRemote.onMicrophoneVolumeChanged = function (volume, muted, adjusting) {
+                        if (!adjusting) {
+                            module.exports.socketIOEmit('obs-microphone-volume-changed', {volume, muted});
+                        }
+                    };
+
+                    module.exports.obsRemote.onDesktopVolumeChanged = function (volume, muted, adjusting) {
+                        if (!adjusting) {
+                            module.exports.socketIOEmit('obs-desktop-volume-changed', {volume, muted});
+                        }
+                    };
+
                     module.exports.obsRemote.onStatusUpdate = function (streaming, previewing, bytesPerSecond, strain, streamDurationInMS, totalFrames, droppedFrames, framesPerSecond) {
                         module.exports.obsStatus.process(streaming, previewing, bytesPerSecond, strain, streamDurationInMS, totalFrames, droppedFrames, framesPerSecond);
                     };
+
+                    return resolve();
+                }).catch(reject);
+            });
+        },
+        setupGlobalKeyboardShortcuts: function () {
+            return new Promise(function (resolve, reject) {
+                module.exports.settings.get('obs', 'muteMicrophoneHotkey').then(function (setting) {
+                    module.exports.shortcuts.muteMicrophone = new gui.Shortcut({
+                        key: setting.value,
+                        active: function () {
+                            module.exports.obsRemote.toggleMicrophoneMute();
+                        },
+                        failed: function (msg) {
+                            console.error(new Error(msg));
+                        }
+                    });
+
+                    gui.App.registerGlobalHotKey(module.exports.shortcuts.muteMicrophone);
 
                     return resolve();
                 }).catch(reject);

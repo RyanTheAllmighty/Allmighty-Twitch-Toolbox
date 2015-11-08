@@ -216,3 +216,27 @@ This event is emitted when OBS reports it's status. This event will send the fol
     "date": "2015-01-17T10:37:59.995Z"
 }
 ```
+
+## obs-microphone-volume-changed
+This event is emitted when the microphones volume is changed. This event will send the following data:
+
+```js
+{
+    "volume": 0, // This value is between 0 and 1 where 0 is muted and 1 is full volume
+    "muted": true // If the microphone is muted or not
+}
+```
+
+Please be aware that if you use the Per-Scene Volume Plugin then switching between scenes with different levels will still send off this event.
+
+## obs-desktop-volume-changed
+This event is emitted when the desktop volume is changed. This event will send the following data:
+
+```js
+{
+    "volume": 0, // This value is between 0 and 1 where 0 is muted and 1 is full volume
+    "muted": true // If the desktop volume is muted or not
+}
+```
+
+Please be aware that if you use the Per-Scene Volume Plugin then switching between scenes with different levels will still send off this event.

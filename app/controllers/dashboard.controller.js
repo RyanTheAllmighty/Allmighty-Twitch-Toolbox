@@ -41,6 +41,7 @@
 
         $scope.droppedFrames = 0;
         $scope.framesPerSecond = 0;
+        $scope.microphoneMuted = false;
 
         $scope.game = '';
         $scope.title = '';
