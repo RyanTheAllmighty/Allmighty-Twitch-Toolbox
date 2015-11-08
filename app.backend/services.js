@@ -76,7 +76,8 @@
             tools: {
                 menu: null,
                 submenu: null,
-                microphone: null
+                microphone: null,
+                microphoneWindow: null
             },
             exit: null
         },
@@ -168,6 +169,10 @@
                 module.exports.tray.menu = new gui.Menu();
                 module.exports.tray.exit = new gui.MenuItem({type: 'normal', label: 'Exit', enabled: false});
                 module.exports.tray.exit.click = function () {
+                    if (module.exports.tray.tools.microphoneWindow) {
+                        module.exports.tray.tools.microphoneWindow.close();
+                    }
+
                     gui.Window.get().close();
                 };
 
@@ -178,16 +183,46 @@
                 module.exports.tray.tools.submenu = new gui.Menu();
                 module.exports.tray.tools.microphone = new gui.MenuItem({type: 'normal', label: 'Microphone Status'});
                 module.exports.tray.tools.microphone.click = function () {
-                    module.exports.splashScreen = gui.Window.open('http://localhost:28800/tools/microphone-status', {
-                        position: 'center',
-                        width: 500,
-                        height: 500,
-                        frame: true,
-                        toolbar: false,
-                        show_in_taskbar: true,
-                        show: true,
-                        resizable: true
-                    });
+                    if (!module.exports.tray.tools.microphoneWindow) {
+                        module.exports.tray.tools.microphoneWindow = gui.Window.open('http://localhost:28800/tools/microphone-status', {
+                            frame: true,
+                            toolbar: false,
+                            show_in_taskbar: true,
+                            show: false,
+                            resizable: true
+                        });
+
+                        module.exports.tray.tools.microphoneWindow.on('closed', function () {
+                            module.exports.tray.tools.microphoneWindow = null;
+                        });
+
+                        module.exports.tray.tools.microphoneWindow.on('move', function (x, y) {
+                            module.exports.settings.get('tools', 'microphoneStatus').then(function (setting) {
+                                setting.value.x = x;
+                                setting.value.y = y;
+                                module.exports.settings.set('tools', 'microphoneStatus', setting.value);
+                            });
+                        });
+
+                        module.exports.tray.tools.microphoneWindow.on('resize', function (width, height) {
+                            module.exports.settings.get('tools', 'microphoneStatus').then(function (setting) {
+                                setting.value.width = width;
+                                setting.value.height = height;
+                                module.exports.settings.set('tools', 'microphoneStatus', setting.value);
+                            });
+                        });
+
+                        module.exports.tray.tools.microphoneWindow.on('loaded', function () {
+                            module.exports.settings.get('tools', 'microphoneStatus').then(function (setting) {
+                                module.exports.tray.tools.microphoneWindow.moveTo(setting.value.x, setting.value.y);
+                                module.exports.tray.tools.microphoneWindow.resizeTo(setting.value.width, setting.value.height);
+                                module.exports.tray.tools.microphoneWindow.show();
+                            }).catch(function (err) {
+                                console.error(err);
+                                module.exports.tray.tools.microphoneWindow = null;
+                            });
+                        });
+                    }
                 };
                 module.exports.tray.tools.submenu.append(module.exports.tray.tools.microphone);
 

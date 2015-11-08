@@ -76,6 +76,14 @@
         },
         application: {
             hasSetup: false
+        },
+        tools: {
+            microphoneStatus: {
+                width: 500,
+                height: 500,
+                x: 0,
+                y: 0
+            }
         }
     };
 

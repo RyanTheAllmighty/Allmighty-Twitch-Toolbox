@@ -20,7 +20,6 @@
     'use strict';
 
     // NodeJS Modules
-    let _ = require('lodash');
     let path = require('path');
     let express = require('express');
 
