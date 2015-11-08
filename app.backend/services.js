@@ -70,6 +70,8 @@
         shortcuts: {
             muteMicrophone: null
         },
+        tray: null,
+        trayMenu: null,
         socketIOEmit: function (name, message) {
             return new Promise(function (resolve, reject) {
                 if (_.isUndefined(message)) {
@@ -144,6 +146,29 @@
                 module.exports.splashScreen.on('closed', function () {
                     module.exports.splashScreen = null;
                 });
+            });
+        },
+        setupTrayIcon: function () {
+            return new Promise(function (resolve) {
+                module.exports.tray = new gui.Tray({title: 'Allmighty Twitch Toolbox', tooltip: 'Allmighty Twitch Toolbox', icon: 'assets/image/icon.png'});
+
+                module.exports.trayMenu = new gui.Menu();
+
+                module.exports.trayMenu.append(new gui.MenuItem({
+                    type: 'normal',
+                    label: 'Exit',
+                    click: function () {
+                        if (module.exports.splashScreen) {
+                            module.exports.splashScreen.close();
+                        }
+
+                        gui.Window.get().close();
+                    }
+                }));
+
+                module.exports.tray.menu = module.exports.trayMenu;
+
+                return resolve();
             });
         },
         setupOBSRemote: function () {

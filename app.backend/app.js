@@ -50,6 +50,7 @@
     // Load everything up
     services.load()
         .then(services.showSplashScreen)
+        .then(services.setupTrayIcon)
         .then(services.setupOBSRemote)
         .then(services.setupGlobalKeyboardShortcuts)
         .then(services.setupTwitchAPI)
