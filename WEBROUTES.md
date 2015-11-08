@@ -640,3 +640,15 @@ This route returns an array of the last statuses received from OBS. It returns t
 ```
 
 Please note that this may be an empty array as this data is only captured while OBS is streaming/recording/previewing and as such may not have any recent data.
+
+### GET /obs/volumes
+This route returns the volume levels of OBS. It returns the following:
+
+```js
+{
+    "microphoneVolume": 0, // This value is between 0 and 1 where 0 is muted and 1 is full volume
+    "microphonemuted": true, // If the microphone volume is muted or not
+    "desktopVolume": 0.5, // This value is between 0 and 1 where 0 is muted and 1 is full volume
+    "desktopMuted": false // If the desktop volume is muted or not
+}
+```

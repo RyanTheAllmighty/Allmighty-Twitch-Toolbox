@@ -408,5 +408,16 @@
         });
     });
 
+    router.get('/obs/volumes', function (req, res) {
+        global.services.obsRemote.getVolumes(function (microphoneVolume, microphoneMuted, desktopVolume, desktopMuted) {
+            res.json({
+                microphoneVolume,
+                microphoneMuted,
+                desktopVolume,
+                desktopMuted
+            });
+        });
+    });
+
     module.exports = router;
 })();

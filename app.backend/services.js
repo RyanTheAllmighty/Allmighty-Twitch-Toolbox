@@ -70,8 +70,16 @@
         shortcuts: {
             muteMicrophone: null
         },
-        tray: null,
-        trayMenu: null,
+        tray: {
+            main: null,
+            menu: null,
+            tools: {
+                menu: null,
+                submenu: null,
+                microphone: null
+            },
+            exit: null
+        },
         socketIOEmit: function (name, message) {
             return new Promise(function (resolve, reject) {
                 if (_.isUndefined(message)) {
@@ -145,28 +153,54 @@
                 // When the splash screen is closed, remove it from global
                 module.exports.splashScreen.on('closed', function () {
                     module.exports.splashScreen = null;
+
+                    // Setup the tray menu stuff to enable it all now that were loaded
+                    module.exports.tray.exit.enabled = true;
+                    module.exports.tray.tools.menu.enabled = true;
                 });
             });
         },
         setupTrayIcon: function () {
             return new Promise(function (resolve) {
-                module.exports.tray = new gui.Tray({title: 'Allmighty Twitch Toolbox', tooltip: 'Allmighty Twitch Toolbox', icon: 'assets/image/icon.png'});
+                module.exports.tray.main = new gui.Tray({title: 'Allmighty Twitch Toolbox', tooltip: 'Allmighty Twitch Toolbox', icon: 'assets/image/icon.png'});
 
-                module.exports.trayMenu = new gui.Menu();
+                // Main Menu
+                module.exports.tray.menu = new gui.Menu();
+                module.exports.tray.exit = new gui.MenuItem({type: 'normal', label: 'Exit', enabled: false});
+                module.exports.tray.exit.click = function () {
+                    gui.Window.get().close();
+                };
 
-                module.exports.trayMenu.append(new gui.MenuItem({
-                    type: 'normal',
-                    label: 'Exit',
-                    click: function () {
-                        if (module.exports.splashScreen) {
-                            module.exports.splashScreen.close();
-                        }
+                // Tools Menu
+                module.exports.tray.tools.menu = new gui.MenuItem({type: 'normal', label: 'Tools', enabled: false});
 
-                        gui.Window.get().close();
-                    }
-                }));
+                // Tools Submenu
+                module.exports.tray.tools.submenu = new gui.Menu();
+                module.exports.tray.tools.microphone = new gui.MenuItem({type: 'normal', label: 'Microphone Status'});
+                module.exports.tray.tools.microphone.click = function () {
+                    module.exports.splashScreen = gui.Window.open('http://localhost:28800/tools/microphone-status', {
+                        position: 'center',
+                        width: 500,
+                        height: 500,
+                        frame: true,
+                        toolbar: false,
+                        show_in_taskbar: true,
+                        show: true,
+                        resizable: true
+                    });
+                };
+                module.exports.tray.tools.submenu.append(module.exports.tray.tools.microphone);
 
-                module.exports.tray.menu = module.exports.trayMenu;
+                // Set the submenu
+                module.exports.tray.tools.menu.submenu = module.exports.tray.tools.submenu;
+
+                // Add them to the menu
+                module.exports.tray.menu.append(module.exports.tray.tools.menu);
+                module.exports.tray.menu.append(new gui.MenuItem({type: 'separator'}));
+                module.exports.tray.menu.append(module.exports.tray.exit);
+
+                // Add the menu to the tray
+                module.exports.tray.main.menu = module.exports.tray.menu;
 
                 return resolve();
             });
@@ -319,6 +353,8 @@
                 module.exports.expressApp.use('/assets', express.static(path.join(process.cwd(), 'assets')));
                 module.exports.expressApp.use('/scenes/js', express.static(path.join(process.cwd(), 'app.scenes', 'js')));
                 module.exports.expressApp.use('/scenes/css', express.static(path.join(process.cwd(), 'app.scenes', 'css')));
+                module.exports.expressApp.use('/tools/js', express.static(path.join(process.cwd(), 'app.tools', 'js')));
+                module.exports.expressApp.use('/tools/css', express.static(path.join(process.cwd(), 'app.tools', 'css')));
 
                 module.exports.expressApp.set('view engine', 'jade');
 
@@ -353,6 +389,7 @@
                 module.exports.expressApp.use('/api', require(path.join(process.cwd(), 'app.backend', 'routes', 'apiRoutes')));
                 module.exports.expressApp.use('/foobar', require(path.join(process.cwd(), 'app.backend', 'routes', 'foobarRoutes')));
                 module.exports.expressApp.use('/scenes', require(path.join(process.cwd(), 'app.backend', 'routes', 'scenesRoutes')));
+                module.exports.expressApp.use('/tools', require(path.join(process.cwd(), 'app.backend', 'routes', 'toolsRoutes')));
 
                 module.exports.expressApp.use(function (req, res) {
                     res.status(404).json({error: 'Page not found!'});
