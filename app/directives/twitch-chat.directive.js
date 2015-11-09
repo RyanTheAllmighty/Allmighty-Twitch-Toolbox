@@ -41,8 +41,7 @@
 
         client.connect();
 
-        client.on('chat', function (channel, user, message) {
-            console.log(user);
+        function parseMessage(channel, user, message) {
             if (user.emotes) {
                 _.forEach(user.emotes, function (locations, key) {
                     let emoteURL = 'http://static-cdn.jtvnw.net/emoticons/v1/' + key + '/3.0';
@@ -60,7 +59,11 @@
                 user,
                 message: message
             });
-        });
+        }
+
+        client.on('chat', parseMessage);
+
+        client.on('action', parseMessage);
 
         client.on('timeout', function (channel, username) {
             $scope.chat = _.map($scope.chat, function (chat) {

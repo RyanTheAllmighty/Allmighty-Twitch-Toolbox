@@ -100,8 +100,8 @@ span.twitch-chat-mod-icons-purge {
 span.twitch-chat-username {
 }
 
-span.twitch-chat-username:after {
-    content: ": ";
+.twitch-chat-line:not(.twitch-chat-action) .twitch-chat-username:after {
+    content: ': ';
 }
 
 span.twitch-chat-message {

@@ -1,18 +1,18 @@
 <div>
     <div class="twitch-chat" scroll-glue>
-        <div class="twitch-chat-line" ng-repeat="c in chat">
+        <div class="twitch-chat-line" ng-class="{'twitch-chat-action': c.user['message-type'] === 'action'}" ng-repeat="c in chat">
             <span class="twitch-chat-time" ng-bind="c.date | date:'h:mm:ss'"></span>
-        <span ng-if="!c.user['user-type'] && c.user.username !== channel" class="twitch-chat-mod-icons">
-            <span ng-click="ban(c.user.username)" class="twitch-chat-mod-icons-ban"></span>
-            <span ng-click="timeout(c.user.username)" class="twitch-chat-mod-icons-timeout"></span>
-            <span ng-click="purge(c.user.username)" class="twitch-chat-mod-icons-purge"></span>
-        </span>
-        <span class="twitch-chat-badges">
-            <span ng-if="c.user.subscriber" class="twitch-chat-badge-subscriber"></span>
-            <span ng-if="c.user.turbo" class="twitch-chat-badge-turbo"></span>
-            <span ng-if="c.user['user-type']" class="twitch-chat-badge-{{ c.user['user-type'] }}"></span>
-            <span ng-if="c.user.username === channel" class="twitch-chat-badge-broadcaster"></span>
-        </span>
+            <span ng-if="!c.user['user-type'] && c.user.username !== channel" class="twitch-chat-mod-icons">
+                <span ng-click="ban(c.user.username)" class="twitch-chat-mod-icons-ban"></span>
+                <span ng-click="timeout(c.user.username)" class="twitch-chat-mod-icons-timeout"></span>
+                <span ng-click="purge(c.user.username)" class="twitch-chat-mod-icons-purge"></span>
+            </span>
+            <span class="twitch-chat-badges">
+                <span ng-if="c.user.subscriber" class="twitch-chat-badge-subscriber"></span>
+                <span ng-if="c.user.turbo" class="twitch-chat-badge-turbo"></span>
+                <span ng-if="c.user['user-type']" class="twitch-chat-badge-{{ c.user['user-type'] }}"></span>
+                <span ng-if="c.user.username === channel" class="twitch-chat-badge-broadcaster"></span>
+            </span>
             <span class="twitch-chat-username" ng-style="{'color': c.user.color || '#FFFFFF'}" ng-bind="c.user['display-name'].replace('\\s', ' ') || c.user.username"></span>
             <span class="twitch-chat-message" ng-bind-html="c.message"></span>
         </div>
