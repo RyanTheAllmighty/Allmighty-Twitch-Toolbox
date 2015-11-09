@@ -1,0 +1,129 @@
+div.twitch-chat {
+    max-height: 400px;
+    min-height: 400px;
+    overflow-y: scroll;
+}
+
+div.twitch-chat-line {
+    background-color: rgb(33, 33, 33);
+    color: rgb(222, 222, 222);
+    min-height: 25px;
+}
+
+div.twitch-chat-line:nth-child(2n) {
+    background-color: rgb(11, 11, 11);
+}
+
+span.twitch-chat-time {
+    font-size: smaller;
+}
+
+span.twitch-chat-badges {
+    display: inline-block;
+}
+
+.twitch-chat-badges > span {
+    margin-bottom: 2px;
+    border-radius: 2px;
+    height: 1em;
+    min-width: 1em;
+    display: inline-block;
+    vertical-align: middle;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+span.twitch-chat-badge-subscriber {
+}
+
+span.twitch-chat-badge-broadcaster {
+    cursor: pointer;
+    background-color: hsl(0, 81%, 50%);
+    background-image: url(http://www.twitch.tv/images/xarth/badge_broadcaster.svg);
+}
+
+span.twitch-chat-badge-admin {
+    cursor: pointer;
+    background-color: hsl(40, 96%, 54%);
+    background-image: url(http://www.twitch.tv/images/xarth/badge_admin.svg);
+}
+
+span.twitch-chat-badge-staff {
+    cursor: pointer;
+    background-color: hsl(268, 55%, 13%);
+    background-image: url(http://www.twitch.tv/images/xarth/badge_staff.svg);
+}
+
+span.twitch-chat-badge-turbo {
+    cursor: pointer;
+    background-color: hsl(261, 43%, 45%);
+    background-image: url(http://www.twitch.tv/images/xarth/badge_turbo.svg);
+}
+
+span.twitch-chat-badge-mod {
+    cursor: pointer;
+    background-color: hsl(105, 89%, 36%);
+    background-image: url(http://www.twitch.tv/images/xarth/badge_mod.svg);
+}
+
+span.twitch-chat-mod-icons {
+    display: inline-block;
+}
+
+.twitch-chat-mod-icons > span {
+    margin-bottom: 2px;
+    border-radius: 2px;
+    height: 1em;
+    min-width: 1em;
+    display: inline-block;
+    vertical-align: middle;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+span.twitch-chat-mod-icons-ban {
+    cursor: pointer;
+    background-image: url(http://www.twitch.tv/images/xarth/button_ban.svg);
+}
+
+span.twitch-chat-mod-icons-timeout {
+    cursor: pointer;
+    background-color: hsl(0, 81%, 50%);
+    background-image: url(http://www.twitch.tv/images/xarth/button_timeout.svg);
+}
+
+span.twitch-chat-mod-icons-purge {
+    cursor: pointer;
+    background-image: url(http://www.twitch.tv/images/xarth/button_timeout.svg);
+}
+
+span.twitch-chat-username {
+}
+
+span.twitch-chat-username:after {
+    content: ": ";
+}
+
+span.twitch-chat-message {
+}
+
+img.twitch-chat-emoticon {
+    background-position: center center;
+    background-repeat: no-repeat;
+    margin: -5px 0;
+    display: inline-block;
+    vertical-align: middle !important;
+    height: 1.5em;
+}
+
+div.twitch-chat-send-message {
+
+}
+
+input.twitch-chat-send-message-input {
+    width: 90%
+}
+
+button.twitch-chat-send-message-button {
+    width: 9%;
+}

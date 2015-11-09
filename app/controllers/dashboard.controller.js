@@ -16,16 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* globals async */
+/* globals async, _ */
 
 (function () {
     'use strict';
 
     angular.module('AllmightyTwitchToolbox').controller('DashboardController', dashboardController);
 
-    dashboardController.$inject = ['$scope', '$timeout', 'Donations', 'Viewers', 'Stream', 'GiantBomb', 'Notification', 'SocketIO', 'OBS'];
+    dashboardController.$inject = ['$scope', '$timeout', 'Donations', 'Viewers', 'Stream', 'GiantBomb', 'Notification', 'SocketIO', 'OBS', 'settings'];
 
-    function dashboardController($scope, $timeout, Donations, Viewers, Stream, GiantBomb, Notification, SocketIO, OBS) {
+    function dashboardController($scope, $timeout, Donations, Viewers, Stream, GiantBomb, Notification, SocketIO, OBS, settings) {
         $scope.streamOnline = false;
         $scope.obsOnline = false;
         $scope.viewerCount = 0;
@@ -42,6 +42,9 @@
         $scope.droppedFrames = 0;
         $scope.framesPerSecond = 0;
         $scope.microphoneMuted = false;
+
+        $scope.chatChannelName = _.result(_.findWhere(settings, {group: 'twitch', name: 'auth'}), 'value').username;
+        $scope.chatOauth = 'oauth:' + _.result(_.findWhere(settings, {group: 'twitch', name: 'auth'}), 'value').accessToken;
 
         $scope.game = '';
         $scope.title = '';

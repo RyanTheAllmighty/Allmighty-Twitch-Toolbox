@@ -51,7 +51,12 @@
             url: '/dashboard',
             templateUrl: 'app/views/dashboard.html',
             controller: 'DashboardController',
-            controllerAs: 'vm'
+            controllerAs: 'vm',
+            resolve: {
+                settings: function(Settings) {
+                    return Settings.getAll();
+                }
+            }
         }).state('viewers', {
             url: '/viewers',
             templateUrl: 'app/views/viewers.html',

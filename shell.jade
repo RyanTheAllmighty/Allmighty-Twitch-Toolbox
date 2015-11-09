@@ -12,6 +12,7 @@ html(ng-app='AllmightyTwitchToolbox')
         link(rel='stylesheet', type='text/css', href='assets/css/libs/bootstrap-datetimepicker-4.17.37.min.css')
         link(rel='stylesheet', type='text/css', href='assets/css/libs/nv.d3-1.8.1.min.css')
         link(rel='stylesheet', type='text/css', href='assets/css/app.css')
+        link(rel='stylesheet', type='text/css', href='app/directives/twitch-chat.directive.css')
     body
         nav.navbar.navbar-default.navbar-fixed-top(ng-controller='NavigationController')
             .container-fluid
@@ -77,6 +78,9 @@ html(ng-app='AllmightyTwitchToolbox')
         // Bootstrap Date Time Picker
         script(type='text/javascript', src='assets/js/libs/bootstrap-datetimepicker-4.17.37.min.js')
 
+        // TMI.js Library (Twitch Chat)
+        script(type='text/javascript', src='assets/js/libs/tmijs-0.0.24.min.js')
+
         // Angular & Plugins
         script(type='text/javascript', src='assets/js/libs/angular-1.4.7.min.js')
         script(type='text/javascript', src='assets/js/libs/angular-ui-router-0.2.15.min.js')
@@ -126,6 +130,7 @@ html(ng-app='AllmightyTwitchToolbox')
         // Our directives
         script(type='text/javascript', src='app/directives/collapsible.directive.js')
         script(type='text/javascript', src='app/directives/hero-widget.directive.js')
+        script(type='text/javascript', src='app/directives/twitch-chat.directive.js')
 
         // Our filters
         script(type='text/javascript', src='app/filters/capitalize.filter.js')
