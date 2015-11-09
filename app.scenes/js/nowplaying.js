@@ -21,6 +21,8 @@
 (function () {
     'use strict';
 
+    var $transition = null;
+
     var vue = new Vue({
         el: '.songInfo',
         data: {
@@ -55,6 +57,16 @@
     function showSongInfo() {
         var $songInfo = $('.songInfo');
 
-        $songInfo.transition({x: '-170px'}).transition({opacity: 0, delay: window.customData.musicChangeNotificationTime - 500}, 500, 'linear').transition({x: '165px'}).transition({opacity: 100});
+        if ($transition) {
+            $transition.stopTransition();
+            $songInfo.removeAttr('style');
+        }
+
+        $transition = $songInfo.transition({x: '-170px'}).transition({
+            opacity: 0,
+            delay: window.customData.musicChangeNotificationTime - 500
+        }, 500, 'linear').transition({x: '165px'}).transition({opacity: 100}, function () {
+            $transition = null;
+        });
     }
 })();
