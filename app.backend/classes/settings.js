@@ -28,7 +28,7 @@
         twitch: {
             redirectURI: 'http://127.0.0.1:28800/#/auth/twitch',
             clientID: '62gqva8j7h003ar84w0gprmu8ebrqth',
-            scopes: ['user_read', 'chat_login'],
+            scopes: ['user_read', 'chat_login', 'channel_editor'],
             auth: {
                 accessToken: '',
                 scopes: '',
@@ -146,7 +146,8 @@
                                 needToSave = true;
                             } else {
                                 // User's auth doesn't have the correct scopes anymore
-                                if (_.difference(ourSettings.twitch.auth.scopes, defaultSettings.twitch.scopes).length !== 0) {
+                                if (_.difference(defaultSettings.twitch.scopes, ourSettings.twitch.auth.scopes).length !== 0) {
+                                    ourSettings.twitch.scopes = defaultSettings.twitch.scopes;
                                     ourSettings.twitch.auth = defaultSettings.twitch.auth;
                                     ourSettings.application.hasSetup = false;
 

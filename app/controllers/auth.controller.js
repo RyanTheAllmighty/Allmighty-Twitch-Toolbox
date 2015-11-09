@@ -36,7 +36,7 @@
         Settings.setTwitchAuth({
             accessToken: $location.search().access_token
         }).then(function () {
-            Notification.success({message: 'Logged into Twitch!', delay: 3000});
+            Notification.success({message: 'Logged into Twitch! Please restart the application to continue!', delay: 3000});
 
             $state.go('settings');
         }).catch(function (err) {

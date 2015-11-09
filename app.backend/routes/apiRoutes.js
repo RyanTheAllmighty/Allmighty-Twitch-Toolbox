@@ -53,8 +53,12 @@
                 auth.clientID = setting.value;
 
                 global.services.settings.set('twitch', 'auth', auth).then(function () {
-                    res.json({
-                        success: true
+                    global.services.settings.set('application', 'hasSetup', true).then(function () {
+                        res.json({
+                            success: true
+                        });
+                    }).catch(function (err) {
+                        res.status(500).send({error: err.message});
                     });
                 }).catch(function (err) {
                     res.status(500).send({error: err.message});
