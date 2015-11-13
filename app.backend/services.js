@@ -23,6 +23,7 @@
     let _ = require('lodash');
     let path = require('path');
     let async = require('async');
+    let tmijs = require('tmi.js');
     let express = require('express');
     let OBSRemote = require('obs-remote');
     let TwitchAPI = require('twitch-api');
@@ -31,6 +32,7 @@
     let gui = global.window.nwDispatcher.requireNwGui();
 
     // Our Classes
+    let Chat = require('./classes/chat');
     let Stream = require('./classes/stream');
     let Timers = require('./classes/timers');
     let Viewers = require('./classes/viewers');
@@ -51,6 +53,7 @@
         settings: null,
         stream: null,
         obsStatus: null,
+        chat: null,
         viewers: null,
         timers: null,
         expressApp: null,
@@ -67,6 +70,7 @@
         streamTipAPI: null,
         giantBombAPI: null,
         splashScreen: null,
+        twitchChatClient: null,
         shortcuts: {
             muteMicrophone: null
         },
@@ -113,6 +117,7 @@
                     module.exports.viewers = new Viewers({autoload: true});
                     module.exports.donations = new Donations({autoload: true});
                     module.exports.followers = new Followers({autoload: true});
+                    module.exports.chat = new Chat({inMemoryOnly: true, autoload: true});
                     module.exports.obsStatus = new OBSStatus({inMemoryOnly: true, autoload: true});
 
                     module.exports.notificationQueue = new NotificationQueue();
@@ -304,6 +309,54 @@
                 }).catch(reject);
             });
         },
+        setupTwitchChat: function () {
+            return new Promise(function (resolve, reject) {
+                module.exports.settings.get('twitch', 'auth').then(function (setting) {
+                    if (setting.value.username && setting.value.accessToken) {
+                        module.exports.twitchChatClient = new tmijs.client({
+                            connection: {
+                                random: 'chat',
+                                reconnect: true
+                            },
+                            identity: {
+                                username: setting.value.username,
+                                password: 'oauth:' + setting.value.accessToken
+                            },
+                            channels: ['#' + setting.value.username]
+                        });
+
+                        let parseMessage = function (channel, user, message) {
+                            let rawMessage = message;
+
+                            if (user.emotes) {
+                                _.forEach(user.emotes, function (locations, key) {
+                                    let emoteURL = 'http://static-cdn.jtvnw.net/emoticons/v1/' + key + '/3.0';
+
+                                    _.forEach(locations, function (location) {
+                                        let locationParts = location.split('-');
+
+                                        message = message.substr(0, parseInt(locationParts[0])) + '<img class="twitch-chat-emoticon" src="' + emoteURL + '" />' +
+                                            message.substring(parseInt(locationParts[1]) + 1);
+                                    });
+                                });
+                            }
+
+                            module.exports.chat.parse({user, message, rawMessage});
+                        };
+
+                        module.exports.twitchChatClient.on('chat', parseMessage);
+
+                        module.exports.twitchChatClient.on('action', parseMessage);
+
+                        module.exports.twitchChatClient.on('timeout', function (channel, username) {
+                            module.exports.chat.parseTimeout(username);
+                        });
+                    }
+
+                    return resolve();
+                }).catch(reject);
+            });
+        },
         setupTwitchAPI: function () {
             return new Promise(function (resolve, reject) {
                 module.exports.settings.getGroup('twitch').then(function (settings) {
@@ -444,8 +497,18 @@
                 });
             });
         },
+        connectToTwitchChat: function () {
+            return new Promise(function (resolve, reject) {
+                if (module.exports.twitchChatClient) {
+                    console.log(module.exports.twitchChatClient);
+                    module.exports.twitchChatClient.connect().then(resolve).catch(reject);
+                } else {
+                    return resolve();
+                }
+            });
+        },
         loadAngularApp: function () {
-            return new Promise(function (resolve) {
+            return new Promise(function (resolve, reject) {
                 window.location = 'http://localhost:' + 28800;
 
                 return resolve();

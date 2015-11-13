@@ -240,3 +240,24 @@ This event is emitted when the desktop volume is changed. This event will send t
 ```
 
 Please be aware that if you use the Per-Scene Volume Plugin then switching between scenes with different levels will still send off this event.
+
+## twitch-chat-message
+This event is emitted when a new Twitch chat message has been received. This event will send the following data:
+
+```js
+{
+    "user": {
+        
+    },
+    "message": "Hello <img class=\"twitch-chat-emoticon\" src=\"http://static-cdn.jtvnw.net/emoticons/v1/25/3.0\" />", // The message with the emotes parsed into img tags
+    "rawMessage": "Hello Kappa", // The raw message without any emote parsing
+    "date": "2015-01-17T10:37:59.995Z" // The date the message was received
+}
+```
+
+## twitch-chat-timeout
+This event is emitted when a user has been timed out. This event will send the following data:
+
+```js
+"SomeUser" // The username of the user who was timed out
+```

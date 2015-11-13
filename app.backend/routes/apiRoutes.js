@@ -423,5 +423,43 @@
         });
     });
 
+    router.get('/chat', function (req, res) {
+        global.services.chat.getAll().then(function (data) {
+            res.json(data);
+        }, function (err) {
+            res.status(500).send({error: err.message});
+        });
+    });
+
+    router.post('/chat/ban', function (req, res) {
+        global.services.chat.ban(req.body.username).then(function () {
+            res.json({
+                success: true
+            });
+        }, function (err) {
+            res.status(500).send({error: err.message});
+        });
+    });
+
+    router.post('/chat/timeout', function (req, res) {
+        global.services.chat.timeout(req.body.username, req.body.seconds).then(function () {
+            res.json({
+                success: true
+            });
+        }, function (err) {
+            res.status(500).send({error: err.message});
+        });
+    });
+
+    router.post('/chat/say', function (req, res) {
+        global.services.chat.say(req.body.message).then(function () {
+            res.json({
+                success: true
+            });
+        }, function (err) {
+            res.status(500).send({error: err.message});
+        });
+    });
+
     module.exports = router;
 })();

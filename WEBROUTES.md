@@ -31,6 +31,74 @@ If everything was a success then a 200 status code will be returned.
 
 If there was an error a 500 status code will be returned.
 
+### GET /api/chat
+This route gets a listing of StreamTip donations. It returns the following:
+
+```js
+[
+    {
+        "user": {
+            
+        },
+        "message": "Hello <img class=\"twitch-chat-emoticon\" src=\"http://static-cdn.jtvnw.net/emoticons/v1/25/3.0\" />", // The message with the emotes parsed into img tags
+        "rawMessage": "Hello Kappa", // The raw message without any emote parsing
+        "date": "2015-01-17T10:37:59.995Z" // The date the message was received
+    }
+]
+```
+
+### POST /api/chat/ban
+This route bans a user from your chat. Sent data should be in JSON format via POST as follows:
+                                                                                              
+```js
+{
+    "username": "SomeUser" // The username to ban
+}
+```
+
+If successful a success message will be sent back in the response as per below, else an error will be returned:
+
+```js
+{
+    "success": true
+}
+```
+
+### POST /api/chat/timeout
+This route times out a user from your chat. Sent data should be in JSON format via POST as follows:
+                                                                                              
+```js
+{
+    "username": "SomeUser", // The username to timeout
+    "seconds": 600 // The number of seconds to time them out for
+}
+```
+
+If successful a success message will be sent back in the response as per below, else an error will be returned:
+
+```js
+{
+    "success": true
+}
+```
+
+### POST /api/chat/say
+This route sends a message to chat. Sent data should be in JSON format via POST as follows:
+                                                                                              
+```js
+{
+    "message": "Hello there Kappa" // The message to send
+}
+```
+
+If successful a success message will be sent back in the response as per below, else an error will be returned:
+
+```js
+{
+    "success": true
+}
+```
+
 ### GET /api/donations
 This route gets a listing of StreamTip donations. It returns the following:
 

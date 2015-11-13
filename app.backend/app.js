@@ -53,6 +53,7 @@
         .then(services.setupTrayIcon)
         .then(services.setupOBSRemote)
         .then(services.setupGlobalKeyboardShortcuts)
+        .then(services.setupTwitchChat)
         .then(services.setupTwitchAPI)
         .then(services.setupStreamTipAPI)
         .then(services.setupGiantBombAPI)
@@ -64,6 +65,7 @@
         .then(services.setupSocketIOServer)
         .then(services.setupExpress)
         .then(services.startExpressServer)
+        .then(services.connectToTwitchChat)
         .then(services.loadAngularApp)
         .catch(function (err) {
             console.error(err);

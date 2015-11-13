@@ -16,56 +16,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* globals _, irc */
+/* globals _ */
 
 (function () {
     'use strict';
 
     angular.module('AllmightyTwitchToolbox').directive('twitchChat', twitchChatDirective);
 
-    let twitchChatController = ['$scope', '$interval', function ($scope, $interval) {
+    twitchChatController.$inject = ['$scope', '$interval', 'Chat', 'SocketIO'];
+
+    function twitchChatController($scope, $interval, Chat, SocketIO) {
         $scope.chat = [];
         $scope.chatMessage = '';
 
-        let client = new irc.client({
-            connection: {
-                random: 'chat',
-                reconnect: true
-            },
-            identity: {
-                username: $scope.channel,
-                password: $scope.oauth
-            },
-            channels: ['#' + $scope.channel]
+        Chat.getAllMessages().then(function (data) {
+            $scope.chat = data;
         });
 
-        client.connect();
+        SocketIO.on('twitch-chat-message', function (data) {
+            $scope.chat.push(data);
+        });
 
-        function parseMessage(channel, user, message) {
-            if (user.emotes) {
-                _.forEach(user.emotes, function (locations, key) {
-                    let emoteURL = 'http://static-cdn.jtvnw.net/emoticons/v1/' + key + '/3.0';
-
-                    _.forEach(locations, function (location) {
-                        let locationParts = location.split('-');
-
-                        message = message.substr(0, parseInt(locationParts[0])) + '<img class="twitch-chat-emoticon" src="' + emoteURL + '" />' + message.substring(parseInt(locationParts[1]) + 1);
-                    });
-                });
-            }
-
-            $scope.chat.push({
-                date: new Date(),
-                user,
-                message: message
-            });
-        }
-
-        client.on('chat', parseMessage);
-
-        client.on('action', parseMessage);
-
-        client.on('timeout', function (channel, username) {
+        SocketIO.on('twitch-chat-timeout', function (username) {
             $scope.chat = _.map($scope.chat, function (chat) {
                 if (chat.user.username === username) {
                     chat.message = '<Deleted>';
@@ -76,22 +48,21 @@
         });
 
         $scope.ban = function (username) {
-            client.ban($scope.channel, username);
+            Chat.ban(username);
         };
 
         $scope.timeout = function (username) {
-            client.timeout($scope.channel, username, 300);
+            Chat.timeout(username, 300);
         };
 
         $scope.purge = function (username) {
-            client.timeout($scope.channel, username, 1);
+            Chat.timeout(username, 1);
         };
 
         $scope.sendMessage = function () {
-            if ($scope.chatMessage) {
-                client.say($scope.channel, $scope.chatMessage);
+            Chat.say($scope.chatMessage).then(function () {
                 $scope.chatMessage = '';
-            }
+            });
         };
 
         // Every 30 seconds trim the chat array down to 100 records
@@ -100,7 +71,7 @@
                 $scope.chat = _.drop($scope.chat, $scope.chat.length - 100);
             }
         }, 30000);
-    }];
+    }
 
     function twitchChatDirective() {
         return {
