@@ -100,7 +100,7 @@
             let self = this;
 
             return new Promise(function (resolve, reject) {
-                self.datastore.find({}).sort({date: -1}).exec(function (err, data) {
+                self.datastore.find({}).sort({date: 1}).exec(function (err, data) {
                     if (err) {
                         return reject(err);
                     }
