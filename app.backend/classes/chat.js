@@ -19,7 +19,11 @@
 (function () {
     'use strict';
 
+    let path = require('path');
+    let accounting = require('accounting');
+
     let Datastore = require('./datastore');
+    let QueueableNotification = require(path.join(process.cwd(), 'app.backend', 'classes', 'queueableNotification'));
 
     let _ = require('lodash');
 
@@ -40,6 +44,30 @@
                     }
                 }, 60000);
             }
+        }
+
+        hosted(username, viewers, options) {
+            return new Promise(function (resolve, reject) {
+                if (options.noNotification) {
+                    return resolve();
+                }
+
+                global.services.settings.getAll().then(function (settings) {
+                    let noti = new QueueableNotification()
+                        .title('Channel Hosted!')
+                        .message(username + ' has hosted the channel for ' + accounting.formatNumber(viewers) + ' viewers!')
+                        .timeout(_.result(_.findWhere(settings, {group: 'notifications', name: 'channelHostedNotificationTime'}), 'value') * 1000)
+                        .socketIO('channel-hosted', {username, viewers})
+                        .sound(_.result(_.findWhere(settings, {group: 'sounds', name: 'channelHosted'}), 'value'), _.result(_.findWhere(settings, {
+                            group: 'sounds',
+                            name: 'channelHostedVolume'
+                        }), 'value'));
+
+                    global.services.notificationQueue.add(noti);
+
+                    return resolve();
+                }).catch(reject);
+            });
         }
 
         parse(details) {

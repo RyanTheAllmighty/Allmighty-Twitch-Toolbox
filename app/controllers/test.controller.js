@@ -21,9 +21,9 @@
 
     angular.module('AllmightyTwitchToolbox').controller('TestController', testController);
 
-    testController.$inject = ['$scope', 'Followers', 'Donations', 'Notification'];
+    testController.$inject = ['$scope', 'Followers', 'Donations', 'Notification', 'Host'];
 
-    function testController($scope, Followers, Donations, Notification) {
+    function testController($scope, Followers, Donations, Notification, Host) {
         $scope.donation = {
             username: '',
             amount: 0
@@ -73,6 +73,33 @@
 
         $scope.clearFollower = function () {
             $scope.follower.username = '';
+        };
+
+        $scope.host = {
+            username: '',
+            viewers: 0
+        };
+
+        $scope.testHost = function () {
+            if ($scope.host.username === '') {
+                Notification.error({message: 'Username must be filled in!', delay: 3000});
+            } else {
+                let username = $scope.host.username;
+                let viewers = $scope.host.viewers;
+
+                $scope.clearHost();
+
+                Host.testHost({username, viewers, date: new Date(), test: true}).then(function () {
+                    Notification.success({message: 'New host triggered!', delay: 3000});
+                }).catch(function (err) {
+                    Notification.error({message: err.message, delay: 3000});
+                });
+            }
+        };
+
+        $scope.clearHost = function () {
+            $scope.host.username = '';
+            $scope.host.viewers = 0;
         };
     }
 })();

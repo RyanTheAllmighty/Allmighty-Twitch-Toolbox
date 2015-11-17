@@ -261,3 +261,13 @@ This event is emitted when a user has been timed out. This event will send the f
 ```js
 "SomeUser" // The username of the user who was timed out
 ```
+
+## channel-hosted
+This event is emitted when a user has hosted your channel. This event will send the following data:
+
+```js
+{
+    "username": SomeUser", // The username of the user who hosted you
+    "viewers": 22 // The number of viewers the host was for
+}
+```

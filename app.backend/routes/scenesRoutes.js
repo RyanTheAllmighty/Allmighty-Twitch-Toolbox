@@ -30,6 +30,7 @@
     router.get('/alerts', function (req, res) {
         res.render(path.join(process.cwd(), 'app.scenes', 'alerts'), {
             data: {
+                channelHostedNotificationTime: _.result(_.findWhere(req.notificationSettings, {name: 'channelHostedNotificationTime'}), 'value') * 1000,
                 donationNotificationTime: _.result(_.findWhere(req.notificationSettings, {name: 'donationNotificationTime'}), 'value') * 1000,
                 followerNotificationTime: _.result(_.findWhere(req.notificationSettings, {name: 'followerNotificationTime'}), 'value') * 1000
             }

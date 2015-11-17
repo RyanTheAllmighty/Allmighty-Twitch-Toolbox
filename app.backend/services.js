@@ -351,6 +351,10 @@
                         module.exports.twitchChatClient.on('timeout', function (channel, username) {
                             module.exports.chat.parseTimeout(username);
                         });
+
+                        module.exports.twitchChatClient.on('hosted', function (channel, username, viewers) {
+                            module.exports.chat.hosted(username, viewers);
+                        });
                     }
 
                     return resolve();

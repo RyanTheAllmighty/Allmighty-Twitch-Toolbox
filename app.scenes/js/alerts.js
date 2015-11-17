@@ -45,6 +45,13 @@
         showAlert(window.customData.donationNotificationTime);
     });
 
+    // Received chanel hosted data
+    socket.on('channel-hosted', function (data) {
+        vue.username = data.username;
+        vue.message = 'hosted the channel for ' + accounting.formatNumber(data.viewers) + ' viewers!';
+        showAlert(window.customData.channelHostedNotificationTime);
+    });
+
     function showAlert(time) {
         var $alert = $('.alert');
 

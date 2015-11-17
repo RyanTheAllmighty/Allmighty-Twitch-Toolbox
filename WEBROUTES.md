@@ -319,6 +319,24 @@ You can specify URL query strings to change the behaviour of the call as per bel
 | limit | Limits the number of results to return. Maximum is 100. | 25 |
 | namesOnly | If you only want to return an array of names else it will return an array of game objects from GiantBomb. | false |
 
+### POST /api/host/test
+This route tests someone hosting the channel for alerts. Sent data should be in JSON format via POST as follows:
+                                                                                              
+```js
+{
+    "username": "SomeUser", // The username of the user to test with
+    "viewers": 10 // The number of viewers to test with
+}
+```
+
+If successful a success message will be sent back in the response as per below, else an error will be returned:
+
+```js
+{
+    "success": true
+}
+```
+
 ### GET /api/nowplaying/reshow
 This route sends a message to any displayed now playing scenes to reshow the currently playing song. This will return a 200 status code.
 

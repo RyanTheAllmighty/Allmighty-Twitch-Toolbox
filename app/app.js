@@ -43,7 +43,8 @@
         'music',
         'scenes',
         'obs',
-        'chat'
+        'chat',
+        'host'
     ]);
 
     angular.module('AllmightyTwitchToolbox').config(function ($stateProvider, $urlRouterProvider, localStorageServiceProvider, NotificationProvider) {

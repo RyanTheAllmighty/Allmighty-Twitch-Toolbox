@@ -61,6 +61,10 @@
         };
 
         $scope.save = function () {
+            if (document.getElementById('channelHosted').files[0]) {
+                $scope.settings.sounds.channelHosted = document.getElementById('channelHosted').files[0].path.toString();
+            }
+
             if (document.getElementById('newDonation').files[0]) {
                 $scope.settings.sounds.newDonation = document.getElementById('newDonation').files[0].path.toString();
             }

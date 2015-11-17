@@ -461,5 +461,17 @@
         });
     });
 
+    router.post('/host/test', function (req, res) {
+        if (!req.body.test) {
+            req.body.test = true;
+        }
+
+        global.services.chat.hosted(req.body.username, req.body.viewers, req.body).then(function () {
+            res.json({success: true});
+        }).catch(function (err) {
+            res.status(500).send({error: err.message});
+        });
+    });
+
     module.exports = router;
 })();

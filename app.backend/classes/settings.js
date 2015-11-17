@@ -55,12 +55,15 @@
             foobarHttpControlPort: 8888
         },
         sounds: {
+            channelHosted: '',
+            channelHostedVolume: 1.0,
             newDonation: '',
             newDonationVolume: 1.0,
             newFollower: '',
             newFollowerVolume: 1.0
         },
         notifications: {
+            channelHostedNotificationTime: 5,
             donationNotificationTime: 5,
             followerNotificationTime: 5,
             musicChangeNotificationTime: 5
