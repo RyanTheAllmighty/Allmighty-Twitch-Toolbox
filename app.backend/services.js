@@ -512,7 +512,7 @@
             });
         },
         loadAngularApp: function () {
-            return new Promise(function (resolve, reject) {
+            return new Promise(function (resolve) {
                 window.location = 'http://localhost:' + 28800;
 
                 return resolve();
