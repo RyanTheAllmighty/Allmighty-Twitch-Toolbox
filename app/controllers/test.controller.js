@@ -32,6 +32,8 @@
         $scope.testDonation = function () {
             if ($scope.donation.username === '') {
                 Notification.error({message: 'Username must be filled in!', delay: 3000});
+            } else if ($scope.donation.amount < 0) {
+                Notification.error({message: 'Amount cannot be less than 0!', delay: 3000});
             } else {
                 let username = $scope.donation.username;
                 let amount = $scope.donation.amount;
@@ -83,6 +85,8 @@
         $scope.testHost = function () {
             if ($scope.host.username === '') {
                 Notification.error({message: 'Username must be filled in!', delay: 3000});
+            } else if ($scope.host.viewers < 0) {
+                Notification.error({message: 'Viewers cannot be less than 0!', delay: 3000});
             } else {
                 let username = $scope.host.username;
                 let viewers = $scope.host.viewers;
