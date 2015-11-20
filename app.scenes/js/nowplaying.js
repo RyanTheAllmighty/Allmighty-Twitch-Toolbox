@@ -54,6 +54,11 @@
         showSongInfo();
     });
 
+    // Received reload event
+    socket.on('scenes-reload', function () {
+        location.reload();
+    });
+
     function showSongInfo() {
         var $songInfo = $('.songInfo');
 
