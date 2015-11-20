@@ -55,7 +55,7 @@
                 global.services.settings.getAll().then(function (settings) {
                     let noti = new QueueableNotification()
                         .title('Channel Hosted!')
-                        .message(username + ' has hosted the channel for ' + accounting.formatNumber(viewers) + ' viewers!')
+                        .message(username + ' has hosted the channel for ' + accounting.formatNumber(viewers) + ' viewer' + (viewers === 1 ? '' : 's') + '!')
                         .timeout(_.result(_.findWhere(settings, {group: 'notifications', name: 'channelHostedNotificationTime'}), 'value') * 1000)
                         .socketIO('channel-hosted', {username, viewers})
                         .sound(_.result(_.findWhere(settings, {group: 'sounds', name: 'channelHosted'}), 'value'), _.result(_.findWhere(settings, {

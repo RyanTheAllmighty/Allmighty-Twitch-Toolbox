@@ -48,7 +48,7 @@
     // Received chanel hosted data
     socket.on('channel-hosted', function (data) {
         vue.username = data.username;
-        vue.message = 'hosted the channel for ' + accounting.formatNumber(data.viewers) + ' viewers!';
+        vue.message = 'hosted the channel for ' + accounting.formatNumber(data.viewers) + ' viewer' + (data.viewers === 1 ? '' : 's') + '!';
         showAlert(window.customData.channelHostedNotificationTime);
     });
 
