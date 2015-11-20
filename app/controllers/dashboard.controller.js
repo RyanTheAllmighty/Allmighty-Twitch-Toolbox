@@ -23,9 +23,9 @@
 
     angular.module('AllmightyTwitchToolbox').controller('DashboardController', dashboardController);
 
-    dashboardController.$inject = ['$scope', '$timeout', 'Donations', 'Viewers', 'Stream', 'GiantBomb', 'Notification', 'SocketIO', 'OBS', 'settings'];
+    dashboardController.$inject = ['$scope', '$timeout', 'Donations', 'Viewers', 'Stream', 'GiantBomb', 'Notification', 'SocketIO', 'OBS', 'settings', 'Chat'];
 
-    function dashboardController($scope, $timeout, Donations, Viewers, Stream, GiantBomb, Notification, SocketIO, OBS, settings) {
+    function dashboardController($scope, $timeout, Donations, Viewers, Stream, GiantBomb, Notification, SocketIO, OBS, settings, Chat) {
         $scope.streamOnline = false;
         $scope.obsOnline = false;
         $scope.viewerCount = 0;
@@ -45,6 +45,10 @@
 
         $scope.chatChannelName = _.result(_.findWhere(settings, {group: 'twitch', name: 'auth'}), 'value').username;
         $scope.chatOauth = 'oauth:' + _.result(_.findWhere(settings, {group: 'twitch', name: 'auth'}), 'value').accessToken;
+
+        $scope.channelSlowMode = false;
+        $scope.channelSlowModeLength = 0;
+        $scope.channelSubMode = false;
 
         $scope.game = '';
         $scope.title = '';
@@ -76,6 +80,15 @@
 
         SocketIO.on('title-updated', function (title) {
             $scope.title = title;
+        });
+
+        SocketIO.on('twitch-chat-slowmode', function (data) {
+            $scope.channelSlowMode = data.enabled;
+            $scope.channelSlowModeLength = data.length;
+        });
+
+        SocketIO.on('twitch-chat-submode', function (data) {
+            $scope.channelSubMode = data.enabled;
         });
 
         SocketIO.on('donations', function () {
@@ -125,6 +138,18 @@
                     return Notification.error({message: err.message, delay: 3000});
                 });
             }
+        };
+
+        $scope.clearChat = function () {
+            Chat.clear();
+        };
+
+        $scope.toggleSlowMode = function () {
+            Chat.slowmode(!$scope.channelSlowMode);
+        };
+
+        $scope.toggleSubMode = function () {
+            Chat.submode(!$scope.channelSubMode);
         };
 
         updateStats();

@@ -64,6 +64,55 @@ If successful a success message will be sent back in the response as per below, 
 }
 ```
 
+
+### GET /api/chat/clear
+This route clears your chat. If successful a success message will be sent back in the response as per below, else an error will be returned:
+
+```js
+{
+    "success": true
+}
+```
+
+### POST /api/chat/slowmode
+This route enables/disables slow mode for your chat. Sent data should be in JSON format via POST as follows:
+                                                                                              
+```js
+{
+    "enabled": true, // If slow mode should be enabled or not
+    "seconds": 30 // The number of seconds between user messages (defaults to 300)
+}
+```
+
+If successful a success message will be sent back in the response as per below, else an error will be returned:
+
+```js
+{
+    "success": true
+}
+```
+
+For confirmation of the slow mode being changed, you can listen for a 'twitch-chat-slowmode' socket event.
+
+### POST /api/chat/submode
+This route enables/disables subscribers only mode for your chat. Sent data should be in JSON format via POST as follows:
+                                                                                              
+```js
+{
+    "enabled": true // If subscribers only mode should be enabled or not
+}
+```
+
+If successful a success message will be sent back in the response as per below, else an error will be returned:
+
+```js
+{
+    "success": true
+}
+```
+
+For confirmation of the subscribers only mode being changed, you can listen for a 'twitch-chat-submode' socket event.
+
 ### POST /api/chat/timeout
 This route times out a user from your chat. Sent data should be in JSON format via POST as follows:
                                                                                               

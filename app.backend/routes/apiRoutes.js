@@ -446,6 +446,36 @@
         });
     });
 
+    router.get('/chat/clear', function (req, res) {
+        global.services.chat.clear().then(function () {
+            res.json({
+                success: true
+            });
+        }, function (err) {
+            res.status(500).send({error: err.message});
+        });
+    });
+
+    router.post('/chat/slowmode', function (req, res) {
+        global.services.chat.slowmode(req.body.enabled, req.body.seconds).then(function () {
+            res.json({
+                success: true
+            });
+        }, function (err) {
+            res.status(500).send({error: err.message});
+        });
+    });
+
+    router.post('/chat/submode', function (req, res) {
+        global.services.chat.submode(req.body.enabled).then(function () {
+            res.json({
+                success: true
+            });
+        }, function (err) {
+            res.status(500).send({error: err.message});
+        });
+    });
+
     router.post('/chat/timeout', function (req, res) {
         global.services.chat.timeout(req.body.username, req.body.seconds).then(function () {
             res.json({

@@ -355,6 +355,14 @@
                         module.exports.twitchChatClient.on('hosted', function (channel, username, viewers) {
                             module.exports.chat.hosted(username, viewers);
                         });
+
+                        module.exports.twitchChatClient.on('slowmode', function (channel, enabled, length) {
+                            module.exports.chat.parseSlowmode(enabled, length);
+                        });
+
+                        module.exports.twitchChatClient.on('subscribers', function (channel, enabled) {
+                            module.exports.chat.parseSubmode(enabled);
+                        });
                     }
 
                     return resolve();

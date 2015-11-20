@@ -54,6 +54,12 @@
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h3 class="panel-title">Chat</h3>
+
+                <div class="pull-right">
+                    <button class="btn btn-xs btn-default pull-right" ng-click="clearChat()">Clear</button>
+                    <button class="btn btn-xs pull-right" ng-class="{'btn-danger': !channelSlowMode, 'btn-success': channelSlowMode}" ng-click="toggleSlowMode()">Slow Mode</button>
+                    <button class="btn btn-xs pull-right" ng-class="{'btn-danger': !channelSubMode, 'btn-success': channelSubMode}" ng-click="toggleSubMode()">Sub Mode</button>
+                </div>
             </div>
 
             <div class="panel-body">

@@ -30,7 +30,10 @@
             getAllMessages,
             ban,
             timeout,
-            say
+            say,
+            clear,
+            slowmode,
+            submode
         };
 
         function getAllMessages() {
@@ -66,6 +69,40 @@
         function say(message) {
             return new Promise(function (resolve, reject) {
                 $http.post('http://127.0.0.1:28800/api/chat/say', {message}).success(function () {
+                    return resolve();
+                }).error(function (data, code) {
+                    return reject(data.error || 'An error occurred with status code ' + code);
+                });
+            });
+        }
+
+        function clear() {
+            return new Promise(function (resolve, reject) {
+                $http.get('http://127.0.0.1:28800/api/chat/clear').success(function () {
+                    return resolve();
+                }).error(function (data, code) {
+                    return reject(data.error || 'An error occurred with status code ' + code);
+                });
+            });
+        }
+
+        function slowmode(enabled, seconds) {
+            return new Promise(function (resolve, reject) {
+                if (enabled && !seconds) {
+                    seconds = 300;
+                }
+
+                $http.post('http://127.0.0.1:28800/api/chat/slowmode', {enabled, seconds}).success(function () {
+                    return resolve();
+                }).error(function (data, code) {
+                    return reject(data.error || 'An error occurred with status code ' + code);
+                });
+            });
+        }
+
+        function submode(enabled) {
+            return new Promise(function (resolve, reject) {
+                $http.post('http://127.0.0.1:28800/api/chat/submode', {enabled}).success(function () {
                     return resolve();
                 }).error(function (data, code) {
                     return reject(data.error || 'An error occurred with status code ' + code);

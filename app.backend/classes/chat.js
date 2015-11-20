@@ -70,6 +70,14 @@
             });
         }
 
+        parseSlowmode(enabled, length) {
+            global.services.socketIOEmit('twitch-chat-slowmode', {enabled, length});
+        }
+
+        parseSubmode(enabled) {
+            global.services.socketIOEmit('twitch-chat-submode', {enabled});
+        }
+
         parse(details) {
             if (this.datastore) {
                 if (!details.date) {
@@ -94,6 +102,44 @@
             return new Promise(function (resolve, reject) {
                 global.services.settings.get('twitch', 'auth').then(function (setting) {
                     global.services.twitchChatClient.ban(setting.value.username, username);
+
+                    return resolve();
+                }).catch(reject);
+            });
+        }
+
+        clear() {
+            return new Promise(function (resolve, reject) {
+                global.services.settings.get('twitch', 'auth').then(function (setting) {
+                    global.services.twitchChatClient.clear(setting.value.username);
+
+                    return resolve();
+                }).catch(reject);
+            });
+        }
+
+        slowmode(enabled, seconds) {
+            return new Promise(function (resolve, reject) {
+                global.services.settings.get('twitch', 'auth').then(function (setting) {
+                    if (enabled) {
+                        global.services.twitchChatClient.slow(setting.value.username, seconds);
+                    } else {
+                        global.services.twitchChatClient.slowoff(setting.value.username);
+                    }
+
+                    return resolve();
+                }).catch(reject);
+            });
+        }
+
+        submode(enabled) {
+            return new Promise(function (resolve, reject) {
+                global.services.settings.get('twitch', 'auth').then(function (setting) {
+                    if (enabled) {
+                        global.services.twitchChatClient.subscribers(setting.value.username);
+                    } else {
+                        global.services.twitchChatClient.subscribersoff(setting.value.username);
+                    }
 
                     return resolve();
                 }).catch(reject);

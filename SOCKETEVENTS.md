@@ -255,6 +255,25 @@ This event is emitted when a new Twitch chat message has been received. This eve
 }
 ```
 
+## twitch-chat-slowmode
+This event is emitted when the channel enters or exits slow mode. This event will send the following data:
+
+```js
+{
+    "enabled": true, // If slow mode is enabled or not
+    "length": 30 // The number of seconds users can send messages
+}
+```
+
+## twitch-chat-submode
+This event is emitted when the channel enters or exits subscribers only mode. This event will send the following data:
+
+```js
+{
+    "enabled": true // If subscribers only mode is enabled or not
+}
+```
+
 ## twitch-chat-timeout
 This event is emitted when a user has been timed out. This event will send the following data:
 

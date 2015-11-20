@@ -87,3 +87,12 @@ textarea.logging-text-area {
 #accordion .panel-title > a.accordion-toggle.collapsed::before, #accordion a.collapsed[data-toggle="collapse"]::before {
     content: "\e114";
 }
+
+.panel-heading div {
+    margin-top: -20px;
+    font-size: 15px;
+}
+
+.panel-heading div button:not(:last-child) {
+    margin-left: 5px
+}
