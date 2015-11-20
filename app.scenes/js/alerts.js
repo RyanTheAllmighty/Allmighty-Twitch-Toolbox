@@ -52,6 +52,11 @@
         showAlert(window.customData.channelHostedNotificationTime);
     });
 
+    // Received reload event
+    socket.on('scenes-reload', function () {
+        location.reload();
+    });
+
     function showAlert(time) {
         var $alert = $('.alert');
 

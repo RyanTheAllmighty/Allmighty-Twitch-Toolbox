@@ -126,6 +126,14 @@
             });
         };
 
+        $scope.reloadScenes = function () {
+            Scenes.reload().then(function () {
+                Notification.success({message: 'Scenes Reloading!', delay: 3000});
+            }).catch(function (err) {
+                Notification.error({message: err.message, delay: 3000});
+            });
+        };
+
         $scope.reloadScenesState = function () {
             Scenes.reloadState().then(function () {
                 Notification.success({message: 'Scenes Reloading State!', delay: 3000});

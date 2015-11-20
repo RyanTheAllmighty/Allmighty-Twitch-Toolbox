@@ -361,7 +361,12 @@
     });
 
     router.get('/scenes/reload', function (req, res) {
-        global.services.socketIOEmit('reload-state');
+        global.services.socketIOEmit('scenes-reload');
+        res.status(200).send();
+    });
+
+    router.get('/scenes/reload/state', function (req, res) {
+        global.services.socketIOEmit('scenes-reload-state');
         res.status(200).send();
     });
 

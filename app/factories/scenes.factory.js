@@ -27,12 +27,23 @@
 
     function scenesFactory($http) {
         return {
+            reload,
             reloadState
         };
 
-        function reloadState() {
+        function reload() {
             return new Promise(function (resolve, reject) {
                 $http.get('http://127.0.0.1:28800/api/scenes/reload').success(function () {
+                    return resolve();
+                }).error(function (data, code) {
+                    return reject(data.error || 'An error occurred with status code ' + code);
+                });
+            });
+        }
+
+        function reloadState() {
+            return new Promise(function (resolve, reject) {
+                $http.get('http://127.0.0.1:28800/api/scenes/reload/state').success(function () {
                     return resolve();
                 }).error(function (data, code) {
                     return reject(data.error || 'An error occurred with status code ' + code);

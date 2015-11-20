@@ -41,8 +41,13 @@
         setBodyBackground(data.muted);
     });
 
+    // Received reload event
+    socket.on('scenes-reload', function () {
+        location.reload();
+    });
+
     // Received a reload state event
-    socket.on('reload-state', function () {
+    socket.on('scenes-reload-state', function () {
         getMicrophoneStatus(setBodyBackground);
     });
 
