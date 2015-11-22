@@ -20,6 +20,7 @@
     'use strict';
 
     let path = require('path');
+    let request = require('request');
     let accounting = require('accounting');
 
     let Datastore = require('./datastore');
@@ -46,6 +47,14 @@
             }
 
             this.chatState = {};
+            this.bttvEmotes = [];
+
+            let self = this;
+            request({method: 'get', url: 'https://api.betterttv.net/2/emotes', json: true}, function (err, res, body) {
+                if (!err && body.emotes) {
+                    self.bttvEmotes = body.emotes;
+                }
+            });
         }
 
         hosted(username, viewers, options) {
@@ -94,21 +103,50 @@
             });
         }
 
+        formatEmotes(text, emotes) {
+            var splitText = text.split('');
+
+            for (var i in emotes) {
+                var e = emotes[i];
+                for (var j in e) {
+                    var mote = e[j];
+                    if (typeof mote === 'string') {
+                        mote = mote.split('-');
+                        mote = [parseInt(mote[0]), parseInt(mote[1])];
+                        var length = mote[1] - mote[0],
+                            empty = Array.apply(null, new Array(length + 1)).map(function () {
+                                return '';
+                            });
+                        splitText = splitText.slice(0, mote[0]).concat(empty).concat(splitText.slice(mote[1] + 1, splitText.length));
+                        splitText.splice(mote[0], 1, '<img class="twitch-chat-emoticon" src="http://static-cdn.jtvnw.net/emoticons/v1/' + i + '/3.0">');
+                    }
+                }
+            }
+
+            return splitText.join('');
+        }
+
         parseChat(user, message) {
             let rawMessage = message;
 
+            // Twitch Emotes
             if (user.emotes) {
-                _.forEach(user.emotes, function (locations, key) {
-                    let emoteURL = 'http://static-cdn.jtvnw.net/emoticons/v1/' + key + '/3.0';
-
-                    _.forEach(locations, function (location) {
-                        let locationParts = location.split('-');
-
-                        message = message.substr(0, parseInt(locationParts[0])) + '<img class="twitch-chat-emoticon" src="' + emoteURL + '" />' +
-                            message.substring(parseInt(locationParts[1]) + 1);
-                    });
-                });
+                message = this.formatEmotes(message, user.emotes);
             }
+
+            // BTTV emotes
+            _.forEach(this.bttvEmotes, function (emote) {
+                let emoteURL = 'https://cdn.betterttv.net/emote/' + emote.id + '/3x';
+
+                let index = message.indexOf(emote.code);
+
+                while (index !== -1) {
+                    message = message.substr(0, parseInt(index)) + '<img class="twitch-chat-emoticon" src="' + emoteURL + '" />' +
+                        message.substring(parseInt(index + emote.code.length) + 1);
+
+                    index = message.indexOf(emote.code);
+                }
+            });
 
             this.saveChat({user, message, rawMessage});
         }
