@@ -436,6 +436,14 @@
         });
     });
 
+    router.get('/chat/state', function (req, res) {
+        global.services.chat.getState().then(function (state) {
+            res.json(state);
+        }, function (err) {
+            res.status(500).send({error: err.message});
+        });
+    });
+
     router.post('/chat/ban', function (req, res) {
         global.services.chat.ban(req.body.username).then(function () {
             res.json({

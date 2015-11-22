@@ -28,6 +28,7 @@
     function chatFactory($http) {
         return {
             getAllMessages,
+            getState,
             ban,
             timeout,
             say,
@@ -39,6 +40,16 @@
         function getAllMessages() {
             return new Promise(function (resolve, reject) {
                 $http.get('http://127.0.0.1:28800/api/chat').success(function (data) {
+                    return resolve(data);
+                }).error(function (data, code) {
+                    return reject(data.error || 'An error occurred with status code ' + code);
+                });
+            });
+        }
+
+        function getState() {
+            return new Promise(function (resolve, reject) {
+                $http.get('http://127.0.0.1:28800/api/chat/state').success(function (data) {
                     return resolve(data);
                 }).error(function (data, code) {
                     return reject(data.error || 'An error occurred with status code ' + code);

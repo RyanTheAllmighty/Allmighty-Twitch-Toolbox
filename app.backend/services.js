@@ -363,6 +363,10 @@
                         module.exports.twitchChatClient.on('subscribers', function (channel, enabled) {
                             module.exports.chat.parseSubmode(enabled);
                         });
+
+                        module.exports.twitchChatClient.on('roomstate', function (channel, state) {
+                            module.exports.chat.parseState(state);
+                        });
                     }
 
                     return resolve();

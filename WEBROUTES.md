@@ -38,7 +38,7 @@ This route gets a listing of StreamTip donations. It returns the following:
 [
     {
         "user": {
-            
+
         },
         "message": "Hello <img class=\"twitch-chat-emoticon\" src=\"http://static-cdn.jtvnw.net/emoticons/v1/25/3.0\" />", // The message with the emotes parsed into img tags
         "rawMessage": "Hello Kappa", // The raw message without any emote parsing
@@ -93,6 +93,20 @@ If successful a success message will be sent back in the response as per below, 
 ```
 
 For confirmation of the slow mode being changed, you can listen for a 'twitch-chat-slowmode' socket event.
+
+### GET /api/chat/state
+This route gets the current chats state. It returns the following:
+
+```js
+{
+    'broadcaster-lang': null,
+    'r9k': false,
+    'slow': false,
+    'subs-only': true,
+    'channel': '#myusername'
+}
+```
+
 
 ### POST /api/chat/submode
 This route enables/disables subscribers only mode for your chat. Sent data should be in JSON format via POST as follows:

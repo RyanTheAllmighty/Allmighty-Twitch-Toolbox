@@ -44,6 +44,8 @@
                     }
                 }, 60000);
             }
+
+            this.chatState = {};
         }
 
         hosted(username, viewers, options) {
@@ -71,11 +73,25 @@
         }
 
         parseSlowmode(enabled, length) {
+            this.chatState.slow = enabled;
             global.services.socketIOEmit('twitch-chat-slowmode', {enabled, length});
         }
 
         parseSubmode(enabled) {
+            this.chatState['subs-only'] = enabled;
             global.services.socketIOEmit('twitch-chat-submode', {enabled});
+        }
+
+        parseState(state) {
+            this.chatState = state;
+        }
+
+        getState() {
+            let self = this;
+
+            return new Promise(function (resolve) {
+                return resolve(self.chatState);
+            });
         }
 
         parse(details) {

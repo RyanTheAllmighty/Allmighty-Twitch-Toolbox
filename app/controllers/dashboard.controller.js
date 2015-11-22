@@ -194,6 +194,14 @@
 
                         next();
                     }).catch(next);
+                },
+                function (next) {
+                    Chat.getState().then(function (state) {
+                        $scope.channelSlowMode = state.slow;
+                        $scope.channelSubMode = state['sub-mode'];
+
+                        next();
+                    }).catch(next);
                 }
             ], function (err) {
                 if (err) {
