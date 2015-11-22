@@ -68,7 +68,12 @@
         .then(services.connectToTwitchChat)
         .then(services.loadAngularApp)
         .catch(function (err) {
+            console.log('Error starting application! Please see the messages in this console and close the console when done!');
             console.error(err);
-            gui.App.quit();
+
+            services.splashScreen.showDevTools();
+            services.splashScreen.on('devtools-closed', function () {
+                gui.App.quit();
+            });
         });
 })();
