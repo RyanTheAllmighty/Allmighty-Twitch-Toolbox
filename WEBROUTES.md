@@ -39,8 +39,9 @@ This route gets a listing of StreamTip donations. It returns the following:
     {
         "user": {
 
-        },
+        }, // The user object. May not be present if this is a notice
         "deleted": false, // If this message was deleted or not
+        "notice": "bad_ban_staff", // If this message is a notice then the ID will be here (http://www.tmijs.org/docs/Events.md#notice)
         "message": "Hello <img class=\"twitch-chat-emoticon\" src=\"http://static-cdn.jtvnw.net/emoticons/v1/25/3.0\" />", // The message with the emotes parsed into img tags
         "rawMessage": "Hello Kappa", // The raw message without any emote parsing
         "date": "2015-01-17T10:37:59.995Z" // The date the message was received

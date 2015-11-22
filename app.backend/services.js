@@ -348,6 +348,10 @@
 
                         module.exports.twitchChatClient.on('action', parseMessage);
 
+                        module.exports.twitchChatClient.on('notice', function (channel, msgid, message) {
+                            module.exports.chat.parse({notice: msgid, message, rawMessage: message});
+                        });
+
                         module.exports.twitchChatClient.on('timeout', function (channel, username) {
                             module.exports.chat.parseTimeout(username);
                         });
