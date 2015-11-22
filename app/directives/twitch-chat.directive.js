@@ -40,7 +40,7 @@
         SocketIO.on('twitch-chat-timeout', function (username) {
             $scope.chat = _.map($scope.chat, function (chat) {
                 if (chat.user.username === username) {
-                    chat.message = '<Deleted>';
+                    chat.deleted = true;
                 }
 
                 return chat;

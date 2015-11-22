@@ -100,6 +100,10 @@
                     details.date = new Date();
                 }
 
+                if (!details.deleted) {
+                    details.deleted = false;
+                }
+
                 details.index = index++;
 
                 this.datastore.insert(details, function (err) {
@@ -115,11 +119,19 @@
         }
 
         ban(username) {
+            let self = this;
+
             return new Promise(function (resolve, reject) {
                 global.services.settings.get('twitch', 'auth').then(function (setting) {
                     global.services.twitchChatClient.ban(setting.value.username, username);
 
-                    return resolve();
+                    self.datastore.update({'user.username': username}, {$set: {deleted: true}}, {multi: true}, function (err) {
+                        if (err) {
+                            return reject(err);
+                        }
+
+                        return resolve();
+                    });
                 }).catch(reject);
             });
         }
@@ -171,7 +183,13 @@
 
                     self.parseTimeout(username);
 
-                    return resolve();
+                    self.datastore.update({'user.username': username}, {$set: {deleted: true}}, {multi: true}, function (err) {
+                        if (err) {
+                            return reject(err);
+                        }
+
+                        return resolve();
+                    });
                 }).catch(reject);
             });
         }

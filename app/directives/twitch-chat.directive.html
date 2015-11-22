@@ -14,7 +14,8 @@
                 <span ng-if="c.user.username === channel" class="twitch-chat-badge-broadcaster"></span>
             </span>
             <span class="twitch-chat-username" ng-style="{'color': c.user.color || '#FFFFFF'}" ng-bind="c.user['display-name'].replace('\\s', ' ') || c.user.username"></span>
-            <span class="twitch-chat-message" ng-bind-html="c.message"></span>
+            <span class="twitch-chat-message" ng-hide="c.deleted" ng-bind-html="c.message"></span>
+            <span class="twitch-chat-message" ng-show="c.deleted">&lt;Deleted&gt;</span>
         </div>
     </div>
 
