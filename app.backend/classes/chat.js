@@ -94,21 +94,40 @@
             });
         }
 
-        parse(details) {
+        parseChat(user, message) {
+            let rawMessage = message;
+
+            if (user.emotes) {
+                _.forEach(user.emotes, function (locations, key) {
+                    let emoteURL = 'http://static-cdn.jtvnw.net/emoticons/v1/' + key + '/3.0';
+
+                    _.forEach(locations, function (location) {
+                        let locationParts = location.split('-');
+
+                        message = message.substr(0, parseInt(locationParts[0])) + '<img class="twitch-chat-emoticon" src="' + emoteURL + '" />' +
+                            message.substring(parseInt(locationParts[1]) + 1);
+                    });
+                });
+            }
+
+            this.saveChat({user, message, rawMessage});
+        }
+
+        parseNotice(msgid, message) {
+            this.saveChat({notice: msgid, message, rawMessage: message});
+        }
+
+        saveChat(data) {
             if (this.datastore) {
-                if (!details.date) {
-                    details.date = new Date();
+                if (!data.date) {
+                    data.date = new Date();
                 }
 
-                if (!details.deleted) {
-                    details.deleted = false;
-                }
+                data.index = index++;
 
-                details.index = index++;
-
-                this.datastore.insert(details, function (err) {
+                this.datastore.insert(data, function (err) {
                     if (!err) {
-                        global.services.socketIOEmit('twitch-chat-message', _.omit(details, 'index'));
+                        global.services.socketIOEmit('twitch-chat-message', _.omit(data, 'index'));
                     }
                 });
             }

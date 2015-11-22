@@ -325,31 +325,16 @@
                             channels: ['#' + setting.value.username]
                         });
 
-                        let parseMessage = function (channel, user, message) {
-                            let rawMessage = message;
+                        module.exports.twitchChatClient.on('chat', function(channel, user, message) {
+                            module.exports.chat.parseChat(user, message);
+                        });
 
-                            if (user.emotes) {
-                                _.forEach(user.emotes, function (locations, key) {
-                                    let emoteURL = 'http://static-cdn.jtvnw.net/emoticons/v1/' + key + '/3.0';
-
-                                    _.forEach(locations, function (location) {
-                                        let locationParts = location.split('-');
-
-                                        message = message.substr(0, parseInt(locationParts[0])) + '<img class="twitch-chat-emoticon" src="' + emoteURL + '" />' +
-                                            message.substring(parseInt(locationParts[1]) + 1);
-                                    });
-                                });
-                            }
-
-                            module.exports.chat.parse({user, message, rawMessage});
-                        };
-
-                        module.exports.twitchChatClient.on('chat', parseMessage);
-
-                        module.exports.twitchChatClient.on('action', parseMessage);
+                        module.exports.twitchChatClient.on('action', function(channel, user, message) {
+                            module.exports.chat.parseChat(user, message);
+                        });
 
                         module.exports.twitchChatClient.on('notice', function (channel, msgid, message) {
-                            module.exports.chat.parse({notice: msgid, message, rawMessage: message});
+                            module.exports.chat.parseNotice(msgid, message);
                         });
 
                         module.exports.twitchChatClient.on('timeout', function (channel, username) {
