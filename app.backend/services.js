@@ -325,11 +325,15 @@
                             channels: ['#' + setting.value.username]
                         });
 
-                        module.exports.twitchChatClient.on('chat', function(channel, user, message) {
+                        module.exports.twitchChatClient.on('clearchat', function (channel) {
+                            module.exports.chat.parseClearChat();
+                        });
+
+                        module.exports.twitchChatClient.on('chat', function (channel, user, message) {
                             module.exports.chat.parseChat(user, message);
                         });
 
-                        module.exports.twitchChatClient.on('action', function(channel, user, message) {
+                        module.exports.twitchChatClient.on('action', function (channel, user, message) {
                             module.exports.chat.parseChat(user, message);
                         });
 

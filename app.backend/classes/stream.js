@@ -124,7 +124,7 @@
             let self = this;
 
             return new Promise(function (resolve, reject) {
-                self.datastore.findOne({}).sort({date: -1}).limit(1).exec(function (err, status) {
+                self.datastore.findOne({}).sort({date: -1}).exec(function (err, status) {
                     if (err) {
                         return reject(err);
                     }

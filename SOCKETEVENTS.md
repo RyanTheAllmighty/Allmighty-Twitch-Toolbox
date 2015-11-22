@@ -241,6 +241,9 @@ This event is emitted when the desktop volume is changed. This event will send t
 
 Please be aware that if you use the Per-Scene Volume Plugin then switching between scenes with different levels will still send off this event.
 
+## twitch-chat-cleared
+This event is emitted when the chat has been cleared. This event doesn't send any information.
+
 ## twitch-chat-message
 This event is emitted when a new Twitch chat message has been received. This event will send the following data:
 

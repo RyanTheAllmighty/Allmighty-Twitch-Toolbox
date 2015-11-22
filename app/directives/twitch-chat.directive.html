@@ -19,7 +19,7 @@
             </span>
 
             <span ng-class="{'twitch-chat-notice': c.notice, 'twitch-chat-message': !c.notice}" ng-hide="c.deleted" ng-bind-html="c.message"></span>
-            <span class="twitch-chat-message" ng-if="c.user" ng-show="c.deleted">&lt;Deleted&gt;</span>
+            <span class="twitch-chat-message" ng-show="c.deleted">&lt;Deleted&gt;</span>
         </div>
     </div>
 

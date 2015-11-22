@@ -34,9 +34,9 @@
         constructor(options) {
             super('chat', options);
 
-            if (options.inMemoryOnly) {
-                let self = this;
+            let self = this;
 
+            if (options.inMemoryOnly) {
                 setInterval(function () {
                     if (index >= 100) {
                         self.datastore.remove({index: {$lt: index - 100}}, {multi: true}, function () {
@@ -49,7 +49,6 @@
             this.chatState = {};
             this.bttvEmotes = [];
 
-            let self = this;
             request({method: 'get', url: 'https://api.betterttv.net/2/emotes', json: true}, function (err, res, body) {
                 if (!err && body.emotes) {
                     self.bttvEmotes = body.emotes;
@@ -162,6 +161,14 @@
 
         parseNotice(msgid, message) {
             this.saveChat({notice: msgid, message, rawMessage: message});
+        }
+
+        parseClearChat() {
+            global.services.socketIOEmit('twitch-chat-cleared');
+
+            let message = 'Chat was cleared by a moderator';
+
+            this.saveChat({notice: 'CLEARCHAT', message, rawMessage: message});
         }
 
         saveChat(data) {
