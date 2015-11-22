@@ -106,10 +106,10 @@
         formatTwitchEmotes(text, emotes) {
             let splitText = text.split('');
 
-            _.foreach(emotes, function (i) {
+            _.forEach(emotes, function (i) {
                 let e = emotes[i];
 
-                _.foreach(e, function (j) {
+                _.forEach(e, function (j) {
                     let mote = e[j];
                     if (typeof mote === 'string') {
                         mote = mote.split('-');
