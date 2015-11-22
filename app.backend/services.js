@@ -325,7 +325,7 @@
                             channels: ['#' + setting.value.username]
                         });
 
-                        module.exports.twitchChatClient.on('clearchat', function (channel) {
+                        module.exports.twitchChatClient.on('clearchat', function () {
                             module.exports.chat.parseClearChat();
                         });
 
