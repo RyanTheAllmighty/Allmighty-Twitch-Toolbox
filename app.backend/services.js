@@ -458,7 +458,7 @@
 
                 module.exports.expressApp.set('view engine', 'jade');
 
-                module.exports.expressApp.use(bodyParser.json());
+                module.exports.expressApp.use(bodyParser.json({limit: '50mb'}));
 
                 module.exports.expressApp.use(function (req, res, next) {
                     res.header('Access-Control-Allow-Origin', '*');

@@ -672,7 +672,7 @@ You can specify URL query strings to change the behaviour of the call as per bel
 
 | Name | Description | Default |
 | --- | --- | -------- |
-| volume | The volume to set foobar to, between -100 and 0 where -100 is muted and 0 is full volume | 0 |
+| level | The volume level to set foobar to, between 0 and 1000 where 1000 is muted (-100 db) and 0 is full volume | 0 |
 
 ### GET /foobar/state
 This returns the current state of foobar including playing song, album art and more.
