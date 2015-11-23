@@ -32,7 +32,7 @@
         $scope.testDonation = function () {
             if ($scope.donation.username === '') {
                 Notification.error({message: 'Username must be filled in!', delay: 3000});
-            } else if ($scope.donation.amount < 0) {
+            } else if ($scope.donation.amount <= 0) {
                 Notification.error({message: 'Amount cannot be less than 0!', delay: 3000});
             } else {
                 let username = $scope.donation.username;

@@ -9,7 +9,7 @@
                     <label for="donation.username" class="col-lg-2 control-label">Username</label>
 
                     <div class="col-lg-10">
-                        <input ng-model="donation.username" type="text" maxlength="25" class="form-control" id="donation.username"/>
+                        <input ng-model="donation.username" type="text" maxlength="25" class="form-control" id="donation.username" ng-keyup="$event.keyCode === 13 ? testDonation() : null"/>
                     </div>
                 </div>
 
@@ -17,7 +17,7 @@
                     <label for="donation.amount" class="col-lg-2 control-label">Amount</label>
 
                     <div class="col-lg-10">
-                        <input ng-model="donation.amount" type="number" step="0.01" class="form-control" id="donation.amount"/>
+                        <input ng-model="donation.amount" type="number" step="0.01" class="form-control" id="donation.amount" ng-keyup="$event.keyCode === 13 ? testDonation() : null"/>
                     </div>
                 </div>
             </div>
@@ -45,7 +45,7 @@
                     <label for="followerUsername" class="col-lg-2 control-label">Username</label>
 
                     <div class="col-lg-10">
-                        <input ng-model="follower.username" type="text" maxlength="25" class="form-control" id="followerUsername"/>
+                        <input ng-model="follower.username" type="text" maxlength="25" class="form-control" id="followerUsername" ng-keyup="$event.keyCode === 13 ? testFollower() : null"/>
                     </div>
                 </div>
             </div>
@@ -75,7 +75,7 @@
                     <label for="host.username" class="col-lg-2 control-label">Username</label>
 
                     <div class="col-lg-10">
-                        <input ng-model="host.username" type="text" maxlength="25" class="form-control" id="host.username"/>
+                        <input ng-model="host.username" type="text" maxlength="25" class="form-control" id="host.username" ng-keyup="$event.keyCode === 13 ? testHost() : null"/>
                     </div>
                 </div>
 
@@ -83,7 +83,7 @@
                     <label for="host.viewers" class="col-lg-2 control-label">Viewers</label>
 
                     <div class="col-lg-10">
-                        <input ng-model="host.viewers" type="number" class="form-control" id="host.viewers"/>
+                        <input ng-model="host.viewers" type="number" class="form-control" id="host.viewers" ng-keyup="$event.keyCode === 13 ? testHost() : null"/>
                     </div>
                 </div>
             </div>
