@@ -3,6 +3,46 @@ This file contains all the socket events that this application can emit.
 
 **NOTE: This is for advanced users only!**
 
+
+
+<!-- toc -->
+
+* [Socket Server](#socket-server)
+* [new-follower](#new-follower)
+* [followers](#followers)
+* [follower-count-changed](#follower-count-changed)
+* [view-count-changed](#view-count-changed)
+* [viewer-count-changed](#viewer-count-changed)
+* [game-updated](#game-updated)
+* [title-updated](#title-updated)
+* [stream-online / stream-offline](#stream-online-stream-offline)
+* [timer-added](#timer-added)
+* [timer-deleted](#timer-deleted)
+* [timer-set](#timer-set)
+* [song-changed](#song-changed)
+* [song-reshow](#song-reshow)
+* [play-sound](#play-sound)
+* [tools-musicparser-started](#tools-musicparser-started)
+* [tools-musicparser-finished](#tools-musicparser-finished)
+* [tools-musicparser-info](#tools-musicparser-info)
+* [tools-musicparser-error](#tools-musicparser-error)
+* [obs-scene-switched](#obs-scene-switched)
+* [obs-stream-started](#obs-stream-started)
+* [obs-stream-stopped](#obs-stream-stopped)
+* [obs-status-changed](#obs-status-changed)
+* [obs-microphone-volume-changed](#obs-microphone-volume-changed)
+* [obs-desktop-volume-changed](#obs-desktop-volume-changed)
+* [twitch-chat-cleared](#twitch-chat-cleared)
+* [twitch-chat-message](#twitch-chat-message)
+* [twitch-chat-slowmode](#twitch-chat-slowmode)
+* [twitch-chat-submode](#twitch-chat-submode)
+* [twitch-chat-timeout](#twitch-chat-timeout)
+* [channel-hosted](#channel-hosted)
+
+<!-- toc stop -->
+
+
+
 ## Socket Server
 The socket server for all these events is on http://localhost:28800.
 

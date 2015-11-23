@@ -3,6 +3,72 @@ This file contains all the web routes accessible from this application.
 
 **NOTE: This is for advanced users only!**
 
+
+
+<!-- toc -->
+
+* [URL](#url)
+* [/](#)
+* [/api](#api)
+  * [GET /api/chat](#get-apichat)
+  * [POST /api/chat/ban](#post-apichatban)
+  * [GET /api/chat/clear](#get-apichatclear)
+  * [POST /api/chat/slowmode](#post-apichatslowmode)
+  * [GET /api/chat/state](#get-apichatstate)
+  * [POST /api/chat/submode](#post-apichatsubmode)
+  * [POST /api/chat/timeout](#post-apichattimeout)
+  * [POST /api/chat/say](#post-apichatsay)
+  * [GET /api/donations](#get-apidonations)
+  * [GET /api/donations/all](#get-apidonationsall)
+  * [POST /api/donations/test](#post-apidonationstest)
+  * [GET /api/donations/count](#get-apidonationscount)
+  * [GET /api/donations/total](#get-apidonationstotal)
+  * [GET /api/followers](#get-apifollowers)
+  * [GET /api/followers/all](#get-apifollowersall)
+  * [DELETE /api/followers](#delete-apifollowers)
+  * [POST /api/followers/test](#post-apifollowerstest)
+  * [GET /api/followers/count](#get-apifollowerscount)
+  * [HEAD /api/followers/user/:user](#head-apifollowersuseruser)
+  * [GET /api/followers/user/:user](#get-apifollowersuseruser)
+  * [POST /api/giantbomb/search/games](#post-apigiantbombsearchgames)
+  * [POST /api/host/test](#post-apihosttest)
+  * [GET /api/nowplaying/reshow](#get-apinowplayingreshow)
+  * [POST /api/nowplaying/reshow](#post-apinowplayingreshow)
+  * [GET /api/scenes/reload](#get-apiscenesreload)
+  * [GET /api/scenes/reload/state](#get-apiscenesreloadstate)
+  * [GET /api/stream](#get-apistream)
+  * [POST /api/stream/game](#post-apistreamgame)
+  * [POST /api/stream/title](#post-apistreamtitle)
+  * [GET /api/settings](#get-apisettings)
+  * [POST /api/settings](#post-apisettings)
+  * [GET /api/settings/:group](#get-apisettingsgroup)
+  * [GET /api/settings/:group/:name](#get-apisettingsgroupname)
+  * [GET /api/timers](#get-apitimers)
+  * [GET /api/timers/:id](#get-apitimersid)
+  * [POST /api/timers/:id](#post-apitimersid)
+  * [DELETE /api/timers/:id](#delete-apitimersid)
+  * [GET /api/tools/musicparser/run](#get-apitoolsmusicparserrun)
+  * [GET /api/viewers](#get-apiviewers)
+  * [GET /api/viewers/count](#get-apiviewerscount)
+  * [GET /foobar/stop](#get-foobarstop)
+  * [GET /foobar/play](#get-foobarplay)
+  * [GET /foobar/pause](#get-foobarpause)
+  * [GET /foobar/previous](#get-foobarprevious)
+  * [GET /foobar/next](#get-foobarnext)
+  * [GET /foobar/nextpause](#get-foobarnextpause)
+  * [GET /foobar/volume](#get-foobarvolume)
+  * [GET /foobar/state](#get-foobarstate)
+  * [GET /obs/scene](#get-obsscene)
+  * [POST /obs/scene](#post-obsscene)
+  * [GET /obs/scenes](#get-obsscenes)
+  * [GET /obs/status](#get-obsstatus)
+  * [GET /obs/statuses](#get-obsstatuses)
+  * [GET /obs/volumes](#get-obsvolumes)
+
+<!-- toc stop -->
+
+
+
 ## URL
 The base URL for all these routes is on http://localhost:28800.
 
