@@ -1,0 +1,106 @@
+/*
+ * Allmighty Twitch Toolbox - https://github.com/RyanTheAllmighty/Allmighty-Twitch-Toolbox
+ * Copyright (C) 2015 RyanTheAllmighty
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/* global accounting, io, Vue */
+
+(function () {
+    'use strict';
+
+    var vue = new Vue({
+        el: '#container',
+        data: {
+            username: '',
+            message: '',
+            nowPlaying: {}
+        }
+    });
+
+    var $transition = null;
+
+    var socket = io('http://127.0.0.1:28800');
+
+    // Received new follower data
+    socket.on('new-follower', function (data) {
+        vue.username = data.display_name;
+        vue.message = 'has followed the channel!';
+        showAlert(window.customData.followerNotificationTime);
+    });
+
+    // Received new donation data
+    socket.on('new-donation', function (data) {
+        vue.username = data.username;
+        vue.message = 'just donated ' + accounting.formatMoney(data.amount) + '!';
+        showAlert(window.customData.donationNotificationTime);
+    });
+
+    // Received chanel hosted data
+    socket.on('channel-hosted', function (data) {
+        vue.username = data.username;
+        vue.message = 'hosted the channel for ' + accounting.formatNumber(data.viewers) + ' viewer' + (data.viewers === 1 ? '' : 's') + '!';
+        showAlert(window.customData.channelHostedNotificationTime);
+    });
+
+    // Received song data
+    socket.on('song-changed', function (data) {
+        vue.nowPlaying = data;
+        if (!vue.nowPlaying.title) {
+            vue.nowPlaying.title = 'Unknown';
+        }
+
+        showSongInfo();
+    });
+
+    // Asked to reshow the current song's data
+    socket.on('song-reshow', function (data) {
+        if (data) {
+            vue.nowPlaying = data;
+            if (!vue.nowPlaying.title) {
+                vue.nowPlaying.title = 'Unknown';
+            }
+        }
+
+        showSongInfo();
+    });
+
+    // Received reload event
+    socket.on('scenes-reload', function () {
+        location.reload();
+    });
+
+    function showAlert(time) {
+        var $alert = $('.alert');
+
+        $alert.transition({x: '505px'}, 500).transition({opacity: 0, delay: time - 1000}, 500, 'linear').transition({x: '-505px'}, 1).transition({opacity: 100}, 1);
+    }
+
+    function showSongInfo() {
+        var $songInfo = $('.songInfo');
+
+        if ($transition) {
+            $transition.stopTransition();
+            $songInfo.removeAttr('style');
+        }
+
+        $transition = $songInfo.transition({x: '-170px'}).transition({
+            opacity: 0,
+            delay: window.customData.musicChangeNotificationTime - 500
+        }, 500, 'linear').transition({x: '165px'}).transition({opacity: 100}, function () {
+            $transition = null;
+        });
+    }
+})();

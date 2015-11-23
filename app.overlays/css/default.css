@@ -1,0 +1,94 @@
+body {
+    overflow: hidden;
+}
+
+div.alert {
+    overflow: hidden;
+    position: absolute;
+    left: -500px;
+    top: 5px;
+    background-color: rgb(81, 123, 218);
+    padding: 5px 10px 5px 10px;
+    border-radius: 10px;
+}
+
+span.username {
+    color: rgb(226, 206, 47);
+    font-weight: bold;
+    font-size: 18pt;
+}
+
+span.message:before {
+    content: "\00a0 ";
+}
+
+span.message {
+    text-align: center;
+    font-family: 'Rubik';
+    color: black;
+    position: relative;
+    font-size: 16pt;
+}
+
+div.songInfo {
+    overflow: hidden;
+    position: absolute;
+    right: -165px;
+    bottom: 5px;
+    width: 155px;
+    background-color: rgb(81, 123, 218);
+    padding: 5px 5px 0 5px;
+    border-radius: 10px;
+}
+
+div.artwork {
+    text-align: center;
+}
+
+div.info {
+    text-align: center;
+    font-family: 'Rubik';
+    color: black;
+}
+
+div.title {
+    position: relative;
+    top: 2px;
+}
+
+div.artist {
+    position: relative;
+    top: -4px;
+}
+
+.strike {
+    display: block;
+    text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 5px 0;
+}
+
+.strike > span {
+    position: relative;
+    display: inline-block;
+}
+
+.strike > span:before, .strike > span:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 9999px;
+    height: 1px;
+    background: red;
+}
+
+.strike > span:before {
+    right: 100%;
+    margin-right: 5px;
+}
+
+.strike > span:after {
+    left: 100%;
+    margin-left: 5px;
+}

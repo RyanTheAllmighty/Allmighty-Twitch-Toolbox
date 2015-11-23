@@ -463,6 +463,8 @@
                 module.exports.expressApp.use('/scenes/css', express.static(path.join(process.cwd(), 'app.scenes', 'css')));
                 module.exports.expressApp.use('/tools/js', express.static(path.join(process.cwd(), 'app.tools', 'js')));
                 module.exports.expressApp.use('/tools/css', express.static(path.join(process.cwd(), 'app.tools', 'css')));
+                module.exports.expressApp.use('/overlays/js', express.static(path.join(process.cwd(), 'app.overlays', 'js')));
+                module.exports.expressApp.use('/overlays/css', express.static(path.join(process.cwd(), 'app.overlays', 'css')));
 
                 module.exports.expressApp.set('view engine', 'jade');
 
@@ -484,7 +486,7 @@
                     });
                 });
 
-                module.exports.expressApp.use('/scenes/*', function (req, res, next) {
+                module.exports.expressApp.use(['/scenes', '/overlays'], function (req, res, next) {
                     global.services.settings.getGroup('notifications').then(function (settings) {
                         req.notificationSettings = settings;
                         next();
@@ -498,6 +500,7 @@
                 module.exports.expressApp.use('/foobar', require(path.join(process.cwd(), 'app.backend', 'routes', 'foobarRoutes')));
                 module.exports.expressApp.use('/scenes', require(path.join(process.cwd(), 'app.backend', 'routes', 'scenesRoutes')));
                 module.exports.expressApp.use('/tools', require(path.join(process.cwd(), 'app.backend', 'routes', 'toolsRoutes')));
+                module.exports.expressApp.use('/overlays', require(path.join(process.cwd(), 'app.backend', 'routes', 'overlaysRoutes')));
 
                 module.exports.expressApp.use(function (req, res) {
                     res.status(404).json({error: 'Page not found!'});
