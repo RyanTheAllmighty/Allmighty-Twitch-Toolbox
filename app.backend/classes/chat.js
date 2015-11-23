@@ -152,26 +152,28 @@
         formatTwitchEmotes(text, emotes) {
             let splitText = text.split('');
 
-            _.forEach(emotes, function (i) {
-                let e = emotes[i];
+            for (let i in emotes) {
+                if (emotes.hasOwnProperty(i)) {
+                    let e = emotes[i];
 
-                _.forEach(e, function (j) {
-                    let mote = e[j];
+                    for (let j in e) {
+                        if (e.hasOwnProperty(j)) {
+                            let mote = e[j];
 
-                    if (typeof mote === 'string') {
-                        mote = mote.split('-');
-                        mote = [parseInt(mote[0]), parseInt(mote[1])];
-
-                        let length = mote[1] - mote[0];
-                        let empty = Array.apply(null, new Array(length + 1)).map(function () {
-                            return '';
-                        });
-
-                        splitText = splitText.slice(0, mote[0]).concat(empty).concat(splitText.slice(mote[1] + 1, splitText.length));
-                        splitText.splice(mote[0], 1, '<img class="twitch-chat-emoticon" src="http://static-cdn.jtvnw.net/emoticons/v1/' + i + '/3.0">');
+                            if (typeof mote === 'string') {
+                                mote = mote.split('-');
+                                mote = [parseInt(mote[0]), parseInt(mote[1])];
+                                let length = mote[1] - mote[0];
+                                let empty = Array.apply(null, new Array(length + 1)).map(function () {
+                                    return '';
+                                });
+                                splitText = splitText.slice(0, mote[0]).concat(empty).concat(splitText.slice(mote[1] + 1, splitText.length));
+                                splitText.splice(mote[0], 1, '<img class="twitch-chat-emoticon" src="http://static-cdn.jtvnw.net/emoticons/v1/' + i + '/3.0">');
+                            }
+                        }
                     }
-                });
-            });
+                }
+            }
 
             return splitText.join('');
         }
