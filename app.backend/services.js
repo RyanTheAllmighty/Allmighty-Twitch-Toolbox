@@ -296,7 +296,14 @@
                     module.exports.shortcuts.muteMicrophone = new gui.Shortcut({
                         key: setting.value,
                         active: function () {
-                            module.exports.obsRemote.toggleMicrophoneMute();
+                            module.exports.obsRemote.getSceneList(function (currentScene, allScenes) {
+                                let scene = _.findWhere(allScenes, {name: currentScene});
+
+                                // Check to see if there is a [NOMUTE] in the name of the scene or as one of the source names
+                                if (scene && currentScene.indexOf('[NOMUTE]') === -1 && !_.any(scene.sources, {name: '[NOMUTE]'})) {
+                                    module.exports.obsRemote.toggleMicrophoneMute();
+                                }
+                            });
                         },
                         failed: function (msg) {
                             console.error(new Error(msg));
