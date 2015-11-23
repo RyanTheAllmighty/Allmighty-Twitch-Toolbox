@@ -336,12 +336,12 @@
                             module.exports.chat.parseClearChat();
                         });
 
-                        module.exports.twitchChatClient.on('chat', function (channel, user, message) {
-                            module.exports.chat.parseChat(user, message);
+                        module.exports.twitchChatClient.on('chat', function (channel, user, message, self) {
+                            module.exports.chat.parseChat(user, message, self);
                         });
 
-                        module.exports.twitchChatClient.on('action', function (channel, user, message) {
-                            module.exports.chat.parseChat(user, message);
+                        module.exports.twitchChatClient.on('action', function (channel, user, message, self) {
+                            module.exports.chat.parseChat(user, message, self);
                         });
 
                         module.exports.twitchChatClient.on('notice', function (channel, msgid, message) {
@@ -367,9 +367,13 @@
                         module.exports.twitchChatClient.on('roomstate', function (channel, state) {
                             module.exports.chat.parseState(state);
                         });
+
+                        module.exports.twitchChatClient.on('emotesets', function (sets) {
+                            module.exports.chat.loadTwitchEmotes(sets);
+                        });
                     }
 
-                    return resolve();
+                    module.exports.chat.loadEmotes().then(resolve).catch(reject);
                 }).catch(reject);
             });
         },

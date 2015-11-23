@@ -48,11 +48,58 @@
 
             this.chatState = {};
             this.bttvEmotes = [];
+            this.ttvEmotes = [];
+            this.ttvEmotesSet = '';
+        }
 
-            request({method: 'get', url: 'https://api.betterttv.net/2/emotes', json: true}, function (err, res, body) {
-                if (!err && body.emotes) {
-                    self.bttvEmotes = body.emotes;
+        loadEmotes() {
+            let self = this;
+
+            return new Promise(function (resolve, reject) {
+                request({method: 'get', url: 'https://api.betterttv.net/2/emotes', json: true}, function (err, res, body) {
+                    if (err) {
+                        return reject(err);
+                    }
+
+                    if (body.emotes) {
+                        self.bttvEmotes = body.emotes;
+                    }
+
+                    return resolve();
+                });
+
+            });
+        }
+
+        loadTwitchEmotes(sets) {
+            let self = this;
+
+            if (!sets) {
+                sets = 0;
+            }
+
+            return new Promise(function (resolve, reject) {
+                if (self.ttvEmotesSet === sets) {
+                    return resolve();
                 }
+
+                request({method: 'get', url: 'https://api.twitch.tv/kraken/chat/emoticon_images?emotesets=' + encodeURIComponent(sets), json: true}, function (err, res, body) {
+                    if (err) {
+                        return reject(err);
+                    }
+
+                    if (body.emoticon_sets) {
+                        self.ttvEmotes = [];
+
+                        _.forEach(body.emoticon_sets, function (value) {
+                            self.ttvEmotes = self.ttvEmotes.concat(value);
+                        });
+
+                        self.ttvEmotesSet = sets;
+                    }
+
+                    return resolve();
+                });
             });
         }
 
@@ -110,6 +157,7 @@
 
                 _.forEach(e, function (j) {
                     let mote = e[j];
+
                     if (typeof mote === 'string') {
                         mote = mote.split('-');
                         mote = [parseInt(mote[0]), parseInt(mote[1])];
@@ -145,8 +193,50 @@
             return text;
         }
 
-        parseChat(user, message) {
+        parseSelfTwitchEmotes(user, message) {
+            let foundEmotes = {};
+
+            if (this.ttvEmotes.length !== 0) {
+                _.forEach(this.ttvEmotes, function (emote) {
+                    let index = message.indexOf(emote.code);
+
+                    while (index !== -1) {
+                        if (!foundEmotes[emote.id.toString()]) {
+                            foundEmotes[emote.id.toString()] = [];
+                        }
+
+                        foundEmotes[emote.id.toString()].push(index + '-' + (index + emote.code.length - 1));
+
+                        index = message.indexOf(emote.code, index + emote.code.length - 1);
+                    }
+                });
+
+                if (Object.keys(foundEmotes).length !== 0) {
+                    // There are emotes
+                    user.emotes = foundEmotes;
+
+                    let rawEmotes = '';
+                    _.forEach(foundEmotes, function (val, key) {
+                        let parts = _.reduce(val, function (output, n) {
+                            return output += (n + ',');
+                        });
+
+                        rawEmotes += key + ':' + parts + '/';
+                    });
+
+                    user['emotes-raw'] = rawEmotes.substr(0, rawEmotes.length - 1);
+                }
+            }
+
+            return user;
+        }
+
+        parseChat(user, message, self) {
             let rawMessage = message;
+
+            if (self) {
+                user = this.parseSelfTwitchEmotes(user, message);
+            }
 
             // Twitch Emotes
             if (user.emotes) {
