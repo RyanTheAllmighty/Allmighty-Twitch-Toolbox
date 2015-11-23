@@ -68,7 +68,7 @@
                                     artist: data.artist[0]
                                 };
 
-                                if (data.picture[0].data) {
+                                if (data.picture && data.picture[0].data) {
                                     songInfo.artwork = data.picture[0].data.toString('base64');
                                 }
 

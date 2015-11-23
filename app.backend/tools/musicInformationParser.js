@@ -101,7 +101,15 @@ module.exports = {
                             return next(new Error('Cannot find artist on SoundCloud!'));
                         }
 
-                        let artist = res[0];
+                        let artist = _.findWhere(res, {permalink: artistName});
+
+                        if (!artist) {
+                            artist = _.findWhere(res, {username: artistName});
+                        }
+
+                        if (!artist) {
+                            return next(new Error('Cannot find artist on SoundCloud!'));
+                        }
 
                         data.artist = artist.username;
                         data.title = readData.title || name;

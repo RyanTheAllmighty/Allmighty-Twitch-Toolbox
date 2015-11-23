@@ -334,7 +334,7 @@
     router.get('/tools/musicparser/run', function (req, res) {
         global.services.settings.getAll().then(function (settings) {
             let ee = musicInformationParser.run({
-                clientID: _.result(_.findWhere(settings, {group: 'soundcloud', name: 'apiKey'}), 'value'),
+                clientID: _.result(_.findWhere(settings, {group: 'soundcloud', name: 'clientID'}), 'value'),
                 ffmpegPath: _.result(_.findWhere(settings, {group: 'directories', name: 'binary'}), 'value') + '/ffmpeg.exe',
                 path: _.result(_.findWhere(settings, {group: 'directories', name: 'music'}), 'value'),
                 force: req.query.force
@@ -347,7 +347,7 @@
             });
 
             ee.on('error', function (err) {
-                global.services.socketIOEmit('tools-musicparser-error', err.message);
+                global.services.socketIOEmit('tools-musicparser-error', err);
             });
 
             ee.on('done', function () {

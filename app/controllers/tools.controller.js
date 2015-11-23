@@ -69,7 +69,7 @@
 
         SocketIO.on('tools-musicparser-error', function (err) {
             $scope.running.musicInformationParsing = false;
-            $scope.log.musicInformationParsing += '\nError: ' + err.message || err;
+            $scope.log.musicInformationParsing += '\nError: ' + (err.message || 'Unknown');
         });
 
         updateNowPlaying();
