@@ -24,7 +24,7 @@
     </div>
 
     <div class="twitch-chat-send-message">
-        <input class="twitch-chat-send-message-input" ng-model="chatMessage" type="text"/>
+        <input class="twitch-chat-send-message-input" ng-model="chatMessage" ng-keyup="$event.keyCode === 13 ? sendMessage() : null" type="text"/>
         <button type="button" ng-click="sendMessage()" class="twitch-chat-send-message-button btn btn-xs btn-success">Send</button>
     </div>
 </div>
