@@ -166,6 +166,45 @@
                 });
             });
         },
+        setupComponents: function () {
+            return new Promise(function (resolve, reject) {
+                async.parallel([
+                    function (next) {
+                        module.exports.setupTrayIcon().then(() => next()).catch(next);
+                    },
+                    function (next) {
+                        module.exports.setupOBSRemote().then(() => next()).catch(next);
+                    },
+                    function (next) {
+                        module.exports.setupGlobalKeyboardShortcuts().then(() => next()).catch(next);
+                    },
+                    function (next) {
+                        module.exports.setupTwitchChat().then(() => next()).catch(next);
+                    },
+                    function (next) {
+                        module.exports.setupTwitchAPI().then(() => next()).catch(next);
+                    },
+                    function (next) {
+                        module.exports.setupStreamTipAPI().then(() => next()).catch(next);
+                    },
+                    function (next) {
+                        module.exports.setupGiantBombAPI().then(() => next()).catch(next);
+                    },
+                    function (next) {
+                        module.exports.setupSocketIOServer().then(() => next()).catch(next);
+                    },
+                    function (next) {
+                        module.exports.setupExpress().then(() => next()).catch(next);
+                    }
+                ], function (err) {
+                    if (err) {
+                        return reject(err);
+                    }
+
+                    return resolve();
+                });
+            });
+        },
         setupTrayIcon: function () {
             return new Promise(function (resolve) {
                 module.exports.tray.main = new gui.Tray({title: 'Allmighty Twitch Toolbox', tooltip: 'Allmighty Twitch Toolbox', icon: 'assets/image/icon.png'});
@@ -414,6 +453,33 @@
         startNotificationQueue: function () {
             return module.exports.notificationQueue.startQueue();
         },
+        startCheckers: function () {
+            return new Promise(function (resolve, reject) {
+                async.parallel([
+                    function (next) {
+                        module.exports.startNotificationQueue().then(() => next()).catch(next);
+                    },
+                    function (next) {
+                        module.exports.startFollowerChecker().then(() => next()).catch(next);
+                    },
+                    function (next) {
+                        module.exports.startDonationChecker().then(() => next()).catch(next);
+                    },
+                    function (next) {
+                        module.exports.startStreamChecker().then(() => next()).catch(next);
+                    },
+                    function (next) {
+                        module.exports.startMusicChecker().then(() => next()).catch(next);
+                    }
+                ], function (err) {
+                    if (err) {
+                        return reject(err);
+                    }
+
+                    return resolve();
+                });
+            });
+        },
         startFollowerChecker: function () {
             return module.exports.followerChecker.startChecking();
         },
@@ -425,6 +491,24 @@
         },
         startMusicChecker: function () {
             return module.exports.musicChecker.startChecking();
+        },
+        startComponents: function () {
+            return new Promise(function (resolve, reject) {
+                async.parallel([
+                    function (next) {
+                        module.exports.startExpressServer().then(() => next()).catch(next);
+                    },
+                    function (next) {
+                        module.exports.connectToTwitchChat().then(() => next()).catch(next);
+                    }
+                ], function (err) {
+                    if (err) {
+                        return reject(err);
+                    }
+
+                    return resolve();
+                });
+            });
         },
         setupSocketIOServer: function () {
             return new Promise(function (resolve) {
