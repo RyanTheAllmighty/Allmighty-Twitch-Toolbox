@@ -144,8 +144,8 @@
             Chat.clear();
         };
 
-        $scope.toggleSlowMode = function () {
-            Chat.slowmode(!$scope.channelSlowMode);
+        $scope.toggleSlowMode = function (seconds) {
+            Chat.slowmode(!$scope.channelSlowMode, seconds);
         };
 
         $scope.toggleSubMode = function () {

@@ -57,7 +57,19 @@
 
                 <div class="pull-right">
                     <button class="btn btn-xs btn-default pull-right" ng-click="clearChat()">Clear</button>
-                    <button class="btn btn-xs pull-right" ng-class="{'btn-danger': !channelSlowMode, 'btn-success': channelSlowMode}" ng-click="toggleSlowMode()">Slow Mode</button>
+                    <div class="btn-group btn-group-xs pull-right" style="padding-top: 20px;" role="group">
+                        <button class="btn btn-xs dropdown-toggle" data-toggle="dropdown" ng-class="{'btn-danger': !channelSlowMode, 'btn-success': channelSlowMode}">Slow Mode</button>
+                        <ul class="dropdown-menu">
+                            <li ng-show="!channelSlowMode"><a href="" ng-click="toggleSlowMode(10)">10</a></li>
+                            <li ng-show="!channelSlowMode"><a href="" ng-click="toggleSlowMode(30)">30</a></li>
+                            <li ng-show="!channelSlowMode"><a href="" ng-click="toggleSlowMode(60)">60</a></li>
+                            <li ng-show="!channelSlowMode"><a href="" ng-click="toggleSlowMode(120)">120</a></li>
+                            <li ng-show="!channelSlowMode"><a href="" ng-click="toggleSlowMode(180)">180</a></li>
+                            <li ng-show="!channelSlowMode"><a href="" ng-click="toggleSlowMode(240)">240</a></li>
+                            <li ng-show="!channelSlowMode"><a href="" ng-click="toggleSlowMode(300)">300</a></li>
+                            <li ng-show="channelSlowMode"><a href="" ng-click="toggleSlowMode()">Disable</a></li>
+                        </ul>
+                    </div>
                     <button class="btn btn-xs pull-right" ng-class="{'btn-danger': !channelSubMode, 'btn-success': channelSubMode}" ng-click="toggleSubMode()">Sub Mode</button>
                 </div>
             </div>

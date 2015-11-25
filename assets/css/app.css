@@ -93,6 +93,10 @@ textarea.logging-text-area {
     font-size: 15px;
 }
 
-.panel-heading div button:not(:last-child) {
+.panel-heading div button {
+    margin-left: 5px
+}
+
+.panel-heading div div {
     margin-left: 5px
 }
