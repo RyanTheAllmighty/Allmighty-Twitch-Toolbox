@@ -2,6 +2,7 @@ body {
     background-color: transparent;
     color: white;
     overflow: hidden;
+    font-family: 'Rubik', sans-serif;
 }
 
 .flip-clock-label {
