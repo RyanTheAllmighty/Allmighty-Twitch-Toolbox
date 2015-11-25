@@ -91,6 +91,13 @@ Once done click the Save button and then restart the application to which then i
 The application comes built in with the details needed to authenticate with the API with our own application. If you want to use your own, then you can edit the settings in the Twitch settings panel
 with the details of your application you create [here](http://www.twitch.tv/kraken/oauth2/clients/new) making sure that you pass in http://127.0.0.1:28800/#/auth/twitch as the redirect uri.
 
+## Command Line Arguments
+Some parts of this application cannot be set via the applications settings page and must be done via command line arguments. The valid command line arguments and their descriptions are listed below:
+
+| Name | Description | Default | Example
+| --- | --- | --- | --- |
+| storageDir | Sets the directory to store the applications files in. | Windows: %LOCALAPPDATA%/Allmighty-Twitch-Toolbox/ApplicationStorage; Linux: ~/.config/Allmighty-Twitch-Toolbox/ApplicationStorage; OSX: ~/Library/Application Support/Allmighty-Twitch-Toolbox/ApplicationStorage | --storageDir=D:/Path/To/My/Directory
+
 ## Attributions
 Toolbox icon by Daniel Garrett Hickey
 

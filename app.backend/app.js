@@ -20,9 +20,13 @@
     'use strict';
 
     // NodeJS Modules
+    let fs = require('fs');
     let path = require('path');
-    let gui = global.window.nwDispatcher.requireNwGui();
     let nwNotify = require('nw-notify');
+    let gui = global.window.nwDispatcher.requireNwGui();
+
+    // Command line arguments
+    global.args = require('minimist')(gui.App.argv);
 
     // Include our services module
     let services = require(path.join(process.cwd(), 'app.backend', 'services'));
@@ -31,9 +35,21 @@
     // Add the applications storage dir to the global namespace
     global.applicationStorageDir = path.join(gui.App.dataPath, 'ApplicationStorage');
 
-    // When the main window is closed, make sure to do some cleaning up
+    // Check for a custom set storage dir
+    if (global.args.storageDir && fs.existsSync(global.args.storageDir)) {
+        console.log('Custom storage dir set to', global.args.storageDir);
+        
+        global.applicationStorageDir = global.args.storageDir;
+    }
+
+    // When the main window is closed, remove the tray (if there) and do some cleaning up
     gui.Window.get().on('closed', function () {
+        if (global.services.tray.main) {
+            global.services.tray.main.remove();
+        }
+
         gui.App.clearCache();
+
         nwNotify.closeAll();
     });
 
