@@ -21,13 +21,16 @@
 
     let fs = require('fs');
     let gulp = require('gulp');
+    let path = require('path');
     let async = require('async');
     let mkdirp = require('mkdirp');
     let rimraf = require('rimraf');
     let jscs = require('gulp-jscs');
+    let copyDir = require('copy-dir');
     let archiver = require('archiver');
     let minimist = require('minimist');
     let jshint = require('gulp-jshint');
+    let child = require('child_process');
     let NwBuilder = require('nw-builder');
     let packageJson = require('./package.json');
 
@@ -36,37 +39,13 @@
     // Replace the package.json's name with a readable one
     packageJson.name = packageJson.name.replace(/-/g, ' ');
 
-    let toArchive = [
-        '**',
-        '!node_modules/.bin/**',
-        '!node_modules/chai/**',
-        '!node_modules/gulp/**',
-        '!node_modules/gulp-jscs/**',
-        '!node_modules/gulp-jshint/**',
-        '!node_modules/minimist/**',
-        '!node_modules/mkdirp/**',
-        '!node_modules/mocha/**',
-        '!node_modules/nw-builder/**',
-        '!node_modules/rimraf/**',
-        '!node_modules/sinon/**',
-        '!node_modules/ffmetadata/test/**',
-        '!.git/**',
-        '!.idea/**',
-        '!build/**',
-        '!dist/**',
-        '!dist-cache/**',
-        '!test/**',
-        '!.gitignore',
-        '!.jscsrc',
-        '!.jshintrc',
-        '!.jshintignore',
-        '!README.md',
-        '!SOCKETEVENTS.md',
-        '!STYLE.md',
-        '!WEBROUTES.md',
-        '!gulpfile.js',
-        '!app.nw',
-        '!npm-debug.log'
+    let excludedFolders = [
+        '.git',
+        '.idea',
+        'build',
+        'dist',
+        'dist-cache',
+        'test'
     ];
 
     let paths = {
@@ -97,6 +76,30 @@
         gulp.start('default');
     });
 
+    gulp.task('clean-build', function (cb) {
+        rimraf('./build', function (err) {
+            if (err) {
+                return cb(err);
+            }
+
+            mkdirp('./build', function (err) {
+                if (err) {
+                    return cb(err);
+                }
+
+                copyDir.sync('./', './build/', function (_stat, _path) {
+                    if (_stat !== 'directory') {
+                        return true;
+                    }
+
+                    return excludedFolders.indexOf(_path) === -1;
+                });
+
+                child.exec('npm prune --production', {cwd: path.join(__dirname, 'build')}, cb);
+            });
+        });
+    });
+
     gulp.task('clean-dist', function (cb) {
         rimraf('./dist', function (err) {
             if (err) {
@@ -107,7 +110,7 @@
         });
     });
 
-    gulp.task('package', ['clean-dist'], function (cb) {
+    gulp.task('package', ['clean-build', 'clean-dist'], function (cb) {
         let filePath = './dist/' + packageJson.name + ' v' + packageJson.version + '/' + packageJson.name + ' v' + packageJson.version + '.nw';
         let output = fs.createWriteStream(filePath);
         let archive = archiver('zip');
@@ -123,13 +126,13 @@
         archive.pipe(output);
 
         archive.bulk([
-            {src: toArchive, data: {date: new Date()}}
+            {src: './build/**', data: {date: new Date()}}
         ]).finalize();
     });
 
-    gulp.task('distribute', ['clean-dist', 'package'], function (cb) {
+    gulp.task('distribute', ['clean-build', 'clean-dist'], function (cb) {
         let nwOpts = {
-            files: toArchive,
+            files: './build/**',
             version: packageJson.nwJSVersion,
             appName: packageJson.name,
             platforms: ['win', 'osx', 'linux'],
@@ -137,6 +140,7 @@
             cacheDir: './dist-cache',
             macIcns: './assets/image/icon.icns',
             winIco: './assets/image/icon.ico',
+            zip: false,
             buildType: function () {
                 return this.appName + ' v' + this.appVersion;
             }
@@ -150,7 +154,6 @@
 
         nw.build().then(function () {
             async.each(['linux32', 'linux64', 'osx32', 'osx64', 'win32', 'win64'], function (dist, next) {
-
                 let folder = './dist/' + packageJson.name + ' v' + packageJson.version + '/' + dist + '/';
                 let finalZip = './dist/' + packageJson.name + ' v' + packageJson.version + '/' + packageJson.name + ' v' + packageJson.version + ' - ' + dist + '.zip';
 

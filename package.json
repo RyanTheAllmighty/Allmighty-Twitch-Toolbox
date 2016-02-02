@@ -1,6 +1,6 @@
 {
   "name": "Allmighty-Twitch-Toolbox",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "nwJSVersion": "0.12.3",
   "description": "This is a collection of tools and utilities I use for Twitch to tell me such as notifications for new followers and donations as well as providing a simple UI for the broadcaster to use.",
   "repository": {
@@ -35,6 +35,7 @@
     "async": "^1.4.2",
     "autolinker": "^0.18.1",
     "body-parser": "^1.14.1",
+    "copy-dir": "0.0.8",
     "del": "^2.0.2",
     "express": "^4.13.3",
     "ffmetadata": "git://github.com/RyanTheAllmighty/node-ffmetadata.git",
@@ -60,7 +61,6 @@
     "gulp": "^3.9.0",
     "gulp-jscs": "^3.0.2",
     "gulp-jshint": "^1.12.0",
-    "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
     "mocha": "^2.3.3",
     "nw-builder": "^2.0.2",
